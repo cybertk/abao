@@ -1,0 +1,66 @@
+#!/usr/bin/env node
+
+var optimist = require('optimist');
+var path = require('path');
+var pjson = require('../package.json');
+var Abao = require('../lib/abao');
+
+var argv = optimist
+    .usage("Usage: \n  abao <path to raml> <api_endpoint> [OPTIONS]" +
+    "\n\nExample: \n  " + "abao ./api.raml http://api.example.com")
+    .options(Abao.options)
+    .wrap(80)
+    .argv;
+
+var argError = false;
+
+if (argv.help === true) {
+  optimist.showHelp(fn=console.error);
+  process.exit(0);
+}
+
+if (argv.version === true) {
+  console.log(pjson.version);
+  process.exit(0);
+}
+
+if (argv._[0] === undefined) {
+  console.error("Error: Must specify path to raml file.");
+  argError = true;
+}
+if (argError) {
+  console.error("\n");
+  optimist.showHelp(fn=console.error);
+  process.exit(1);
+}
+
+configuration = {
+  'ramlPath': argv._[0],
+  'server': argv._[1],
+  'options': argv
+};
+
+abao = new Abao(configuration);
+
+process.on( 'SIGINT', function() {
+  abao.transactionsComplete(function() {
+    process.exit(0);
+  });
+});
+
+abao.run(function(error, stats){
+  if (error) {
+    if (error.message) {
+      console.error(error.message);
+    }
+    if (error.stack) {
+      console.error(error.stack);
+    }
+    process.exit(1);
+  }
+  if (stats.failures > 0) {
+    process.exit(1);
+  } else {
+    process.exit(0);
+  }
+});

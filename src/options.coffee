@@ -1,0 +1,43 @@
+options =
+  hookfiles:
+    alias: 'f'
+    description: 'Specifes a pattern to match files with before/after hooks for running tests'
+    default: null
+
+  names:
+    alias: 'n'
+    description: 'Only list names of requests (for use in a hookfile). No requests are made.'
+    default: false
+
+  reporter:
+    alias: "r"
+    description: "Output additional report format. This option can be used multiple times to add multiple reporters. Options: junit, nyan, dot, markdown, html, apiary.\n"
+    default: []
+
+  header:
+    alias: "h"
+    description: "Extra header to include in every request. This option can be used multiple times to add multiple headers.\n"
+    default: []
+
+  sorted:
+    alias: "s"
+    description: "Sorts requests in a sensible way so that objects are not modified before they are created. Order: CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH, DELETE, TRACE.\n"
+    default: false
+
+  user:
+    alias: "u"
+    description: "Basic Auth credentials in the form username:password.\n"
+    default: null
+
+  method:
+    alias: "m"
+    description: "Restrict tests to a particular HTTP method (GET, PUT, POST, DELETE, PATCH). This option can be used multiple times to allow multiple methods.\n"
+    default: []
+
+  help:
+    description: "Show usage information.\n"
+
+  version:
+    description: "Show version number.\n"
+
+module.exports = options

@@ -1,0 +1,49 @@
+{
+  "name": "abao",
+  "version": "0.0.0",
+  "description": "RAML testing tool",
+  "main": "lib/index.js",
+  "scripts": {
+    "prepublish": "grunt coffee",
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cybertk/abao.git"
+  },
+  "keywords": [
+    "api",
+    "test",
+    "testing",
+    "documentation",
+    "integration",
+    "acceptance",
+    "RAML",
+    "automated"
+  ],
+  "author": "Quanlong",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cybertk/abao/issues"
+  },
+  "homepage": "https://github.com/cybertk/abao",
+  "devDependencies": {
+    "chai": "~1.9.0",
+    "coffee-script": "~1.8.0",
+    "express": "^4.9.5",
+    "grunt": "~0.4.0",
+    "grunt-cli": "~0.1.0",
+    "grunt-contrib-coffee": "~0.11.0",
+    "grunt-contrib-watch": "~0.6.0",
+    "grunt-mocha-test": "~0.12.0",
+    "jit-grunt": "~0.8.0",
+    "mocha": "~1.21.0",
+    "time-grunt": "~1.0.0"
+  },
+  "dependencies": {
+    "mocha": "^1.21.4",
+    "optimist": "^0.6.1",
+    "raml-parser": "^0.8.7",
+    "tv4": "^1.1.0"
+  }
+}

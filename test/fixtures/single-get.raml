@@ -1,0 +1,24 @@
+#%RAML 0.8
+
+title: World Music API
+baseUri: http://example.api.com/{version}
+version: v1
+
+/machines:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            schema: |
+              { "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "description": "A canonical song",
+                "properties": {
+                  "type":  { "type": "string" },
+                  "name": { "type": "string" }
+                },
+                "required": [ "type", "name" ]
+              }
+            example: |
+              { "type": "Kulu", "name": "Mike" }
