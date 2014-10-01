@@ -1,12 +1,19 @@
-require('chai').should()
-
+request = require 'request'
 Mocha = require 'mocha'
+raml = require 'raml-parser'
+chai = require 'chai'
+jsonlint = require 'jsonlint'
+csonschema = require 'csonschema'
+async = require 'async'
+_ = require 'underscore'
+
+assert = chai.assert
+chai.use(require 'chai-json-schema')
+
 Test = Mocha.Test
 Suite = Mocha.Suite
 
-raml = require 'raml-parser'
-tv4 = require 'tv4'
-
+i = 0
 
 _validatable = (body) ->
 
@@ -26,7 +33,7 @@ _validate = (body) ->
   tv4.validate example, schema
 
 
-_traverse = (ramlObj, parentUrl, parentSuite) ->
+_traverse = (ramlObj, parentUrl, parentSuite, server) ->
 
   for i of ramlObj.resources
     resource = ramlObj.resources[i]
@@ -43,11 +50,11 @@ _traverse = (ramlObj, parentUrl, parentSuite) ->
       method = endpoint.method
 
       # Request
-      if not _validatable(endpoint.body)
-        suite.addTest new Test "#{method.toUpperCase()} request"
-      else
-        suite.addTest new Test "#{method.toUpperCase()} request", ->
-          true.should.equal _validate endpoint.body
+      # if not _validatable(endpoint.body)
+      #   suite.addTest new Test "#{method.toUpperCase()} request"
+      # else
+      #   suite.addTest new Test "#{method.toUpperCase()} request", ->
+      #     true.should.equal _validate endpoint.body
 
       # Response
       if not endpoint.responses
@@ -58,17 +65,34 @@ _traverse = (ramlObj, parentUrl, parentSuite) ->
         if not _validatable(res.body)
           suite.addTest new Test "#{method.toUpperCase()} response #{status}"
         else
-          suite.addTest new Test "#{method.toUpperCase()} response #{status}", ->
-            true.should.equal _validate res.body
+          suite.addTest new Test "#{method.toUpperCase()} response #{status}",  _.bind (done) ->
+            schema = this.schema
 
-    _traverse resource, url, parentSuite
+            csonschema.parse schema, (err, obj) ->
+
+              # true.should.equal _validate res.body
+              request server + url, (error, response, body) ->
+                assert.isNull error
+                assert.isNotNull response
+
+                # Status code
+                assert.equal response.statusCode, status
+
+                # Body
+                assert.isNotNull body
+                assert.jsonSchema (JSON.parse body), obj
+                done()
+
+          , { schema: res.body['application/json'].schema }
+
+    _traverse resource, url, parentSuite, server
 
 
-generateTests = (source, mocha, callback) ->
+generateTests = (source, mocha, server, callback) ->
 
   raml.load(source).then (raml) ->
 
-    _traverse raml, '', mocha.suite
+    _traverse raml, '', mocha.suite, server
 
     callback()
   , (error) ->

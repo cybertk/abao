@@ -11,14 +11,9 @@ version: v1
         body:
           application/json:
             schema: |
-              { "$schema": "http://json-schema.org/schema",
-                "type": "object",
-                "description": "A canonical song",
-                "properties": {
-                  "type":  { "type": "string" },
-                  "name": { "type": "string" }
-                },
-                "required": [ "type", "name" ]
-              }
+              [
+                type: 'string'
+                name: 'string'
+              ]
             example: |
               { "type": "Kulu", "name": "Mike" }

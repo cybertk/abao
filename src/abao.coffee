@@ -17,7 +17,7 @@ class Abao
       return callback(loadingError, {}) if loadingError
 
       mocha = new Mocha config.options
-      generateTests data, mocha, ->
+      generateTests data, mocha, config.server, ->
         mocha.run ->
           callback(null, mocha.reporter.stats)
 
