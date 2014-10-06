@@ -11,6 +11,8 @@ stdout = ''
 report = ''
 exitStatus = null
 
+recievedRequest = {}
+
 execCommand = (cmd, callback) ->
   stderr = ''
   stdout = ''
@@ -83,7 +85,6 @@ describe "Command line interface", ->
   describe 'when called with arguments', ->
 
     describe "when using additional reporters with -r", ->
-
       before (done) ->
         cmd = "./bin/abao -r spec ./test/fixtures/single-get.raml http://localhost:#{PORT}"
 
@@ -105,3 +106,30 @@ describe "Command line interface", ->
 
       it 'should print using the new reporter', ->
         assert.include stdout, 'passing'
+
+    describe "when adding additional headers with -h", ->
+
+      recievedRequest = {}
+
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -h Accept:application/json"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          recievedRequest = req
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            type: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'should have an additional header in the request', () ->
+        assert.ok recievedRequest.headers.accept is 'application/json'

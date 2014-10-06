@@ -13,8 +13,6 @@ chai.use(require 'chai-json-schema')
 Test = Mocha.Test
 Suite = Mocha.Suite
 
-i = 0
-
 _validatable = (body) ->
 
   return false if not body
@@ -26,14 +24,7 @@ _validatable = (body) ->
   false
 
 
-_validate = (body) ->
-
-  example = JSON.parse body['application/json'].example
-  schema = JSON.parse body['application/json'].schema
-  tv4.validate example, schema
-
-
-_traverse = (ramlObj, parentUrl, parentSuite, server) ->
+_traverse = (ramlObj, parentUrl, parentSuite, configuration) ->
 
   for i of ramlObj.resources
     resource = ramlObj.resources[i]
@@ -70,8 +61,18 @@ _traverse = (ramlObj, parentUrl, parentSuite, server) ->
 
             csonschema.parse schema, (err, obj) ->
 
-              # true.should.equal _validate res.body
-              request server + url, (error, response, body) ->
+              console.error('ack')
+              options =
+                url: configuration.server + url
+                headers: {}
+
+              console.error('ck', configuration)
+              if configuration.options.header.length > 0
+                for header in configuration.options.header
+                  splitHeader = header.split(':')
+                  options.headers[splitHeader[0]] = splitHeader[1]
+
+              request options, (error, response, body) ->
                 assert.isNull error
                 assert.isNotNull response
 
@@ -85,14 +86,14 @@ _traverse = (ramlObj, parentUrl, parentSuite, server) ->
 
           , { schema: res.body['application/json'].schema }
 
-    _traverse resource, url, parentSuite, server
+    _traverse resource, url, parentSuite, configuration
 
 
-generateTests = (source, mocha, server, callback) ->
+generateTests = (source, mocha, configuration, callback) ->
 
   raml.load(source).then (raml) ->
 
-    _traverse raml, '', mocha.suite, server
+    _traverse raml, '', mocha.suite, configuration
 
     callback()
   , (error) ->
