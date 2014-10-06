@@ -133,3 +133,21 @@ describe "Command line interface", ->
 
       it 'should have an additional header in the request', () ->
         assert.ok recievedRequest.headers.accept is 'application/json'
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0
+
+      it 'should print count of tests will run', ->
+        assert.include stdout, '1 passing'
+
+    describe "when printing test cases with -n", ->
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -n"
+
+        execCommand cmd, done
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0
+
+      it 'should print names', () ->
+        assert.include stdout, 'GET /machines -> 200'

@@ -53,7 +53,9 @@ _traverse = (ramlObj, parentUrl, parentSuite, configuration) ->
 
       for status, res of endpoint.responses
 
-        if not _validatable(res.body)
+        if configuration.options.names
+          console.log "#{method.toUpperCase()} #{url} -> #{status}"
+        else if not _validatable(res.body)
           suite.addTest new Test "#{method.toUpperCase()} response #{status}"
         else
           suite.addTest new Test "#{method.toUpperCase()} response #{status}",  _.bind (done) ->
@@ -61,12 +63,10 @@ _traverse = (ramlObj, parentUrl, parentSuite, configuration) ->
 
             csonschema.parse schema, (err, obj) ->
 
-              console.error('ack')
               options =
                 url: configuration.server + url
                 headers: {}
 
-              console.error('ck', configuration)
               if configuration.options.header.length > 0
                 for header in configuration.options.header
                   splitHeader = header.split(':')
