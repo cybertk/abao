@@ -79,7 +79,7 @@ describe "Command line interface", ->
         assert.equal 1, report.passes.length
 
       it 'should print correct title for response', ->
-        assert.equal report.tests[0].fullTitle, '/machines GET response 200'
+        assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate'
 
     describe "when executing the command and raml includes other ramls", () ->
       before (done) ->
@@ -157,7 +157,7 @@ describe "Command line interface", ->
         server.on 'close', done
 
       it 'should have an additional header in the request', () ->
-        assert.ok recievedRequest.headers.accept is 'application/json'
+        assert.equal recievedRequest.headers.accept, 'application/json'
 
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
