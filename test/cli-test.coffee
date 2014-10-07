@@ -81,6 +81,31 @@ describe "Command line interface", ->
       it 'should print correct title for response', ->
         assert.equal report.tests[0].fullTitle, '/machines GET response 200'
 
+    describe "when executing the command and raml includes other ramls", () ->
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/include_other_raml.raml http://localhost:#{PORT}"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            type: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0
+
+      it 'should print count of tests will run', ->
+        assert.include stdout, '1 passing'
 
   describe 'when called with arguments', ->
 
@@ -105,7 +130,7 @@ describe "Command line interface", ->
         server.on 'close', done
 
       it 'should print using the new reporter', ->
-        assert.include stdout, 'passing'
+        assert.include stdout, '1 passing'
 
     describe "when adding additional headers with -h", ->
 

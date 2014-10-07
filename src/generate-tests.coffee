@@ -1,6 +1,5 @@
 request = require 'request'
 Mocha = require 'mocha'
-raml = require 'raml-parser'
 chai = require 'chai'
 jsonlint = require 'jsonlint'
 csonschema = require 'csonschema'
@@ -89,16 +88,11 @@ _traverse = (ramlObj, parentUrl, parentSuite, configuration) ->
     _traverse resource, url, parentSuite, configuration
 
 
-generateTests = (source, mocha, configuration, callback) ->
+generateTests = (raml, mocha, config) ->
 
-  raml.load(source).then (raml) ->
+  chai.tv4.addSchema(id, json) for id, json of config.refs if config.refs
 
-    _traverse raml, '', mocha.suite, configuration
-
-    callback()
-  , (error) ->
-    console.log(error)
-    callback()
+  _traverse raml, '', mocha.suite, config
 
 
 module.exports = generateTests

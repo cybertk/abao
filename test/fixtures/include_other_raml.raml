@@ -1,0 +1,22 @@
+#%RAML 0.8
+
+title: World Music API
+baseUri: http://example.api.com/{version}
+version: v1
+
+securitySchemes:
+  - oauth_2_0: !include ./oauth_2_0.yml
+
+/machines:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            schema: |
+              [
+                type: 'string'
+                name: 'string'
+              ]
+            example: |
+              { "type": "Kulu", "name": "Mike" }
