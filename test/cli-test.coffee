@@ -176,3 +176,6 @@ describe "Command line interface", ->
 
       it 'should print names', () ->
         assert.include stdout, 'GET /machines -> 200'
+
+      it 'should not run tests', () ->
+        assert.notInclude stdout, '0 passing'

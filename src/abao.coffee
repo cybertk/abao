@@ -26,6 +26,8 @@ class Abao
     .then (raml) ->
       mocha = new Mocha config.options
       generateTests raml, mocha, config
+      return callback(null, {}) if configuration.options.names
+
       mocha.run ->
         callback(null, mocha.reporter.stats)
 
