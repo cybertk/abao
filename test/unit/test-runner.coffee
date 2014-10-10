@@ -1,11 +1,9 @@
 {assert} = require 'chai'
 sinon = require 'sinon'
-request = require 'request'
 _ = require 'underscore'
 proxyquire = require('proxyquire').noCallThru()
 
 Test = require '../../lib/test'
-
 TestRunner = proxyquire '../../lib/test-runner', {
 }
 

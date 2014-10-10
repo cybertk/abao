@@ -4,6 +4,7 @@ chai = require 'chai'
 
 options = require './options'
 addTests = require './add-tests'
+addHooks = require './add-hooks'
 Runner = require './test-runner'
 applyConfiguration = require './apply-configuration'
 
@@ -11,6 +12,8 @@ applyConfiguration = require './apply-configuration'
 class Abao
   constructor: (config) ->
     @configuration = applyConfiguration(config)
+    @tests = []
+    @hooks = new Hooks()
 
   run: (callback) ->
     config = @configuration
@@ -26,6 +29,10 @@ class Abao
       # Parse tests from RAML
       (raml, callback) ->
         addTests raml, tests, callback
+      ,
+      # Parse hooks
+      (callback) ->
+        addHooks config.options.hookfiles, callback
       ,
       # Run tests
       (callback) ->
