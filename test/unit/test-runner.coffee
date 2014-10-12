@@ -4,7 +4,14 @@ _ = require 'underscore'
 proxyquire = require('proxyquire').noCallThru()
 
 Test = require '../../lib/test'
+
+mocha = require 'mocha'
+hooksStub = require '../../lib/hooks'
+suiteStub = ''
+
 TestRunner = proxyquire '../../lib/test-runner', {
+  'mocha': mocha,
+  'hooks': hooksStub
 }
 
 
@@ -14,30 +21,57 @@ describe 'Test Runner', ->
 
   describe '#run', ->
 
-    describe 'and single test', ->
+    describe 'when test is valid', ->
 
       runner = ''
+      beforeHook = ''
+      afterHook = ''
+      test = new Test()
+      test.name = 'GET /machines -> 200'
+      test.request.path = '/machines'
+      test.request.method = 'GET'
+      test.response.status = 200
+      test.response.schema = """[
+        type: 'string'
+        name: 'string'
+      ]"""
 
       before (done) ->
-
-        test = new Test()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
-        test.response.status = 200
-        test.response.schema = """[
-          type: 'string'
-          name: 'string'
-        ]"""
-        tests = [test]
-
         runner = new TestRunner "http://abao.io"
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
+        mochaStub = runner.mocha
+        originSuiteCreate = mocha.Suite.create
+        sinon.stub mocha.Suite, 'create', (parent, title) ->
+          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
 
-        runner.run tests, done
+          # Stub suite
+          originSuiteBeforeAll = suiteStub.beforeAll
+          originSuiteAfterAll = suiteStub.afterAll
+          sinon.stub suiteStub, 'beforeAll', (title, fn) ->
+            beforeHook = fn
+            originSuiteBeforeAll.call(suiteStub, title, fn)
+          sinon.stub suiteStub, 'afterAll', (title, fn) ->
+            afterHook = fn
+            originSuiteAfterAll.call(suiteStub, title, fn)
+
+          console.log('ck', suiteStub)
+          suiteStub
+
+        sinon.stub mochaStub, 'run', (callback) ->
+          callback()
+
+        sinon.stub hooksStub, 'runBefore', (test, callback) ->
+          callback()
+        sinon.stub hooksStub, 'runAfter', (test, callback) ->
+          callback()
+
+        runner.run [test], hooksStub, done
 
       after ->
-        runner.mocha.run.restore()
+        mochaStub = runner.mocha
+        mochaStub.run.restore()
+
+        hooksStub.runBefore.restore()
+        hooksStub.runAfter.restore()
 
       it 'should run mocha', ->
         assert.ok runner.mocha.run.calledOnce
@@ -51,6 +85,20 @@ describe 'Test Runner', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
+
+      it 'should generated hook of suite', ->
+        assert.ok suiteStub.beforeAll.called
+        assert.ok suiteStub.afterAll.called
+
+      # describe 'when executed hooks', ->
+      #   before (done) ->
+      #
+      #   it 'should executed hooks', ->
+      #   # it 'should generated before hook', ->
+      #     assert.ok hooksStub.runBefore.calledWith(test)
+        #
+        # it 'should call after hook', ->
+        #   assert.ok hooksStub.runAfter.calledWith(test)
 
     describe 'Interact with #test', ->
 
@@ -72,7 +120,7 @@ describe 'Test Runner', ->
         sinon.stub test, 'run', (callback) ->
            callback()
 
-        runner.run [test], done
+        runner.run [test], hooksStub, done
 
       after ->
         test.run.restore()
@@ -93,7 +141,7 @@ describe 'Test Runner', ->
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
 
-        runner.run [test], done
+        runner.run [test], hooksStub, done
 
       after ->
         runner.mocha.run.restore()
@@ -133,7 +181,7 @@ describe 'Test Runner', ->
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.spy console, 'log'
 
-        runner.run [test], done
+        runner.run [test], hooksStub, done
 
       after ->
         runner.mocha.run.restore()
@@ -166,7 +214,7 @@ describe 'Test Runner', ->
           recievedTest = _.clone(test)
           callback()
 
-        runner.run [test], done
+        runner.run [test], hooksStub, done
 
       after ->
         runner.mocha.run.restore()

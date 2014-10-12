@@ -7,17 +7,19 @@ addTests = require './add-tests'
 addHooks = require './add-hooks'
 Runner = require './test-runner'
 applyConfiguration = require './apply-configuration'
+hooks = require './hooks'
 
 
 class Abao
   constructor: (config) ->
     @configuration = applyConfiguration(config)
     @tests = []
-    @hooks = new Hooks()
+    @hooks = hooks
 
   run: (callback) ->
     config = @configuration
-    tests = []
+    tests = @tests
+    hooks = @hooks
 
     async.waterfall [
       # Load RAML
@@ -32,7 +34,7 @@ class Abao
       ,
       # Parse hooks
       (callback) ->
-        addHooks config.options.hookfiles, callback
+        addHooks hooks, config.options.hookfiles
       ,
       # Run tests
       (callback) ->

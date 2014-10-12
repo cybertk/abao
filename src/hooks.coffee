@@ -20,6 +20,7 @@ class Hooks
     @afterAllHooks.push hook
 
   addHook: (hooks, name, hook) =>
+    console.log('addhook')
     if hooks[name]
       hooks[name].push hook
     else

@@ -9,20 +9,20 @@ class TestRunner
     @options = options
     @mocha = new Mocha options
 
-  run: (tests, callback) ->
+  run: (tests, hooks, callback) ->
     server = @server
     options = @options
     mocha = @mocha
 
     async.each tests, (test, callback) ->
 
-      # Generate Test Suite
-      suite = Mocha.Suite.create mocha.suite, test.name
-
       # list tests
       if options.names
         console.log test.name
         return callback()
+
+      # Generate Test Suite
+      suite = Mocha.Suite.create mocha.suite, test.name
 
       # No Response defined
       if !test.response.status or !test.response.schema
@@ -33,6 +33,15 @@ class TestRunner
       req = test.request
       req.server = server
       _.extend(req.headers, options.header)
+
+      if hooks
+        suite.beforeAll _.bind (done) ->
+          @hooks.runBefore @test, done
+        , {hooks, test}
+
+        suite.afterAll _.bind (done) ->
+          @hooks.runAfter @test, done
+        , {hooks, test}
 
       suite.addTest new Mocha.Test 'Validate', _.bind (done) ->
         @test.run done
