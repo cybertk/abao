@@ -58,8 +58,8 @@ class TestRunner
       return callback(err) if err
       return callback(null, {}) if options.names
 
-      mocha.run ->
-        callback(null, mocha.reporter.stats)
+      mocha.run (failures) ->
+        callback(null, failures)
 
 
 module.exports = TestRunner

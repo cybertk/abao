@@ -29,6 +29,7 @@
   "homepage": "https://github.com/cybertk/abao",
   "devDependencies": {
     "chai": "~1.9.0",
+    "coffee-errors": "^0.8.6",
     "coffee-script": "~1.8.0",
     "express": "^4.9.5",
     "grunt": "~0.4.0",
@@ -37,7 +38,10 @@
     "grunt-contrib-watch": "~0.6.0",
     "grunt-mocha-test": "~0.12.0",
     "jit-grunt": "~0.8.0",
-    "mocha": "~1.21.0",
+    "nock": "^0.48.0",
+    "proxyquire": "^1.0.1",
+    "sinon": "^1.10.3",
+    "sinon-chai": "^2.6.0",
     "time-grunt": "~1.0.0"
   },
   "dependencies": {

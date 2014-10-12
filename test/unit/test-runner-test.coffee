@@ -1,5 +1,6 @@
-{assert} = require 'chai'
+chai = require 'chai'
 sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
 _ = require 'underscore'
 mocha = require 'mocha'
 proxyquire = require('proxyquire').noCallThru()
@@ -15,6 +16,10 @@ TestRunner = proxyquire '../../lib/test-runner', {
 }
 
 
+assert = chai.assert
+should = chai.should()
+chai.use(sinonChai);
+
 runner = null
 
 describe 'Test Runner', ->
@@ -26,6 +31,7 @@ describe 'Test Runner', ->
       runner = ''
       beforeHook = ''
       afterHook = ''
+      runCallback = ''
       test = new Test()
       test.name = 'GET /machines -> 200'
       test.request.path = '/machines'
@@ -38,6 +44,11 @@ describe 'Test Runner', ->
 
       before (done) ->
         runner = new TestRunner "http://abao.io"
+
+        runCallback = sinon.stub()
+        runCallback(done)
+        runCallback.yield()
+
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
         sinon.stub mocha.Suite, 'create', (parent, title) ->
@@ -56,14 +67,14 @@ describe 'Test Runner', ->
           suiteStub
 
         sinon.stub mochaStub, 'run', (callback) ->
-          callback()
+          callback(0)
 
         sinon.stub hooksStub, 'runBefore', (test, callback) ->
           callback()
         sinon.stub hooksStub, 'runAfter', (test, callback) ->
           callback()
 
-        runner.run [test], hooksStub, done
+        runner.run [test], hooksStub, runCallback
 
       after ->
         mochaStub = runner.mocha
@@ -73,8 +84,13 @@ describe 'Test Runner', ->
         hooksStub.runBefore.restore()
         hooksStub.runAfter.restore()
 
+        runCallback = ''
+
       it 'should run mocha', ->
         assert.ok runner.mocha.run.calledOnce
+
+      it 'should invoke callback with failures', ->
+        runCallback.should.be.calledWith null, 0
 
       it 'should generated mocha suite', ->
         suites = runner.mocha.suite.suites
