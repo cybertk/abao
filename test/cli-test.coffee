@@ -165,6 +165,7 @@ describe "Command line interface", ->
       it 'should print count of tests will run', ->
         assert.include stdout, '1 passing'
 
+
     describe "when printing test cases with -n", ->
       before (done) ->
         cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -n"
@@ -179,3 +180,31 @@ describe "Command line interface", ->
 
       it 'should not run tests', () ->
         assert.notInclude stdout, '0 passing'
+
+
+    describe 'when loading hooks with --hookfiles', () ->
+
+      recievedRequest = {}
+
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hookfiles=./test/fixtures/*_hooks.*"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          recievedRequest = req
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            type: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'should modify the transaction with hooks', () ->
+        assert.equal recievedRequest.headers['header'], '123232323'

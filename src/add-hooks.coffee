@@ -12,7 +12,7 @@ addHooks = (hooks, pattern) ->
 
     files = glob.sync pattern
 
-    console.log 'Found Hookfiles: ' + files
+    console.error 'Found Hookfiles: ' + files
 
     try
       for file in files

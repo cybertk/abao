@@ -53,7 +53,6 @@ describe 'Test Runner', ->
             afterHook = fn
             originSuiteAfterAll.call(suiteStub, title, fn)
 
-          console.log('ck', suiteStub)
           suiteStub
 
         sinon.stub mochaStub, 'run', (callback) ->

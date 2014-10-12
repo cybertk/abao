@@ -16,7 +16,7 @@ class Abao
     @tests = []
     @hooks = hooks
 
-  run: (callback) ->
+  run: (done) ->
     config = @configuration
     tests = @tests
     hooks = @hooks
@@ -35,12 +35,13 @@ class Abao
       # Parse hooks
       (callback) ->
         addHooks hooks, config.options.hookfiles
+        callback()
       ,
       # Run tests
       (callback) ->
         runner = new Runner config.server, config.options
-        runner.run tests, callback
-    ], callback
+        runner.run tests, hooks, callback
+    ], done
 
 
 module.exports = Abao

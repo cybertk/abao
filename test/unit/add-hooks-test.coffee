@@ -66,20 +66,20 @@ describe 'addHooks(hooks, pattern, callback)', () ->
       beforeEach () ->
         sinon.stub pathStub, 'resolve', (path, rel) ->
           throw new Error()
-        sinon.spy console, 'log'
+        sinon.spy console, 'error'
         sinon.stub globStub, 'sync', (pattern) ->
           ['invalid.xml', 'unexist.md']
         sinon.spy hooksStub, 'addHook'
 
       afterEach () ->
         pathStub.resolve.restore()
-        console.log.restore()
+        console.error.restore()
         globStub.sync.restore()
         hooksStub.addHook.restore()
 
       it 'should log an warning', () ->
         addHooks(hooksStub, pattern)
-        assert.ok console.log.called
+        assert.ok console.error.called
 
       it 'should not attach the hooks', () ->
         addHooks(hooksStub, pattern)

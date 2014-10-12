@@ -45,7 +45,7 @@ class TestRunner
 
       suite.addTest new Mocha.Test 'Validate', _.bind (done) ->
         @test.run done
-      , {test}
+      , {hooks, test}
 
       callback()
 
