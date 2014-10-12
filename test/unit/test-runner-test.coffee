@@ -1,11 +1,11 @@
 {assert} = require 'chai'
 sinon = require 'sinon'
 _ = require 'underscore'
+mocha = require 'mocha'
 proxyquire = require('proxyquire').noCallThru()
 
 Test = require '../../lib/test'
 
-mocha = require 'mocha'
 hooksStub = require '../../lib/hooks'
 suiteStub = ''
 
@@ -68,6 +68,7 @@ describe 'Test Runner', ->
       after ->
         mochaStub = runner.mocha
         mochaStub.run.restore()
+        mocha.Suite.create.restore()
 
         hooksStub.runBefore.restore()
         hooksStub.runAfter.restore()
@@ -223,3 +224,53 @@ describe 'Test Runner', ->
 
       it 'should add headers into test', ->
         assert.deepEqual recievedTest.request.headers, header
+
+    describe 'run test with hooks only indicated by `hooks-only`', ->
+
+      test = new Test()
+      test.name = 'GET /machines -> 200'
+      test.request.path = '/machines'
+      test.request.method = 'GET'
+      test.response.status = 200
+      test.response.schema = {}
+
+      suiteStub = ''
+
+      before (done) ->
+
+        options =
+          'hooks-only': true
+
+        runner = new TestRunner 'http://localhost:3000', options
+
+        mochaStub = runner.mocha
+        originSuiteCreate = mocha.Suite.create
+        sinon.stub mocha.Suite, 'create', (parent, title) ->
+          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
+
+          # Stub suite
+          sinon.spy suiteStub, 'addTest'
+          sinon.spy suiteStub, 'beforeAll'
+          sinon.spy suiteStub, 'afterAll'
+
+          suiteStub
+
+        sinon.stub mochaStub, 'run', (callback) ->
+          callback()
+
+        runner.run [test], hooksStub, done
+
+      after ->
+        runner.mocha.run.restore()
+        mocha.Suite.create.restore()
+        suiteStub.addTest.restore()
+        suiteStub.beforeAll.restore()
+        suiteStub.afterAll.restore()
+
+      it 'should run mocha', ->
+        assert.ok runner.mocha.run.called
+
+      it 'should add a pending test', ->
+        # TODO(quanlong): Implement this test
+        # console.log suiteStub.addTest.printf('%n-%c-%C')
+        # assert.ok suiteStub.addTest.calledWithExactly('GET /machines -> 200')

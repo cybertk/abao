@@ -29,6 +29,11 @@ class TestRunner
         suite.addTest new Mocha.Test 'Skip'
         return callback()
 
+      # No Hooks for this test
+      if not hooks.hasName(test.name) and options['hooks-only']
+        suite.addTest new Mocha.Test 'Skip as no hooks defined'
+        return callback()
+
       # Update test.request
       req = test.request
       req.server = server
