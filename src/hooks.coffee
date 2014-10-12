@@ -1,4 +1,5 @@
 async = require 'async'
+_ = require 'underscore'
 
 class Hooks
   constructor: () ->
@@ -44,5 +45,8 @@ class Hooks
     async.eachSeries @afterHooks[test.name], (hook, callback) ->
       hook test, callback
     , callback
+
+  hasName: (name) =>
+    _.has(@beforeHooks, name) || _.has(@afterHooks, name)
 
 module.exports = new Hooks()

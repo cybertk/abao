@@ -65,6 +65,43 @@ describe 'Hooks', () ->
       hooks.runAfterAll (done) ->
         testDone()
 
+  describe 'when check has name', () ->
+
+    it 'should return true if in before hooks', ->
+      hooks.beforeHooks =
+        foo: (test, done) ->
+          done()
+
+      assert.ok hooks.hasName 'foo'
+
+      hooks.beforeHooks = {}
+
+    it 'should return true if in after hooks', ->
+      hooks.afterHooks =
+        foo: (test, done) ->
+          done()
+
+      assert.ok hooks.hasName 'foo'
+
+      hooks.afterHooks = {}
+
+    it 'should return true if in both before and after hooks', ->
+      hooks.beforeHooks =
+        foo: (test, done) ->
+          done()
+      hooks.afterHooks =
+        foo: (test, done) ->
+          done()
+
+      assert.ok hooks.hasName 'foo'
+
+      hooks.beforeHooks = {}
+      hooks.afterHooks = {}
+
+    it 'should return false if in neither before nor after hooks', ->
+      assert.notOk hooks.hasName 'foo'
+
+
   describe 'when running hooks', () ->
 
     beforeHook = ''
