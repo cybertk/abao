@@ -208,3 +208,30 @@ describe "Command line interface", ->
 
       it 'should modify the transaction with hooks', () ->
         assert.equal recievedRequest.headers['header'], '123232323'
+
+
+    describe 'when run with --hooks-only', () ->
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hooks-only"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            type: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0
+
+      it 'should not run test without hooks', ->
+        assert.include stdout, '1 pending'

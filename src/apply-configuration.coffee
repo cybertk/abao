@@ -29,6 +29,7 @@ applyConfiguration = (config) ->
       header: null
       names: false
       hookfiles: null
+      'hooks-only': false
 
   # normalize options and config
   for own key, value of config
