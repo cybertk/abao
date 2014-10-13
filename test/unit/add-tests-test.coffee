@@ -15,7 +15,7 @@ describe '#addTests', ->
 
   describe '#run', ->
 
-    describe 'With single get raml', ->
+    describe 'when single get raml', ->
 
       tests = []
       callback = ''
@@ -62,3 +62,31 @@ describe '#addTests', ->
         """
         assert.isNull res.headers
         assert.isNull res.body
+
+    describe 'when two-level raml', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/two-levels.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback
+        , done
+
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 2 test', ->
+        assert.lengthOf tests, 2
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /machines -> 200'
+        assert.equal tests[1].name, 'GET /machines/{machine_id} -> 200'

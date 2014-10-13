@@ -13,7 +13,10 @@ addTests = (raml, tests, callback) ->
     async.each resource.methods, (endpoint, callback2) ->
       for status, res of endpoint.responses
         test = new Test
-        test.request.path = resource.relativeUri
+        if raml?.relativeUri
+          test.request.path = raml.relativeUri + resource.relativeUri
+        else
+          test.request.path = resource.relativeUri
         test.request.method = endpoint.method.toUpperCase()
 
         test.response.status = status
