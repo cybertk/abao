@@ -73,7 +73,7 @@ class Test
       schema = @parseSchema @response.schema
       assert.jsonSchema (JSON.parse body), schema, 'Response Body'
 
-    # Update @response
-    @response.body = JSON.parse body
+      # Update @response
+      @response.body = JSON.parse body
 
 module.exports = Test
