@@ -17,7 +17,7 @@ addTests = (raml, tests, callback) ->
         test.request.method = endpoint.method.toUpperCase()
 
         test.response.status = status
-        test.response.schema = res.body['application/json'].schema
+        test.response.schema = res?.body?['application/json']?.schema
 
         test.name = "#{test.request.method} #{test.request.path} -> #{test.response.status}"
         tests.push test

@@ -84,3 +84,34 @@ describe 'Test', ->
         # changed properties
         # assert.equal response.headers, 201
         assert.deepEqual response.body, machine
+
+
+  describe '#assertResponse', ->
+
+    errorStub = ''
+    responseStub = ''
+    bodyStub = ''
+
+    test = new Test()
+    test.response.status = 201
+    test.response.schema =
+      $schema: 'http://json-schema.org/draft-04/schema#'
+      type: 'object'
+      properties:
+        type:
+          type: 'string'
+        name:
+          type: 'string'
+
+    describe 'when against valid response', ->
+
+      it 'should should pass all asserts', ->
+
+        errorStub = null
+        responseStub =
+          statusCode : 201
+        bodyStub = JSON.stringify
+          type: 'foo'
+          name: 'bar'
+        # assert.doesNotThrow
+        test.assertResponse(errorStub, responseStub, bodyStub)
