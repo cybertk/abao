@@ -44,7 +44,7 @@ module.exports = (grunt) ->
           # Unit Test
           'test/unit/*.coffee'
           # Acceptance Test
-          # 'test/cli-test.coffee'
+          'test/cli-test.coffee'
         ]
 
   grunt.registerTask "default", [

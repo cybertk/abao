@@ -94,7 +94,7 @@ describe 'Test', ->
 
     test = new Test()
     test.response.status = 201
-    test.response.schema =
+    test.response.schema = JSON.stringify
       $schema: 'http://json-schema.org/draft-04/schema#'
       type: 'object'
       properties:
