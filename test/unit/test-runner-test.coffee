@@ -144,7 +144,37 @@ describe 'Test Runner', ->
       it 'should called #test.run', ->
         assert.ok test.run.calledOnce
 
-    describe 'and test has no schema', ->
+    describe 'when test has no respones code', ->
+      before (done) ->
+
+        test = new Test()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+
+        runner = new TestRunner "http://localhost:3000"
+        sinon.stub runner.mocha, 'run', (callback) -> callback()
+        sinon.stub test, 'run', (callback) -> callback()
+
+        runner.run [test], hooksStub, done
+
+      after ->
+        runner.mocha.run.restore()
+
+      it 'should run mocha', ->
+        assert.ok runner.mocha.run.called
+
+      it 'should generated mocha suite', ->
+        suites = runner.mocha.suite.suites
+        assert.equal suites.length, 1
+        assert.equal suites[0].title, 'GET /machines -> 200'
+
+      it 'should generated pending mocha test', ->
+        tests = runner.mocha.suite.suites[0].tests
+        assert.equal tests.length, 1
+        assert.ok tests[0].pending
+
+    describe 'when test has no response schema', ->
       before (done) ->
 
         test = new Test()
@@ -170,10 +200,10 @@ describe 'Test Runner', ->
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generated pending mocha test', ->
+      it 'should not generated pending mocha test', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
-        assert.ok tests[0].pending
+        assert.notOk tests[0].pending
 
   describe '#run with options', ->
 

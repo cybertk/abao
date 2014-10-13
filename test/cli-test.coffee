@@ -79,7 +79,7 @@ describe "Command line interface", ->
         assert.equal 1, report.passes.length
 
       it 'should print correct title for response', ->
-        assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate'
+        assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
     describe "when executing the command and raml includes other ramls", () ->
       before (done) ->

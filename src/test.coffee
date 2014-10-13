@@ -62,15 +62,16 @@ class Test
 
   assertResponse: (error, response, body) =>
     assert.isNull error
-    assert.isNotNull response
+    assert.isNotNull response, 'Response'
 
     # Status code
-    assert.equal response.statusCode, @response.status
+    assert.equal response.statusCode, @response.status, 'Response Code'
 
     # Body
     assert.isNotNull body
-    schema = @parseSchema @response.schema
-    assert.jsonSchema (JSON.parse body), schema
+    if @response.schema
+      schema = @parseSchema @response.schema
+      assert.jsonSchema (JSON.parse body), schema, 'Response Body'
 
     # Update @response
     @response.body = JSON.parse body

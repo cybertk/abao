@@ -25,8 +25,8 @@ class TestRunner
       suite = Mocha.Suite.create mocha.suite, test.name
 
       # No Response defined
-      if !test.response.status or !test.response.schema
-        suite.addTest new Mocha.Test 'Skip'
+      if !test.response.status
+        suite.addTest new Mocha.Test 'Skip as no response code defined'
         return callback()
 
       # No Hooks for this test
@@ -34,10 +34,11 @@ class TestRunner
         suite.addTest new Mocha.Test 'Skip as no hooks defined'
         return callback()
 
+      {request, response} = test
+
       # Update test.request
-      req = test.request
-      req.server = server
-      _.extend(req.headers, options.header)
+      request.server = server
+      _.extend(request.headers, options.header)
 
       if hooks
         suite.beforeAll _.bind (done) ->
@@ -48,7 +49,10 @@ class TestRunner
           @hooks.runAfter @test, done
         , {hooks, test}
 
-      suite.addTest new Mocha.Test 'Validate', _.bind (done) ->
+      # Vote test name
+      title = if response.schema then 'Validate response code and body' else 'Validate response code only'
+
+      suite.addTest new Mocha.Test title, _.bind (done) ->
         @test.run done
       , {hooks, test}
 
