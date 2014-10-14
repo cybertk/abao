@@ -23,6 +23,7 @@ class Test
       params: {}
       query: {}
       headers: {}
+      body: null
 
     @response =
       status: ''
@@ -36,10 +37,10 @@ class Test
 
   run: (callback) ->
     url = @request.server + @request.path
-    {method, headers} = @request
+    {method, headers, body} = @request
     assertResponse = @assertResponse
 
-    options = {url, headers, method}
+    options = {url, headers, method, body}
 
     async.waterfall [
       (callback) ->

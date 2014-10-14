@@ -15,7 +15,7 @@ describe '#addTests', ->
 
   describe '#run', ->
 
-    describe 'when single get raml', ->
+    describe 'when raml contains single get', ->
 
       tests = []
       callback = ''
@@ -48,6 +48,7 @@ describe '#addTests', ->
         assert.deepEqual req.params, {}
         assert.deepEqual req.query, {}
         assert.deepEqual req.headers, {}
+        assert.isNull req.body
         assert.equal req.method, 'GET'
 
       it 'should setup test.response', ->
@@ -63,7 +64,53 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when three-levels raml', ->
+    describe 'when raml contains one GET and one POST', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/1-get-1-post.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback
+        , done
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 2 test', ->
+        assert.lengthOf tests, 2
+
+      it 'should setup test.request of POST', ->
+        req = tests[1].request
+
+        assert.equal req.path, '/machines'
+        assert.deepEqual req.params, {}
+        assert.deepEqual req.query, {}
+        assert.deepEqual req.headers,
+          'Content-Type': 'application/json'
+        assert.deepEqual JSON.parse(req.body), { "type": "Kulu", "name": "Mike" }
+        assert.equal req.method, 'POST'
+
+      it 'should setup test.response of POST', ->
+        res = tests[1].response
+
+        assert.equal res.status, 201
+        assert.equal res.schema, """
+          type: 'string'
+          name: 'string'
+          
+        """
+        assert.isNull res.headers
+        assert.isNull res.body
+
+    describe 'when raml contains three-levels endpoints', ->
 
       tests = []
       callback = ''

@@ -34,6 +34,7 @@ describe 'Test', ->
           q: 'value'
         test.request.headers =
           key: 'value'
+        test.request.body = 'http-body'
         test.response.status = 201
         test.response.schema = """
           type: 'string'
@@ -55,9 +56,10 @@ describe 'Test', ->
         # assert.ok requestStub.calledWith({url: 'http://abao.io/machines'})
         assert.ok requestStub.calledWith(
           url: 'http://abao.io/machines'
+          method: 'POST'
           headers:
             key: 'value'
-          method: 'POST'
+          body: 'http-body'
         ), requestStub.printf('%C')
 
       it 'should not modify @name', ->
