@@ -27,10 +27,12 @@ class Hooks
       hooks[name] = [hook]
 
   runBeforeAll: (callback) =>
-    async.series @beforeAllHooks, callback
+    async.series @beforeAllHooks, (err, results) ->
+      callback(err)
 
   runAfterAll: (callback) =>
-    async.series @afterAllHooks, callback
+    async.series @afterAllHooks, (err, results) ->
+      callback(err)
 
   runBefore: (test, callback) =>
     return callback() unless @beforeHooks[test.name]

@@ -29,9 +29,12 @@ describe 'Test Runner', ->
     describe 'when test is valid', ->
 
       runner = ''
+      beforeAllHook = ''
+      afterAllHook = ''
       beforeHook = ''
       afterHook = ''
       runCallback = ''
+      mochaCallback = ''
       test = new Test()
       test.name = 'GET /machines -> 200'
       test.request.path = '/machines'
@@ -48,6 +51,16 @@ describe 'Test Runner', ->
         runCallback = sinon.stub()
         runCallback(done)
         runCallback.yield()
+
+        beforeAllHook = sinon.stub()
+        beforeAllHook.callsArg(0)
+        afterAllHook = sinon.stub()
+        afterAllHook.callsArg(0)
+
+        hooksStub.beforeAllHooks = [beforeAllHook]
+        hooksStub.afterAllHooks = [afterAllHook]
+
+        mochaCallback = sinon.stub()
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
@@ -67,6 +80,7 @@ describe 'Test Runner', ->
           suiteStub
 
         sinon.stub mochaStub, 'run', (callback) ->
+          mochaCallback()
           callback(0)
 
         sinon.stub hooksStub, 'runBefore', (test, callback) ->
@@ -77,6 +91,9 @@ describe 'Test Runner', ->
         runner.run [test], hooksStub, runCallback
 
       after ->
+        hooksStub.beforeAllHooks = [beforeAllHook]
+        hooksStub.afterAllHooks = [afterAllHook]
+
         mochaStub = runner.mocha
         mochaStub.run.restore()
         mocha.Suite.create.restore()
@@ -85,6 +102,13 @@ describe 'Test Runner', ->
         hooksStub.runAfter.restore()
 
         runCallback = ''
+        mochaCallback = ''
+
+      it 'should run beforeAll hooks before tests', ->
+        assert.ok beforeAllHook.calledBefore(runner.mocha.run)
+
+      it 'should run afterAll hooks', ->
+        assert.ok afterAllHook.calledAfter(mochaCallback)
 
       it 'should run mocha', ->
         assert.ok runner.mocha.run.calledOnce

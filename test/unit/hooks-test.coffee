@@ -198,3 +198,53 @@ describe 'Hooks', () ->
 
         it 'should not run hook', ->
           assert.ok afterHook.notCalled
+
+  describe 'when running beforeAll/afterAll', () ->
+
+    funcs = []
+
+    before () ->
+      for i in [1..4]
+        hook = sinon.stub()
+        hook.callsArg(0)
+        funcs.push hook
+
+      hooks.beforeAllHooks = [funcs[0], funcs[1]]
+      hooks.afterAllHooks = [funcs[2], funcs[3]]
+
+    after () ->
+      hooks.beforeAllHooks = []
+      hooks.afterAllHooks = []
+      funcs = []
+
+    describe 'on beforeAll hook', () ->
+      callback = ''
+
+      before (done) ->
+        callback = sinon.stub()
+        callback.returns(done())
+
+        hooks.runBeforeAll callback
+
+      it 'should invoke callback', ->
+        assert.ok callback.calledWithExactly(undefined), callback.printf('%C')
+
+      it 'should run hook', () ->
+        assert.ok funcs[0].called
+        assert.ok funcs[1].called
+
+    describe 'on afterAll hook', () ->
+      callback = ''
+
+      before (done) ->
+        callback = sinon.stub()
+        callback.returns(done())
+
+        hooks.runAfterAll callback
+
+      it 'should invoke callback', ->
+        assert.ok callback.calledWithExactly(undefined), callback.printf('%C')
+
+      it 'should run hook', ->
+        assert.ok funcs[2].called
+        assert.ok funcs[3].called
