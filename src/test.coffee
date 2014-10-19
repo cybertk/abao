@@ -72,9 +72,14 @@ class Test
     assert.isNotNull body
     if @response.schema
       schema = @parseSchema @response.schema
-      assert.jsonSchema (JSON.parse body), schema, 'Response Body'
+      json = JSON.parse body
+      assert.jsonSchema json, schema, """
+        Got unexpected response body:
+        #{JSON.stringify(json, null, 4)}
+        Error
+      """
 
       # Update @response
-      @response.body = JSON.parse body
+      @response.body = json
 
 module.exports = Test
