@@ -46,12 +46,6 @@ configuration = {
 
 abao = new Abao(configuration);
 
-process.on( 'SIGINT', function() {
-  abao.transactionsComplete(function() {
-    process.exit(0);
-  });
-});
-
 abao.run(function(error, failures){
   if (error) {
     if (error.message) {
