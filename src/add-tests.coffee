@@ -34,7 +34,7 @@ addTests = (raml, tests, parentUri, callback) ->
         test.request.method = method
         if api.body?['application/json']
           test.request.headers['Content-Type'] = 'application/json'
-          test.request.body = api.body['application/json']?.example
+          test.request.body = JSON.parse api.body['application/json']?.example
 
         # Update test.response
         test.response.status = status

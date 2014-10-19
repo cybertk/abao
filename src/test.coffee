@@ -23,7 +23,7 @@ class Test
       params: {}
       query: {}
       headers: {}
-      body: null
+      body: {}
 
     @response =
       status: ''
@@ -40,6 +40,7 @@ class Test
     {method, headers, body} = @request
     assertResponse = @assertResponse
 
+    body = JSON.stringify body
     options = {url, headers, method, body}
 
     async.waterfall [

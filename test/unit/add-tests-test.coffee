@@ -48,7 +48,7 @@ describe '#addTests', ->
         assert.deepEqual req.params, {}
         assert.deepEqual req.query, {}
         assert.deepEqual req.headers, {}
-        assert.isNull req.body
+        assert.deepEqual req.body, {}
         assert.equal req.method, 'GET'
 
       it 'should setup test.response', ->
@@ -95,7 +95,9 @@ describe '#addTests', ->
         assert.deepEqual req.query, {}
         assert.deepEqual req.headers,
           'Content-Type': 'application/json'
-        assert.deepEqual JSON.parse(req.body), { "type": "Kulu", "name": "Mike" }
+        assert.deepEqual req.body,
+          type: 'Kulu'
+          name: 'Mike'
         assert.equal req.method, 'POST'
 
       it 'should setup test.response of POST', ->
@@ -105,7 +107,7 @@ describe '#addTests', ->
         assert.equal res.schema, """
           type: 'string'
           name: 'string'
-          
+
         """
         assert.isNull res.headers
         assert.isNull res.body

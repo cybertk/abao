@@ -34,7 +34,8 @@ describe 'Test', ->
           q: 'value'
         test.request.headers =
           key: 'value'
-        test.request.body = 'http-body'
+        test.request.body =
+          body: 'value'
         test.response.status = 201
         test.response.schema = """
           type: 'string'
@@ -59,7 +60,8 @@ describe 'Test', ->
           method: 'POST'
           headers:
             key: 'value'
-          body: 'http-body'
+          body: JSON.stringify
+            body: 'value'
         ), requestStub.printf('%C')
 
       it 'should not modify @name', ->
