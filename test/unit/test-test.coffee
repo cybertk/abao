@@ -90,6 +90,99 @@ describe 'Test', ->
         assert.deepEqual response.body, machine
 
 
+    describe 'of test contains params', ->
+
+      test = ''
+      machine = ''
+
+      before (done) ->
+
+        test = new Test()
+        test.name = 'PUT /machines/{machine_id} -> 200'
+        test.request.server = 'http://abao.io'
+        test.request.path = '/machines/{machine_id}'
+        test.request.method = 'PUT'
+        test.request.params =
+          machine_id: '1'
+        test.request.query =
+          q: 'value'
+        test.request.headers =
+          key: 'value'
+        test.request.body =
+          body: 'value'
+        test.response.status = 200
+        test.response.schema = """
+          type: 'string'
+          name: 'string'
+        """
+
+        machine =
+          type: 'foo'
+          name: 'bar'
+
+        requestStub.callsArgWith(1, null, {statusCode: 200}, JSON.stringify(machine))
+        test.run done
+
+      after ->
+        requestStub.restore()
+
+      it 'should call #request', ->
+        assert.ok requestStub.called
+        assert.ok requestStub.calledWith(
+          url: 'http://abao.io/machines/1'
+          method: 'PUT'
+          headers:
+            key: 'value'
+          body: JSON.stringify
+            body: 'value'
+        ), requestStub.printf('%C')
+
+      it 'should not modify @name', ->
+        assert.equal test.name, 'PUT /machines/{machine_id} -> 200'
+
+      it 'should not modify @request', ->
+        request = test.request
+        assert.equal request.server, 'http://abao.io'
+        assert.equal request.path, '/machines/{machine_id}'
+        assert.equal request.method, 'PUT'
+        assert.deepEqual request.params, {machine_id: '1'}
+        assert.deepEqual request.query, {q: 'value'}
+        assert.deepEqual request.headers, {key: 'value'}
+
+      it 'should update @response', ->
+        response = test.response
+        # Unchanged properties
+        assert.equal response.status, 200
+        assert.deepEqual response.schema, """
+          type: 'string'
+          name: 'string'
+        """
+        assert.deepEqual response.body, machine
+
+
+  describe '#url', ->
+
+    describe 'when call with path does not contain param', ->
+      test = new Test()
+      test.request.path = '/machines'
+
+      it 'should return origin path', ->
+        assert.equal test.url(), '/machines'
+
+    describe 'when call with path contains param', ->
+      test = new Test()
+      test.request.path = '/machines/{machine_id}/parts/{part_id}'
+      test.request.params =
+        machine_id: 'tianmao'
+        part_id: 2
+
+      it 'should replace all params', ->
+        assert.equal test.url(), '/machines/tianmao/parts/2'
+
+      it 'should not touch origin request.path', ->
+        assert.equal test.request.path, '/machines/{machine_id}/parts/{part_id}'
+
+
   describe '#assertResponse', ->
 
     errorStub = ''

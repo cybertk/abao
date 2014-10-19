@@ -32,15 +32,20 @@ class Test
       body: null
 
   url: () ->
-    req = @request
-    return "#{req.protocol}://#{req.hostname}#{req.path}"
+    path = @request.path
+
+    for key, value of @request.params
+      path = path.replace "{#{key}}", value
+
+    return @request.server + path
 
   run: (callback) ->
-    url = @request.server + @request.path
+    url = @url()
     {method, headers, body} = @request
     assertResponse = @assertResponse
 
     body = JSON.stringify body
+
     options = {url, headers, method, body}
 
     async.waterfall [

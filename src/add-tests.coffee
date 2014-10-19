@@ -17,6 +17,12 @@ addTests = (raml, tests, parentUri, callback) ->
   # Iterate endpoint
   async.each raml.resources, (resource, callback) ->
     path = parentUri + resource.relativeUri
+    params = {}
+
+    # Setup param
+    if resource.uriParameters
+      for key, param of resource.uriParameters
+        params[key] = param.example
 
     # Iterate response method
     async.each resource.methods, (api, callback) ->
@@ -35,6 +41,7 @@ addTests = (raml, tests, parentUri, callback) ->
         if api.body?['application/json']
           test.request.headers['Content-Type'] = 'application/json'
           test.request.body = JSON.parse api.body['application/json']?.example
+        test.request.params = params
 
         # Update test.response
         test.response.status = status

@@ -140,3 +140,8 @@ describe '#addTests', ->
         assert.equal tests[0].name, 'GET /machines -> 200'
         assert.equal tests[1].name, 'DELETE /machines/{machine_id} -> 204'
         assert.equal tests[2].name, 'GET /machines/{machine_id}/parts -> 200'
+
+      it 'should set request.param', ->
+        test = tests[1]
+        assert.deepEqual test.request.params,
+          machine_id: '1'

@@ -16,6 +16,12 @@ version: v1
                 name: 'string'
               ]
   /{machine_id}:
+    uriParameters:
+      machine_id:
+        description: |
+          The ID of the Machine
+        type: string
+        example: '1'
     delete:
       responses:
         204:
