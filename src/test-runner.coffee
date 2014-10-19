@@ -51,9 +51,6 @@ class TestRunner
 
     async.waterfall [
       (callback) ->
-        hooks.runBeforeAll callback
-      , # Generate mocha tests
-      (callback) ->
         async.each tests, (test, done) ->
           # list tests
           if options.names
@@ -71,11 +68,14 @@ class TestRunner
       (callback) ->
         return callback(null, 0) if options.names
 
+        mocha.suite.beforeAll _.bind (done) ->
+          @hooks.runBeforeAll done
+        , {hooks}
+        mocha.suite.afterAll _.bind (done) ->
+          @hooks.runAfterAll done
+        , {hooks}
+
         mocha.run (failures) ->
-          callback(null, failures)
-      , # Run after hook
-      (failures, callback) ->
-        hooks.runAfterAll (err) ->
           callback(null, failures)
     ], callback
 

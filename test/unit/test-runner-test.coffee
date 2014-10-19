@@ -34,7 +34,6 @@ describe 'Test Runner', ->
       beforeHook = ''
       afterHook = ''
       runCallback = ''
-      mochaCallback = ''
       test = new Test()
       test.name = 'GET /machines -> 200'
       test.request.path = '/machines'
@@ -60,7 +59,9 @@ describe 'Test Runner', ->
         hooksStub.beforeAllHooks = [beforeAllHook]
         hooksStub.afterAllHooks = [afterAllHook]
 
-        mochaCallback = sinon.stub()
+        beforeHook = sinon.stub()
+        beforeHook.callsArg(1)
+        hooksStub.beforeHooks[test.name] = beforeHook
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
@@ -80,8 +81,10 @@ describe 'Test Runner', ->
           suiteStub
 
         sinon.stub mochaStub, 'run', (callback) ->
-          mochaCallback()
           callback(0)
+
+        sinon.spy mochaStub.suite, 'beforeAll'
+        sinon.spy mochaStub.suite, 'afterAll'
 
         sinon.stub hooksStub, 'runBefore', (test, callback) ->
           callback()
@@ -102,13 +105,11 @@ describe 'Test Runner', ->
         hooksStub.runAfter.restore()
 
         runCallback = ''
-        mochaCallback = ''
 
-      it 'should run beforeAll hooks before tests', ->
-        assert.ok beforeAllHook.calledBefore(runner.mocha.run)
-
-      it 'should run afterAll hooks', ->
-        assert.ok afterAllHook.calledAfter(mochaCallback)
+      it 'should generate beforeAll hooks', ->
+        mochaStub = runner.mocha
+        assert.ok mochaStub.suite.beforeAll.called
+        assert.ok mochaStub.suite.afterAll.called
 
       it 'should run mocha', ->
         assert.ok runner.mocha.run.calledOnce
@@ -228,6 +229,70 @@ describe 'Test Runner', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
+
+    describe 'when test throws AssertionError', ->
+
+      afterAllHook = ''
+
+      before (done) ->
+
+        test = new Test()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+        test.response.status = 200
+
+        afterAllHook = sinon.stub()
+        afterAllHook.callsArg(0)
+
+        hooksStub.afterAllHooks = [afterAllHook]
+
+        runner = new TestRunner "http://localhost:3000"
+        # sinon.stub runner.mocha, 'run', (callback) -> callback()
+        testStub = sinon.stub test, 'run'
+        testStub.throws('AssertionError')
+
+        runner.run [test], hooksStub, done
+
+      after ->
+        afterAllHook = ''
+
+      it 'should call afterAll hook', ->
+        afterAllHook.should.have.been.called
+
+    describe 'when beforeAllHooks throws Uncaught Error', ->
+
+      beforeAllHook = ''
+      afterAllHook = ''
+
+      before (done) ->
+
+        test = new Test()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+        test.response.status = 200
+
+        beforeAllHook = sinon.stub()
+        beforeAllHook.throws('Error')
+        afterAllHook = sinon.stub()
+        afterAllHook.callsArg(0)
+
+        hooksStub.beforeAllHooks = [beforeAllHook]
+        hooksStub.afterAllHooks = [afterAllHook]
+
+        runner = new TestRunner "http://localhost:3000"
+        sinon.stub test, 'run', (callback) ->
+          callback()
+
+        runner.run [test], hooksStub, done
+
+      after ->
+        beforeAllHook = ''
+        afterAllHook = ''
+
+      it 'should call afterAll hook', ->
+        afterAllHook.should.have.been.called
 
   describe '#run with options', ->
 
