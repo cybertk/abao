@@ -24,15 +24,13 @@ options =
     description: "Run test only if defined either before or after hooks"
     default: false
 
-  user:
-    alias: "u"
-    description: "Basic Auth credentials in the form username:password.\n"
-    default: null
+  grep:
+    alias: "g"
+    description: "only run tests matching <pattern>"
 
-  method:
-    alias: "m"
-    description: "Restrict tests to a particular HTTP method (GET, PUT, POST, DELETE, PATCH). This option can be used multiple times to allow multiple methods.\n"
-    default: []
+  invert:
+    alias: "i"
+    description: "inverts --grep matches"
 
   help:
     description: "Show usage information.\n"

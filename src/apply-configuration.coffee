@@ -29,6 +29,8 @@ applyConfiguration = (config) ->
       header: null
       names: false
       hookfiles: null
+      grep: ''
+      invert: false
       'hooks-only': false
 
   # normalize options and config
