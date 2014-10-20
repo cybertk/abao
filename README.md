@@ -31,23 +31,115 @@
 
 $ abao api.raml http://api.example.com
 
-## Writing testable blueprints
+## Writing testable RAML
 
-Abao validates the response from server against jsonschema defines in [RAML][], so there must be **schema** section in defined in [RAML][].
+**Abao** validates the response from server against jsonschema defines in [RAML][], so there must be **schema** section in defined in [RAML][].
 
-### Hooks
+## Hooks
+
+**Abao** can be configured to use hookfiles to do basic setup/teardown between each validation (specified with the --hookfiles flag). Hookfiles can be in javascript or coffeescript, and must import the hook methods.
+
+Requests are identified by their name, which is derived from the structure of the RAML. You can print a list of the generated names with --names.
 
 ### Example
 
+Get Names:
+
+```bash
+$ abao single-get.raml --names
+GET /machines -> 200
+```
+
+Write a hookfile:
+
+```coffee
+{before, after} = require 'hooks'
+
+before 'GET /machines -> 200', (test, done) ->
+  test.request.query =
+    color: 'red'
+  done()
+
+after 'GET /machines -> 200', (test, done) ->
+  machine = test.response.body[0]
+  console.log machine.name
+```
+
+Run validation:
+
+```bash
+$ abao single-get.raml http://api.example.com --hookfiles=*_hooks.*
+```
+
+**Abao** also supports callbacks before and after all tests:
+
+```coffee
+{beforeAll, afterAll} = require 'hooks'
+
+beforeAll (done) ->
+  # do setup
+  done()
+
+afterAll (done) ->
+  # do teardown
+  done()
+```
+
+If `beforeAll`, `afterAll`, `before` and `after` are called multiple times, the callbacks are executed serially in the order they were called.
+
+### test.request
+
+- `server` - Server address, provided from CLI.
+- `path` - API endpoint path, parsed from RAML.
+- `method` - http method, parsed from RAML.
+- `params` - URI parameters, parsed from RAML `uriParameters` section, default to `{}`.
+- `query` - object containing querystring values to be appended to the `path`, default to `{}`.
+- `headers` - http headers, parsed from RAML `headers` section, default to `{}`.
+- `body` - entity body for PATCH, POST and PUT requests. Must be a JSON-serializable object. Parsed from RAML `example` section, default to `{}`
+
+### test.response
+
+- `status` - Expected http response code, parsed from RAML.
+- `schema` - Expected schema of http response, parsed from RAML `schema` section.
+- `headers` - Headers object got from testing server, default to `{}`
+- `body` - http json body got from testing server. default to `null`
+
 ## Command Line Options
 
+```bash
+Usage:
+  abao <path to raml> <api_endpoint> [OPTIONS]
 
+Example:
+  abao ./api.raml http://api.example.com
 
-## Contribution
+Options:
+  --hookfiles, -f   Specifes a pattern to match files with before/after hooks
+                    for running tests                            [default: null]
+  --names, -n       Only list names of requests (for use in a hookfile). No
+                    requests are made.                          [default: false]
+  --reporter, -r    Output additional report format. This option can be used
+                    multiple times to add multiple reporters. Options: junit,
+                    nyan, dot, markdown, html, apiary.
+                                                               [default: "spec"]
+  --header, -h      Extra header to include in every request. This option can
+                    be used multiple times to add multiple headers.
+                                                                   [default: []]
+  --hooks-only, -H  Run test only if defined either before or after hooks
+                                                                [default: false]
+  --grep, -g        only run tests matching <pattern>
+  --invert, -i      inverts --grep matches
+  --help            Show usage information.
+
+  --version         Show version number.
+```
+
 
 ## Run Tests
 
     $ npm test
+
+## Contribution
 
 Any contribution is more then welcome!
 
