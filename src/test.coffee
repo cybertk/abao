@@ -72,7 +72,11 @@ class Test
     assert.isNotNull response, 'Response'
 
     # Status code
-    assert.equal response.statusCode, @response.status, 'Response Code'
+    assert.equal response.statusCode, @response.status, """
+      Got unexpected response code:
+      #{body}
+      Error
+    """
 
     # Body
     assert.isNotNull body
