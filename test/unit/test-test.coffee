@@ -7,7 +7,7 @@ requestStub.restore = () ->
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
 
-Test = proxyquire '../../lib/test', {
+Test = proxyquire '../../src/test', {
   'request': requestStub
 }
 

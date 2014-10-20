@@ -5,12 +5,12 @@ _ = require 'underscore'
 mocha = require 'mocha'
 proxyquire = require('proxyquire').noCallThru()
 
-Test = require '../../lib/test'
+Test = require '../../src/test'
 
-hooksStub = require '../../lib/hooks'
+hooksStub = require '../../src/hooks'
 suiteStub = ''
 
-TestRunner = proxyquire '../../lib/test-runner', {
+TestRunner = proxyquire '../../src/test-runner', {
   'mocha': mocha,
   'hooks': hooksStub
 }

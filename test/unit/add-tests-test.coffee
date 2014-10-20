@@ -6,8 +6,8 @@ proxyquire = require('proxyquire').noCallThru()
 
 mochaStub = require 'mocha'
 
-Test = require '../../lib/test'
-addTests = proxyquire '../../lib/add-tests', {
+Test = require '../../src/test'
+addTests = proxyquire '../../src/add-tests', {
   'mocha': mochaStub
 }
 
