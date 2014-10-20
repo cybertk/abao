@@ -208,6 +208,7 @@ describe "Command line interface", ->
 
       it 'should modify the transaction with hooks', () ->
         assert.equal recievedRequest.headers['header'], '123232323'
+        assert.equal recievedRequest.query['key'], 'value'
 
 
     describe 'when run with --hooks-only', () ->

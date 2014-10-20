@@ -1,6 +1,11 @@
-{assert} = require 'chai'
+chai = require 'chai'
 sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
 proxyquire = require('proxyquire').noCallThru()
+
+assert = chai.assert
+should = chai.should()
+chai.use(sinonChai);
 
 requestStub = sinon.stub()
 requestStub.restore = () ->
@@ -53,16 +58,15 @@ describe 'Test', ->
         requestStub.restore()
 
       it 'should call #request', ->
-        assert.ok requestStub.calledOnce
-        # assert.ok requestStub.calledWith({url: 'http://abao.io/machines'})
-        assert.ok requestStub.calledWith(
+        requestStub.should.be.calledWith
           url: 'http://abao.io/machines'
           method: 'POST'
           headers:
             key: 'value'
+          qs:
+            q: 'value'
           body: JSON.stringify
             body: 'value'
-        ), requestStub.printf('%C')
 
       it 'should not modify @name', ->
         assert.equal test.name, 'POST /machines -> 201'
@@ -127,15 +131,15 @@ describe 'Test', ->
         requestStub.restore()
 
       it 'should call #request', ->
-        assert.ok requestStub.called
-        assert.ok requestStub.calledWith(
+        requestStub.should.be.calledWith
           url: 'http://abao.io/machines/1'
           method: 'PUT'
           headers:
             key: 'value'
+          qs:
+            q: 'value'
           body: JSON.stringify
             body: 'value'
-        ), requestStub.printf('%C')
 
       it 'should not modify @name', ->
         assert.equal test.name, 'PUT /machines/{machine_id} -> 200'

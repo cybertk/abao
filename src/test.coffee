@@ -40,13 +40,12 @@ class Test
     return @request.server + path
 
   run: (callback) ->
-    url = @url()
-    {method, headers, body} = @request
     assertResponse = @assertResponse
 
-    body = JSON.stringify body
-
-    options = {url, headers, method, body}
+    options = _.pick @request, 'headers', 'method'
+    options['url'] = @url()
+    options['body'] = JSON.stringify @request.body
+    options['qs'] = @request.query
 
     async.waterfall [
       (callback) ->
