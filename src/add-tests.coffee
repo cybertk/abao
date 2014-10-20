@@ -4,20 +4,25 @@ _ = require 'underscore'
 Test = require './test'
 
 
-# addTests(raml, tests, [parentUri], callback)
-addTests = (raml, tests, parentUri, callback) ->
+# addTests(raml, tests, [parent], callback)
+addTests = (raml, tests, parent, callback) ->
 
   # Handle 3th optional param
-  if _.isFunction(parentUri)
-    callback = parentUri
-    parentUri = ''
+  if _.isFunction(parent)
+    callback = parent
+    parent = null
 
   return callback() unless raml.resources
 
   # Iterate endpoint
   async.each raml.resources, (resource, callback) ->
-    path = parentUri + resource.relativeUri
+    path = resource.relativeUri
     params = {}
+
+    # Apply parent properties
+    if parent
+      path = parent.path + path
+      params = _.clone parent.params
 
     # Setup param
     if resource.uriParameters
@@ -55,7 +60,7 @@ addTests = (raml, tests, parentUri, callback) ->
       return callback(err) if err
 
       # Recursive
-      addTests resource, tests, path, callback
+      addTests resource, tests, {path, params}, callback
   , callback
 
 
