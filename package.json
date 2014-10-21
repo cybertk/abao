@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "RAML testing tool",
   "bin": "bin/abao",
+  "main": "lib/index.js",
   "scripts": {
     "prepublish": "grunt coffee",
     "test": "grunt test"
