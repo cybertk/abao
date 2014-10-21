@@ -78,10 +78,17 @@ class Test
     """
 
     # Body
-    assert.isNotNull body
     if @response.schema
       schema = @parseSchema @response.schema
-      json = JSON.parse body
+      validateJson = _.partial JSON.parse, body
+      body = '[empty]' if body is ''
+      assert.doesNotThrow validateJson, JSON.SyntaxError, """
+        Invalid JSON:
+        #{body}
+        Error
+      """
+
+      json = validateJson()
       assert.jsonSchema json, schema, """
         Got unexpected response body:
         #{JSON.stringify(json, null, 4)}

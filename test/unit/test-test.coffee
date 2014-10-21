@@ -1,6 +1,7 @@
 chai = require 'chai'
 sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
+_ = require 'underscore'
 proxyquire = require('proxyquire').noCallThru()
 
 assert = chai.assert
@@ -216,3 +217,25 @@ describe 'Test', ->
           name: 'bar'
         # assert.doesNotThrow
         test.assertResponse(errorStub, responseStub, bodyStub)
+
+    describe 'when response body is null', ->
+
+      it 'should throw AssertionError', ->
+
+        errorStub = null
+        responseStub =
+          statusCode : 201
+        bodyStub = null
+        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+        assert.throw fn, chai.AssertionError
+
+    describe 'when response body is invalid json', ->
+
+      it 'should throw AssertionError', ->
+
+        errorStub = null
+        responseStub =
+          statusCode : 201
+        bodyStub = 'Im invalid'
+        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+        assert.throw fn, chai.AssertionError
