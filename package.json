@@ -1,6 +1,6 @@
 {
   "name": "abao",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "RAML testing tool",
   "bin": "bin/abao",
   "main": "lib/index.js",
