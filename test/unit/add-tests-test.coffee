@@ -150,3 +150,30 @@ describe '#addTests', ->
         test = tests[2]
         assert.deepEqual test.request.params,
           machine_id: '1'
+
+    describe 'when raml has resource not defined method', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/no-method.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback
+        , done
+
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 1 test', ->
+        assert.lengthOf tests, 1
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /root/machines -> 200'

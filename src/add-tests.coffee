@@ -29,6 +29,9 @@ addTests = (raml, tests, parent, callback) ->
       for key, param of resource.uriParameters
         params[key] = param.example
 
+    # In case of issue #8, resource does not define methods
+    resource.methods ?= []
+
     # Iterate response method
     async.each resource.methods, (api, callback) ->
       method = api.method.toUpperCase()
