@@ -29,7 +29,7 @@
 
 ## Get Started Testing Your API
 
-$ abao api.raml http://api.example.com
+    $ abao api.raml http://api.example.com
 
 ## Writing testable RAML
 
