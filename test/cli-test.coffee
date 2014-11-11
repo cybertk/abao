@@ -168,7 +168,7 @@ describe "Command line interface", ->
 
     describe "when printing test cases with -n", ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -n"
+        cmd = "./bin/abao ./test/fixtures/single-get.raml -n"
 
         execCommand cmd, done
 

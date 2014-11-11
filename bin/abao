@@ -28,7 +28,7 @@ if (argv._[0] === undefined) {
   console.error("Error: Must specify path to raml file.");
   argError = true;
 }
-if (argv._[1] === undefined) {
+if (argv._[1] === undefined && !argv.names) {
   console.error("Error: Must specify api endpoint.");
   argError = true;
 }
