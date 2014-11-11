@@ -22,7 +22,7 @@
 
 [Node.js][] and [NPM][] is required.
 
-    $ npm install abao
+    $ npm install -g abao
 
 [Node.js]: https://npmjs.org/
 [NPM]: https://npmjs.org/
