@@ -141,7 +141,7 @@ Options:
 
 ## Contribution
 
-Any contribution is more then welcome!
+Any contribution is more than welcome!
 
 [RAML]: http://raml.org
 [mocha]: http://visionmedia.github.io/mocha/
