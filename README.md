@@ -145,3 +145,7 @@ Any contribution is more than welcome!
 
 [RAML]: http://raml.org
 [mocha]: http://visionmedia.github.io/mocha/
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cybertk/abao/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
