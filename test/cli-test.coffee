@@ -210,6 +210,10 @@ describe "Command line interface", ->
         assert.equal recievedRequest.headers['header'], '123232323'
         assert.equal recievedRequest.query['key'], 'value'
 
+      it 'should print message to stdout and stderr', ->
+        assert.include stdout, 'before-hook-GET-machines'
+        assert.include stderr, 'after-hook-GET-machines'
+
 
     describe 'when run with --hooks-only', () ->
       before (done) ->

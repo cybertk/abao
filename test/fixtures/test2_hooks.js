@@ -6,6 +6,6 @@ hooks = require('hooks');
 hooks.before('GET /machines -> 200', function(test, done) {
   test.request.query['key'] = 'value'
   test.request.headers['header'] = '123232323';
-  console.log('before');
+  console.log('before-hook-GET-machines');
   return done();
 });
