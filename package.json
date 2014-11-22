@@ -35,26 +35,27 @@
     "grunt-cli": "~0.1.13",
     "grunt-contrib-coffee": "~0.12.0",
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-mocha-test": "~0.12.2",
+    "grunt-mocha-test": "~0.12.3",
     "jit-grunt": "~0.9.0",
-    "nock": "^0.48.2",
-    "sinon": "^1.11.1",
+    "mute": "^1.0.0",
+    "nock": "^0.50.0",
+    "sinon": "^1.12.1",
     "sinon-chai": "^2.6.0",
     "time-grunt": "~1.0.0"
   },
   "dependencies": {
     "coffee-errors": "^0.8.6",
     "coffee-script": "~1.8.0",
-    "proxyquire": "^1.0.1",
+    "proxyquire": "^1.1.0",
     "async": "^0.9.0",
     "chai-json-schema": "^1.1.0",
     "csonschema": "^0.5.0",
-    "glob": "^4.0.6",
+    "glob": "^4.2.1",
     "jsonlint": "^1.6.2",
     "mocha": "^2.0.1",
     "optimist": "^0.6.1",
     "raml-parser": "^0.8.7",
-    "request": "^2.47.0",
+    "request": "^2.48.0",
     "underscore": "^1.7.0"
   }
 }

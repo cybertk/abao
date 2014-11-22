@@ -4,6 +4,7 @@ require 'coffee-errors'
 nock = require 'nock'
 proxyquire = require 'proxyquire'
 sinon = require 'sinon'
+mute = require 'mute'
 
 globStub = require 'glob'
 pathStub = require 'path'
@@ -34,11 +35,15 @@ describe 'addHooks(hooks, pattern, callback)', () ->
 
     pattern = './**/*_hooks.*'
 
-    it 'should return files', ->
-      sinon.spy globStub, 'sync'
-      addHooks(hooksStub, pattern)
-      assert.ok globStub.sync.called
-      globStub.sync.restore()
+    it 'should return files', (done)->
+      mute (unmute) ->
+        sinon.spy globStub, 'sync'
+        addHooks(hooksStub, pattern)
+        assert.ok globStub.sync.called
+        globStub.sync.restore()
+
+        unmute()
+        done()
 
     describe 'when files are valid js/coffeescript', () ->
 
@@ -52,13 +57,21 @@ describe 'addHooks(hooks, pattern, callback)', () ->
         pathStub.resolve.restore()
         hooksStub.addHook.restore()
 
-      it 'should load the files', () ->
-        addHooks(hooksStub, pattern)
-        assert.ok pathStub.resolve.called
+      it 'should load the files', (done) ->
+        mute (unmute) ->
+          addHooks(hooksStub, pattern)
+          assert.ok pathStub.resolve.called
 
-      it 'should attach the hooks', () ->
-        addHooks(hooksStub, pattern)
-        assert.ok hooksStub.addHook.called
+          unmute()
+          done()
+
+      it 'should attach the hooks', (done) ->
+        mute (unmute) ->
+          addHooks(hooksStub, pattern)
+          assert.ok hooksStub.addHook.called
+
+          unmute()
+          done()
 
 
     describe 'when there is an error reading the hook files', () ->
@@ -77,10 +90,18 @@ describe 'addHooks(hooks, pattern, callback)', () ->
         globStub.sync.restore()
         hooksStub.addHook.restore()
 
-      it 'should log an warning', () ->
-        addHooks(hooksStub, pattern)
-        assert.ok console.error.called
+      it 'should log an warning', (done) ->
+        mute (unmute) ->
+          addHooks(hooksStub, pattern)
+          assert.ok console.error.called
 
-      it 'should not attach the hooks', () ->
-        addHooks(hooksStub, pattern)
-        assert.ok hooksStub.addHook.notCalled
+          unmute()
+          done()
+
+      it 'should not attach the hooks', (done) ->
+        mute (unmute) ->
+          addHooks(hooksStub, pattern)
+          assert.ok hooksStub.addHook.notCalled
+
+          unmute()
+          done()

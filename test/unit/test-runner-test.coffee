@@ -3,6 +3,7 @@ sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
 _ = require 'underscore'
 mocha = require 'mocha'
+mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
 
 Test = require '../../lib/test'
@@ -161,7 +162,11 @@ describe 'Test Runner', ->
         sinon.stub test, 'run', (callback) ->
            callback()
 
-        runner.run [test], hooksStub, done
+        # Mute stdout/stderr
+        mute (unmute) ->
+          runner.run [test], hooksStub, ->
+            unmute()
+            done()
 
       after ->
         test.run.restore()
@@ -252,7 +257,11 @@ describe 'Test Runner', ->
         testStub = sinon.stub test, 'run'
         testStub.throws('AssertionError')
 
-        runner.run [test], hooksStub, done
+        # Mute stdout/stderr
+        mute (unmute) ->
+          runner.run [test], hooksStub, ->
+            unmute()
+            done()
 
       after ->
         afterAllHook = ''
@@ -285,7 +294,11 @@ describe 'Test Runner', ->
         sinon.stub test, 'run', (callback) ->
           callback()
 
-        runner.run [test], hooksStub, done
+        # Mute stdout/stderr
+        mute (unmute) ->
+          runner.run [test], hooksStub, ->
+            unmute()
+            done()
 
       after ->
         beforeAllHook = ''
@@ -316,7 +329,11 @@ describe 'Test Runner', ->
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.spy console, 'log'
 
-        runner.run [test], hooksStub, done
+        # Mute stdout/stderr
+        mute (unmute) ->
+          runner.run [test], hooksStub, ->
+            unmute()
+            done()
 
       after ->
         runner.mocha.run.restore()
