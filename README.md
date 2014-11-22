@@ -3,9 +3,9 @@
 
 [![Build Status](http://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Dependency Status](https://david-dm.org/cybertk/abao.png)](https://david-dm.org/cybertk/abao)
+[![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
 [![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
-[![Coverage Status](https://coveralls.io/repos/cybertk/abao/badge.png?branch=master)](https://coveralls.io/r/cybertk/abao?branch=master)
+[![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
 
 **Abao** is a command-line tool for testing API documentation written in [RAML][] format against its backend implementation. With **Abao** you can easily plug your API documentation into the Continous Integration system like Travis CI or Jenkins and have API documentation up-to-date, all the time. Abao uses the [Mocha][] for judging if a particular API response is valid or if is not.
 

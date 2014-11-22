@@ -8,9 +8,9 @@ mute = require 'mute'
 
 globStub = require 'glob'
 pathStub = require 'path'
-hooksStub = require '../../src/hooks'
+hooksStub = require '../../lib/hooks'
 
-addHooks = proxyquire  '../../src/add-hooks', {
+addHooks = proxyquire  '../../lib/add-hooks', {
   'glob': globStub,
   'path': pathStub
 }
