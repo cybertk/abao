@@ -2,9 +2,9 @@ require 'coffee-errors'
 sinon = require 'sinon'
 {assert} = require 'chai'
 
-TestStub = require '../../src/test'
+TestStub = require '../../lib/test'
 
-hooks = require '../../src/hooks'
+hooks = require '../../lib/hooks'
 
 describe 'Hooks', () ->
 
