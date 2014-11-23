@@ -43,20 +43,23 @@ addTests = (raml, tests, parent, callback) ->
         test = new Test
         tests.push test
 
+        # Update test
+        test.name = "#{method} #{path} -> #{status}"
+
         # Update test.request
         test.request.path = path
         test.request.method = method
         if api.body?['application/json']
           test.request.headers['Content-Type'] = 'application/json'
-          test.request.body = JSON.parse api.body['application/json']?.example
+          try
+            test.request.body = JSON.parse api.body['application/json']?.example
+          catch
+            console.warn "invalid request example of #{test.name}"
         test.request.params = params
 
         # Update test.response
         test.response.status = status
         test.response.schema = res?.body?['application/json']?.schema
-
-        # Update test
-        test.name = "#{method} #{path} -> #{status}"
 
       callback()
     , (err) ->

@@ -177,3 +177,48 @@ describe '#addTests', ->
 
       it 'should set test.name', ->
         assert.equal tests[0].name, 'GET /root/machines -> 200'
+
+    describe 'when raml has invalid request body example', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        raml = """
+        #%RAML 0.8
+
+        title: World Music API
+        baseUri: http://example.api.com/{version}
+        version: v1
+        mediaType: application/json
+
+        /machines:
+          post:
+            body:
+              example: 'invalid-json'
+            responses:
+              204:
+        """
+        ramlParser.load(raml)
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          sinon.stub console, 'warn'
+          addTests data, tests, callback
+        , done
+
+      after ->
+        tests = []
+        console.warn.restore()
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should give a warning', ->
+        assert.ok console.warn.called
+
+      it 'should added 1 test', ->
+        assert.lengthOf tests, 1
+        assert.equal tests[0].name, 'POST /machines -> 204'
