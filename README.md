@@ -106,7 +106,7 @@ If `beforeAll`, `afterAll`, `before` and `after` are called multiple times, the 
 
 ## Command Line Options
 
-```bash
+```
 Usage:
   abao <path to raml> <api_endpoint> [OPTIONS]
 
@@ -122,11 +122,12 @@ Options:
                     multiple times to add multiple reporters. Options: junit,
                     nyan, dot, markdown, html, apiary.
                                                                [default: "spec"]
-  --header, -h      Extra header to include in every request. This option can
-                    be used multiple times to add multiple headers.
-                                                                   [default: []]
+  --header, -h      Extra header to include in every request. The header must
+                    be in KEY:VALUE format, e.g. '-h Accept:application/json'.
+                    This option can be used multiple times to add multiple
+                    headers.
+
   --hooks-only, -H  Run test only if defined either before or after hooks
-                                                                [default: false]
   --grep, -g        only run tests matching <pattern>
   --invert, -i      inverts --grep matches
   --help            Show usage information.
@@ -147,4 +148,3 @@ Any contribution is more than welcome!
 [mocha]: http://mochajs.org
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cybertk/abao/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-

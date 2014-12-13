@@ -16,13 +16,11 @@ options =
 
   header:
     alias: "h"
-    description: "Extra header to include in every request. This option can be used multiple times to add multiple headers.\n"
-    default: []
+    description: "Extra header to include in every request. The header must be in KEY:VALUE format, e.g. '-h Accept:application/json'.\nThis option can be used multiple times to add multiple headers.\n"
 
   'hooks-only':
     alias: "H"
     description: "Run test only if defined either before or after hooks"
-    default: false
 
   grep:
     alias: "g"
