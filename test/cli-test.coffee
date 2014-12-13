@@ -240,3 +240,31 @@ describe "Command line interface", ->
 
       it 'should not run test without hooks', ->
         assert.include stdout, '1 pending'
+
+    describe 'when run with --timeout', () ->
+      cost = ''
+
+      before (done) ->
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --timeout 100"
+
+        app = express()
+
+        t0 = ''
+        app.get '/machines', (req, res) ->
+          t0 = new Date
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            cost = new Date - t0
+            server.close()
+
+        server.on 'close', done
+
+      it 'exit status should be 1', () ->
+        assert.equal exitStatus, 1
+
+      it 'should exit before timeout', ->
+        assert.ok cost < 200
+
+      it 'should not run test without hooks', ->
+        assert.include stdout, '0 passing'

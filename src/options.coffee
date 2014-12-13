@@ -30,6 +30,11 @@ options =
     alias: "i"
     description: "inverts --grep matches"
 
+  timeout:
+    alias: "t"
+    description: "set test-case timeout in milliseconds"
+    default: 2000
+
   help:
     description: "Show usage information.\n"
 

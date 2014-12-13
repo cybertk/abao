@@ -132,6 +132,7 @@ Options:
   --hooks-only, -H  Run test only if defined either before or after hooks
   --grep, -g        only run tests matching <pattern>
   --invert, -i      inverts --grep matches
+  --timeout, -t     set test-case timeout in milliseconds        [default: 2000]
   --help            Show usage information.
 
   --version         Show version number.
