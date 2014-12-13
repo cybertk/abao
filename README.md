@@ -39,6 +39,8 @@
 
 **Abao** can be configured to use hookfiles to do basic setup/teardown between each validation (specified with the --hookfiles flag). Hookfiles can be in javascript or coffeescript, and must import the hook methods.
 
+**NOTE**: The hookfile's extension must be `.coffee` if it's written in coffeescript.
+
 Requests are identified by their name, which is derived from the structure of the RAML. You can print a list of the generated names with --names.
 
 ### Example
