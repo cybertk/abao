@@ -21,7 +21,7 @@ SERVER = 'http://localhost:3000'
 
 assert = chai.assert
 should = chai.should()
-chai.use(sinonChai);
+chai.use(sinonChai)
 
 runner = null
 
@@ -170,7 +170,7 @@ describe 'Test Runner', ->
 
         runner = new TestRunner options
         sinon.stub test, 'run', (callback) ->
-           callback()
+          callback()
 
         # Mute stdout/stderr
         mute (unmute) ->

@@ -21,7 +21,7 @@ Abao = proxyquire '../../', {
 }
 
 should = chai.should()
-chai.use(sinonChai);
+chai.use(sinonChai)
 
 
 describe 'Abao', ->

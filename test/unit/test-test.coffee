@@ -6,7 +6,7 @@ proxyquire = require('proxyquire').noCallThru()
 
 assert = chai.assert
 should = chai.should()
-chai.use(sinonChai);
+chai.use(sinonChai)
 
 requestStub = sinon.stub()
 requestStub.restore = () ->

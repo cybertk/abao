@@ -21,6 +21,17 @@ module.exports = (grunt) ->
         options:
           nospawn: true
 
+    coffeelint:
+      default:
+        src: [
+          'Gruntfile.coffee'
+          'src/**/*.coffee'
+          'test/**/*.coffee'
+        ]
+      options: {
+        configFile: 'coffeelint.json'
+      }
+
     coffeecov:
       compile:
         src: 'lib'
@@ -53,6 +64,7 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask "test", [
+    "coffeelint"
     "coffeecov"
     "mochaTest"
     "uploadCoverage"
