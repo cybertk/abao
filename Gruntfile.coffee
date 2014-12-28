@@ -52,7 +52,7 @@ module.exports = (grunt) ->
         command: 'cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js src'
 
   grunt.registerTask 'uploadCoverage', ->
-    return grunt.log.ok 'Bypass uploading' unless process.env['CI'] is 'true'
+    return grunt.log.ok 'Bypass uploading' unless process.env['TRAVIS'] is 'true'
 
     grunt.task.run 'shell:coveralls'
 
