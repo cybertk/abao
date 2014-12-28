@@ -6,6 +6,10 @@ version: v1
 
 /machines:
   get:
+    headers:
+      Abao-API-Key:
+        type: string
+        example: abcdef
     responses:
       200:
         body:

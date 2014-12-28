@@ -3,6 +3,14 @@ _ = require 'underscore'
 
 Test = require './test'
 
+parseHeaders = (raml) ->
+  return {} unless raml
+
+  headers = {}
+  for key, v of raml
+    headers[key] = v.example
+
+  headers
 
 # addTests(raml, tests, [parent], callback)
 addTests = (raml, tests, parent, callback) ->
@@ -49,6 +57,7 @@ addTests = (raml, tests, parent, callback) ->
         # Update test.request
         test.request.path = path
         test.request.method = method
+        test.request.headers = parseHeaders(api.headers)
         if api.body?['application/json']
           test.request.headers['Content-Type'] = 'application/json'
           try

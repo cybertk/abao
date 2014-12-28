@@ -47,7 +47,8 @@ describe '#addTests', ->
         assert.equal req.path, '/machines'
         assert.deepEqual req.params, {}
         assert.deepEqual req.query, {}
-        assert.deepEqual req.headers, {}
+        assert.deepEqual req.headers,
+          'Abao-API-Key': 'abcdef'
         assert.deepEqual req.body, {}
         assert.equal req.method, 'GET'
 
