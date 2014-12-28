@@ -268,3 +268,17 @@ describe "Command line interface", ->
 
       it 'should not run test without hooks', ->
         assert.include stdout, '0 passing'
+
+    describe 'when run with --reporters', () ->
+      reporters = ''
+
+      before (done) ->
+        execCommand './node_modules/mocha/bin/_mocha --reporters', ->
+          reporters = stdout
+          execCommand './bin/abao --reporters', done
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0
+
+      it 'should print reporters same as `mocha --reporters`', ->
+        assert.equal stdout, reporters

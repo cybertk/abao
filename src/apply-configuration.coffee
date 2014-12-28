@@ -25,6 +25,7 @@ applyConfiguration = (config) ->
     ramlPath: null
     server: null
     options:
+      reporters: false
       reporter: null
       header: null
       names: false

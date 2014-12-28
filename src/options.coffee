@@ -11,12 +11,12 @@ options =
 
   reporter:
     alias: "r"
-    description: "Output additional report format. This option can be used multiple times to add multiple reporters. Options: junit, nyan, dot, markdown, html, apiary.\n"
+    description: "Specify the reporter to use"
     default: "spec"
 
   header:
     alias: "h"
-    description: "Extra header to include in every request. The header must be in KEY:VALUE format, e.g. '-h Accept:application/json'.\nThis option can be used multiple times to add multiple headers.\n"
+    description: "Extra header to include in every request. The header must be in KEY:VALUE format, e.g. '-h Accept:application/json'.\nThis option can be used multiple times to add multiple headers"
 
   'hooks-only':
     alias: "H"
@@ -35,10 +35,13 @@ options =
     description: "set test-case timeout in milliseconds"
     default: 2000
 
+  reporters:
+    description: "Display available reporters"
+
   help:
-    description: "Show usage information.\n"
+    description: "Show usage information"
 
   version:
-    description: "Show version number.\n"
+    description: "Show version number"
 
 module.exports = options

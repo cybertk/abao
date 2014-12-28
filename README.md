@@ -120,22 +120,18 @@ Options:
                     for running tests                            [default: null]
   --names, -n       Only list names of requests (for use in a hookfile). No
                     requests are made.                          [default: false]
-  --reporter, -r    Output additional report format. This option can be used
-                    multiple times to add multiple reporters. Options: junit,
-                    nyan, dot, markdown, html, apiary.
-                                                               [default: "spec"]
+  --reporter, -r    Specify the reporter to use                [default: "spec"]
   --header, -h      Extra header to include in every request. The header must
                     be in KEY:VALUE format, e.g. '-h Accept:application/json'.
                     This option can be used multiple times to add multiple
-                    headers.
-
+                    headers
   --hooks-only, -H  Run test only if defined either before or after hooks
   --grep, -g        only run tests matching <pattern>
   --invert, -i      inverts --grep matches
   --timeout, -t     set test-case timeout in milliseconds        [default: 2000]
-  --help            Show usage information.
-
-  --version         Show version number.
+  --reporters       Display available reporters
+  --help            Show usage information
+  --version         Show version number
 ```
 
 
