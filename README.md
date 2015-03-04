@@ -52,7 +52,24 @@ $ abao single-get.raml --names
 GET /machines -> 200
 ```
 
-Write a hookfile:
+Write a hookfile in **JavaScript**:
+
+```js
+var hooks = require('hooks');
+
+hooks.before('GET /machines -> 200', function(test, done) {
+    test.request.query = {color: 'red'};
+    done();
+});
+
+hooks.after('GET /machines -> 200', function(test, done) {
+    machine = test.response.body[0];
+    console.log(machine.name);
+    done();
+});
+```
+
+Write a hookfile in **CoffeeScript**:
 
 ```coffee
 {before, after} = require 'hooks'
@@ -65,6 +82,7 @@ before 'GET /machines -> 200', (test, done) ->
 after 'GET /machines -> 200', (test, done) ->
   machine = test.response.body[0]
   console.log machine.name
+  done()
 ```
 
 Run validation:
