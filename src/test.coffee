@@ -5,7 +5,7 @@ _ = require 'underscore'
 async = require 'async'
 
 assert = chai.assert
-chai.use(require 'chai-json-schema')
+chai.use(require 'chai2-json-schema')
 
 
 String::contains = (it) ->
