@@ -56,12 +56,9 @@ describe '#addTests', ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        assert.equal res.schema, """[
-          type: 'string'
-          name: 'string'
-        ]
-
-        """
+        schema = res.schema[0]
+        assert.equal schema.items.properties.type.type, 'string'
+        assert.equal schema.items.properties.name.type, 'string'
         assert.isNull res.headers
         assert.isNull res.body
 
@@ -105,11 +102,96 @@ describe '#addTests', ->
         res = tests[1].response
 
         assert.equal res.status, 201
-        assert.equal res.schema, """
-          type: 'string'
-          name: 'string'
+        schema = res.schema[0]
+        assert.equal schema.properties.type.type, 'string'
+        assert.equal schema.properties.name.type, 'string'
+        assert.isNull res.headers
+        assert.isNull res.body
 
-        """
+    describe 'when raml includes multiple referencing schemas', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/ref_other_schemas.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback
+        , done
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 1 test', ->
+        assert.lengthOf tests, 1
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /machines -> 200'
+
+      it 'should setup test.request', ->
+        req = tests[0].request
+
+        assert.equal req.path, '/machines'
+        assert.deepEqual req.params, {}
+        assert.deepEqual req.query, {}
+        assert.deepEqual req.body, {}
+        assert.equal req.method, 'GET'
+
+      it 'should setup test.response', ->
+        res = tests[0].response
+        
+        assert.equal res.status, 200
+        assert.lengthOf res.schema, 3
+        assert.isNull res.headers
+        assert.isNull res.body
+
+    describe 'when raml has inline and included schemas', ->
+
+      tests = []
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/inline_and_included_schemas.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback
+        , done
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 1 test', ->
+        assert.lengthOf tests, 1
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /machines -> 200'
+
+      it 'should setup test.request', ->
+        req = tests[0].request
+
+        assert.equal req.path, '/machines'
+        assert.deepEqual req.params, {}
+        assert.deepEqual req.query, {}
+        assert.deepEqual req.body, {}
+        assert.equal req.method, 'GET'
+
+      it 'should setup test.response', ->
+        res = tests[0].response
+        
+        assert.equal res.status, 200
+        # console.log res.schema
+        assert.lengthOf res.schema, 3
         assert.isNull res.headers
         assert.isNull res.body
 

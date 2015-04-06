@@ -1,7 +1,17 @@
 async = require 'async'
 _ = require 'underscore'
+csonschema = require 'csonschema'
 
 Test = require './test'
+
+parseSchema = (source) ->
+  if source.contains('$schema')
+    #jsonschema
+    # @response.schema = JSON.parse @response.schema
+    JSON.parse source
+  else
+    csonschema.parse source
+    # @response.schema = csonschema.parse @response.schema
 
 parseHeaders = (raml) ->
   return {} unless raml
@@ -68,8 +78,12 @@ addTests = (raml, tests, parent, callback) ->
 
         # Update test.response
         test.response.status = status
-        test.response.schema = res?.body?['application/json']?.schema
-
+        test.response.schema = []
+        if (raml.schemas)
+          test.response.schema = raml.schemas
+        if (res?.body?['application/json']?.schema)
+          test.response.schema.push parseSchema res.body['application/json'].schema
+        
       callback()
     , (err) ->
       return callback(err) if err

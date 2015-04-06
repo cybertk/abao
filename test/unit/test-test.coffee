@@ -43,10 +43,7 @@ describe 'Test', ->
         test.request.body =
           body: 'value'
         test.response.status = 201
-        test.response.schema = """
-          type: 'string'
-          name: 'string'
-        """
+        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
 
         machine =
           type: 'foo'
@@ -85,10 +82,6 @@ describe 'Test', ->
         response = test.response
         # Unchanged properties
         assert.equal response.status, 201
-        assert.deepEqual response.schema, """
-          type: 'string'
-          name: 'string'
-        """
 
         # changed properties
         # assert.equal response.headers, 201
@@ -116,10 +109,7 @@ describe 'Test', ->
         test.request.body =
           body: 'value'
         test.response.status = 200
-        test.response.schema = """
-          type: 'string'
-          name: 'string'
-        """
+        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
 
         machine =
           type: 'foo'
@@ -158,10 +148,6 @@ describe 'Test', ->
         response = test.response
         # Unchanged properties
         assert.equal response.status, 200
-        assert.deepEqual response.schema, """
-          type: 'string'
-          name: 'string'
-        """
         assert.deepEqual response.body, machine
 
 
@@ -196,14 +182,14 @@ describe 'Test', ->
 
     test = new Test()
     test.response.status = 201
-    test.response.schema = JSON.stringify
+    test.response.schema = {
       $schema: 'http://json-schema.org/draft-04/schema#'
       type: 'object'
       properties:
         type:
           type: 'string'
         name:
-          type: 'string'
+          type: 'string'}
 
     describe 'when against valid response', ->
 
