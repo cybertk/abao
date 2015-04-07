@@ -273,7 +273,7 @@ describe "Command line interface", ->
       reporters = ''
 
       before (done) ->
-        execCommand './node_modules/mocha/bin/_mocha --reporters', ->
+        execCommand './node_modules/mocha/bin/mocha --reporters', ->
           reporters = stdout
           execCommand './bin/abao --reporters', done
 
