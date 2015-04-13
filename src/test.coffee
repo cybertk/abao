@@ -31,12 +31,11 @@ class Test
       body: null
 
   url: () ->
-    path = @request.path
+    path = @request.server + @request.path
 
     for key, value of @request.params
       path = path.replace "{#{key}}", value
-
-    return @request.server + path
+    return path
 
   run: (callback) ->
     assertResponse = @assertResponse
