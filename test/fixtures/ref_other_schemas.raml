@@ -1,0 +1,17 @@
+#%RAML 0.8
+
+title: World Music API
+baseUri: http://example.api.com/{version}
+version: v1
+
+schemas:
+  - type1: !include ./type1.json
+  - type2: !include ./type2.json
+
+/machines:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            schema: type2

@@ -1,5 +1,4 @@
 chai = require 'chai'
-csonschema = require 'csonschema'
 request = require 'request'
 _ = require 'underscore'
 async = require 'async'
@@ -32,12 +31,11 @@ class Test
       body: null
 
   url: () ->
-    path = @request.path
+    path = @request.server + @request.path
 
     for key, value of @request.params
       path = path.replace "{#{key}}", value
-
-    return @request.server + path
+    return path
 
   run: (callback) ->
     assertResponse = @assertResponse
@@ -57,15 +55,6 @@ class Test
         callback()
     ], callback
 
-  parseSchema: (source) =>
-    if source.contains('$schema')
-      #jsonschema
-      # @response.schema = JSON.parse @response.schema
-      JSON.parse source
-    else
-      csonschema.parse source
-      # @response.schema = csonschema.parse @response.schema
-
   assertResponse: (error, response, body) =>
     assert.isNull error
     assert.isNotNull response, 'Response'
@@ -79,7 +68,7 @@ class Test
 
     # Body
     if @response.schema
-      schema = @parseSchema @response.schema
+      schema = @response.schema
       validateJson = _.partial JSON.parse, body
       body = '[empty]' if body is ''
       assert.doesNotThrow validateJson, JSON.SyntaxError, """
