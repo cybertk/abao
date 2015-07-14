@@ -78,11 +78,9 @@ addTests = (raml, tests, parent, callback) ->
 
         # Update test.response
         test.response.status = status
-        test.response.schema = []
-        if (raml.schemas)
-          test.response.schema = raml.schemas
+        test.response.schema = null
         if (res?.body?['application/json']?.schema)
-          test.response.schema.push parseSchema res.body['application/json'].schema
+          test.response.schema = parseSchema res.body['application/json'].schema
         
       callback()
     , (err) ->

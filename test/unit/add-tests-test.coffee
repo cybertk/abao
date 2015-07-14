@@ -56,7 +56,7 @@ describe '#addTests', ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        schema = res.schema[0]
+        schema = res.schema
         assert.equal schema.items.properties.type.type, 'string'
         assert.equal schema.items.properties.name.type, 'string'
         assert.isNull res.headers
@@ -102,7 +102,7 @@ describe '#addTests', ->
         res = tests[1].response
 
         assert.equal res.status, 201
-        schema = res.schema[0]
+        schema = res.schema
         assert.equal schema.properties.type.type, 'string'
         assert.equal schema.properties.name.type, 'string'
         assert.isNull res.headers
@@ -147,7 +147,7 @@ describe '#addTests', ->
         res = tests[0].response
         
         assert.equal res.status, 200
-        assert.lengthOf res.schema, 3
+        assert.equal res.schema?.properties?.chick?.type, "string"
         assert.isNull res.headers
         assert.isNull res.body
 
@@ -190,8 +190,7 @@ describe '#addTests', ->
         res = tests[0].response
         
         assert.equal res.status, 200
-        # console.log res.schema
-        assert.lengthOf res.schema, 3
+        assert.equal res.schema?.properties?.type["$ref"], "type2"
         assert.isNull res.headers
         assert.isNull res.body
 
