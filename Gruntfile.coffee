@@ -24,6 +24,8 @@ module.exports = (grunt) ->
 
     coffee:
       compile:
+        options:
+            sourceMap: true
         expand: true,
         flatten: true,
         src: ['src/*.coffee'],
