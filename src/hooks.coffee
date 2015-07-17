@@ -7,6 +7,8 @@ class Hooks
     @afterHooks = {}
     @beforeAllHooks = []
     @afterAllHooks = []
+    @beforeEachHooks = []
+    @afterEachHooks = []
 
   before: (name, hook) =>
     @addHook(@beforeHooks, name, hook)
@@ -19,6 +21,12 @@ class Hooks
 
   afterAll: (hook) =>
     @afterAllHooks.push hook
+
+  beforeEach: (hook) =>
+    @beforeEachHooks.push(hook)
+
+  afterEach: (hook) =>
+    @afterEachHooks.push(hook)
 
   addHook: (hooks, name, hook) =>
     if hooks[name]
@@ -35,16 +43,18 @@ class Hooks
       callback(err)
 
   runBefore: (test, callback) =>
-    return callback() unless @beforeHooks[test.name]
+    return callback() unless (@beforeHooks[test.name] or @beforeEachHooks)
 
-    async.eachSeries @beforeHooks[test.name], (hook, callback) ->
+    hooks = @beforeEachHooks.concat(@beforeHooks[test.name] ? [])
+    async.eachSeries hooks, (hook, callback) ->
       hook test, callback
     , callback
 
   runAfter: (test, callback) =>
-    return callback() unless @afterHooks[test.name]
+    return callback() unless (@afterHooks[test.name] or @afterEachHooks)
 
-    async.eachSeries @afterHooks[test.name], (hook, callback) ->
+    hooks = (@afterHooks[test.name] ? []).concat(@afterEachHooks)
+    async.eachSeries hooks, (hook, callback) ->
       hook test, callback
     , callback
 
