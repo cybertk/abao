@@ -65,6 +65,96 @@ describe 'Hooks', () ->
       hooks.runAfterAll (done) ->
         testDone()
 
+  describe 'when adding beforeEach hooks', () ->
+
+    afterEach () ->
+      hooks.beforeEachHooks = []
+      hooks.beforeHooks = {}
+
+    it 'should add to hook list', () ->
+      hooks.beforeEach () ->
+      assert.lengthOf hooks.beforeEachHooks, 1
+
+    it 'should invoke registered callbacks', (testDone) ->
+      before_called = false
+      before_each_called = false
+      test_name = "before_test"
+      hooks.before test_name, (test, done) ->
+        assert.equal test.name, test_name
+        before_called = true
+        assert.isTrue before_each_called,
+            "before_hook should be called after before_each"
+        done()
+
+      hooks.beforeEach (test, done) ->
+        assert.equal test.name, test_name
+        before_each_called = true
+        assert.isFalse before_called,
+            "before_each should be called before before_hook"
+        done()
+
+      hooks.runBefore {name: test_name}, () ->
+        assert.isTrue before_each_called, "before_each should have been called"
+        assert.isTrue before_called, "before_hook should have been called"
+        testDone()
+
+    it 'should work without test specific before', (testDone) ->
+      before_each_called = false
+      test_name = "before_test"
+      hooks.beforeEach (test, done) ->
+        assert.equal test.name, test_name
+        before_each_called = true
+        done()
+
+      hooks.runBefore {name: test_name}, () ->
+        assert.isTrue before_each_called, "before_each should have been called"
+        testDone()
+
+  describe 'when adding afterEach hooks', () ->
+
+    afterEach () ->
+      hooks.afterEachHooks = []
+      hooks.afterHooks = {}
+
+    it 'should add to hook list', () ->
+      hooks.afterEach () ->
+      assert.lengthOf hooks.afterEachHooks, 1
+
+    it 'should invoke registered callbacks', (testDone) ->
+      after_called = false
+      after_each_called = false
+      test_name = "after_test"
+      hooks.after test_name, (test, done) ->
+        assert.equal test.name, test_name
+        after_called = true
+        assert.isFalse after_each_called,
+            "after_hook should be called before after_each"
+        done()
+
+      hooks.afterEach (test, done) ->
+        assert.equal test.name, test_name
+        after_each_called = true
+        assert.isTrue after_called,
+            "after_each should be called after after_hook"
+        done()
+
+      hooks.runAfter {name: test_name}, () ->
+        assert.isTrue after_each_called, "after_each should have been called"
+        assert.isTrue after_called, "after_hook should have been called"
+        testDone()
+
+    it 'should work without test specific after', (testDone) ->
+      after_each_called = false
+      test_name = "after_test"
+      hooks.afterEach (test, done) ->
+        assert.equal test.name, test_name
+        after_each_called = true
+        done()
+
+      hooks.runAfter {name: test_name}, () ->
+        assert.isTrue after_each_called, "after_each should have been called"
+        testDone()
+
   describe 'when check has name', () ->
 
     it 'should return true if in before hooks', ->
