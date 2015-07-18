@@ -26,11 +26,13 @@ describe 'Test', ->
       testFact = ''
       test = ''
       machine = ''
+      contentTestCalled = null
 
       before (done) ->
 
         testFact = new TestFactory()
         test = testFact.create()
+        contentTestCalled = false
         test.name = 'POST /machines -> 201'
         test.request.server = 'http://abao.io'
         test.request.path = '/machines'
@@ -49,6 +51,12 @@ describe 'Test', ->
         machine =
           type: 'foo'
           name: 'bar'
+
+        test.contentTest = (response, body, done) ->
+          contentTestCalled = true
+          assert.equal(response.status, 201)
+          assert.deepEqual(JSON.parse(body), machine)
+          return done()
 
         requestStub.callsArgWith(1, null, {statusCode: 201}, JSON.stringify(machine))
         test.run done
@@ -87,6 +95,9 @@ describe 'Test', ->
         # changed properties
         # assert.equal response.headers, 201
         assert.deepEqual response.body, machine
+
+      it 'should call contentTest', ->
+        assert.isTrue contentTestCalled
 
 
     describe 'of test contains params', ->

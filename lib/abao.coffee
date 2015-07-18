@@ -27,6 +27,11 @@ class Abao
     factory = new TestFactory(config.options.schemas)
 
     async.waterfall [
+      # Parse hooks
+      (callback) ->
+        addHooks hooks, config.options.hookfiles
+        callback()
+      ,
       # Load RAML
       (callback) ->
         raml.loadFile(config.ramlPath).then (raml) ->
@@ -35,12 +40,7 @@ class Abao
       ,
       # Parse tests from RAML
       (raml, callback) ->
-        addTests raml, tests, callback, factory
-      ,
-      # Parse hooks
-      (callback) ->
-        addHooks hooks, config.options.hookfiles
-        callback()
+        addTests raml, tests, hooks, callback, factory
       ,
       # Run tests
       (callback) ->

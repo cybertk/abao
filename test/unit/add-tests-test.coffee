@@ -7,6 +7,7 @@ proxyquire = require('proxyquire').noCallThru()
 mochaStub = require 'mocha'
 
 TestFactory = require '../../lib/test'
+hooks = require '../../lib/hooks'
 addTests = proxyquire '../../lib/add-tests', {
   'mocha': mochaStub
 }
@@ -22,13 +23,12 @@ describe '#addTests', ->
       callback = ''
 
       before (done) ->
-
         ramlParser.loadFile("#{__dirname}/../fixtures/single-get.raml")
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
       after ->
         tests = []
@@ -76,7 +76,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
       after ->
         tests = []
@@ -123,7 +123,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
       after ->
         tests = []
@@ -167,7 +167,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
       after ->
         tests = []
@@ -211,7 +211,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
 
       after ->
@@ -251,7 +251,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
 
       after ->
@@ -295,7 +295,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           sinon.stub console, 'warn'
-          addTests data, tests, callback, testFactory
+          addTests data, tests, hooks, callback, testFactory
         , done
 
       after ->
