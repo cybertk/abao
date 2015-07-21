@@ -11,8 +11,8 @@ String::contains = (it) ->
   @indexOf(it) != -1
 
 class Test
-  constructor: () ->
-    @name = ''
+  constructor: (@name, @contentTest) ->
+    @name ?= ''
     @skip = false
 
     @request =
@@ -30,6 +30,9 @@ class Test
       headers: null
       body: null
 
+    @contentTest ?= (response, body, done) ->
+        done()
+
   url: () ->
     path = @request.server + @request.path
 
@@ -39,6 +42,7 @@ class Test
 
   run: (callback) ->
     assertResponse = @assertResponse
+    contentTest = @contentTest
 
     options = _.pick @request, 'headers', 'method'
     options['url'] = @url()
@@ -52,7 +56,7 @@ class Test
       ,
       (error, response, body, callback) ->
         assertResponse(error, response, body)
-        callback()
+        contentTest(response, body, callback)
     ], callback
 
   assertResponse: (error, response, body) =>
@@ -65,6 +69,7 @@ class Test
       #{body}
       Error
     """
+    response.status = response.statusCode
 
     # Body
     if @response.schema

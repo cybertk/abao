@@ -7,6 +7,7 @@ proxyquire = require('proxyquire').noCallThru()
 mochaStub = require 'mocha'
 
 Test = require '../../lib/test'
+hooks = require '../../lib/hooks'
 addTests = proxyquire '../../lib/add-tests', {
   'mocha': mochaStub
 }
@@ -21,13 +22,12 @@ describe '#addTests', ->
       callback = ''
 
       before (done) ->
-
         ramlParser.loadFile("#{__dirname}/../fixtures/single-get.raml")
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
       after ->
         tests = []
@@ -74,7 +74,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
       after ->
         tests = []
@@ -120,7 +120,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
       after ->
         tests = []
@@ -163,7 +163,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
       after ->
         tests = []
@@ -206,7 +206,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
 
       after ->
@@ -245,7 +245,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
 
       after ->
@@ -288,7 +288,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           sinon.stub console, 'warn'
-          addTests data, tests, callback
+          addTests data, tests, hooks, callback
         , done
 
       after ->

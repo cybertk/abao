@@ -23,6 +23,11 @@ class Abao
     hooks = @hooks
 
     async.waterfall [
+      # Parse hooks
+      (callback) ->
+        addHooks hooks, config.options.hookfiles
+        callback()
+      ,
       # Load RAML
       (callback) ->
         raml.loadFile(config.ramlPath).then (raml) ->
@@ -31,12 +36,7 @@ class Abao
       ,
       # Parse tests from RAML
       (raml, callback) ->
-        addTests raml, tests, callback
-      ,
-      # Parse hooks
-      (callback) ->
-        addHooks hooks, config.options.hookfiles
-        callback()
+        addTests raml, tests, hooks, callback
       ,
       # Run tests
       (callback) ->

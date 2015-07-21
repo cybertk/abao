@@ -338,3 +338,27 @@ describe 'Hooks', () ->
       it 'should run hook', ->
         assert.ok funcs[2].called
         assert.ok funcs[3].called
+
+  describe 'when successfully adding test hook', () ->
+
+    afterEach () ->
+      hooks.contentTests = {}
+
+    test_name = "content_test_test"
+
+    it 'should get added to the set of hooks', () ->
+      hooks.test(test_name, () ->)
+      assert.isDefined(hooks.contentTests[test_name])
+
+  describe 'adding two content tests fails', () ->
+    afterEach () ->
+      hooks.contentTests = {}
+
+    test_name = "content_test_test"
+
+    it 'should assert when adding a second content test', () ->
+      f = () ->
+        hooks.test(test_name, () ->)
+      f()
+      assert.throw f,
+        "Cannot have more than one test with the name: #{test_name}"

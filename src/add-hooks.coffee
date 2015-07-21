@@ -3,7 +3,6 @@ path = require 'path'
 require 'coffee-script/register'
 proxyquire = require('proxyquire').noCallThru()
 glob = require 'glob'
-async = require 'async'
 
 
 addHooks = (hooks, pattern) ->

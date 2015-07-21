@@ -22,10 +22,10 @@ parseHeaders = (raml) ->
 
   headers
 
-# addTests(raml, tests, [parent], callback)
-addTests = (raml, tests, parent, callback) ->
+# addTests(raml, tests, hooks, [parent], callback)
+addTests = (raml, tests, hooks, parent, callback) ->
 
-  # Handle 3th optional param
+  # Handle 4th optional param
   if _.isFunction(parent)
     callback = parent
     parent = null
@@ -57,12 +57,11 @@ addTests = (raml, tests, parent, callback) ->
       # Iterate response status
       for status, res of api.responses
 
-        # Append new test to tests
-        test = new Test
-        tests.push test
+        testName = "#{method} #{path} -> #{status}"
 
-        # Update test
-        test.name = "#{method} #{path} -> #{status}"
+        # Append new test to tests
+        test = new Test(testName, hooks.contentTests[testName])
+        tests.push test
 
         # Update test.request
         test.request.path = path
@@ -87,7 +86,7 @@ addTests = (raml, tests, parent, callback) ->
       return callback(err) if err
 
       # Recursive
-      addTests resource, tests, {path, params}, callback
+      addTests resource, tests, hooks, {path, params}, callback
   , callback
 
 
