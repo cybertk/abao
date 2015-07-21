@@ -9,6 +9,7 @@ class Hooks
     @afterAllHooks = []
     @beforeEachHooks = []
     @afterEachHooks = []
+    @contentTests = {}
 
   before: (name, hook) =>
     @addHook(@beforeHooks, name, hook)
@@ -33,6 +34,11 @@ class Hooks
       hooks[name].push hook
     else
       hooks[name] = [hook]
+
+  test: (name, hook) =>
+    if @contentTests[name]?
+      throw new Error("Cannot have more than one test with the name: #{name}")
+    @contentTests[name] = hook
 
   runBeforeAll: (callback) =>
     async.series @beforeAllHooks, (err, results) ->
