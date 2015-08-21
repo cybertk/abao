@@ -6,3 +6,11 @@ env:
 notifications:
   slack:
     secure: fsCX0/TDE9TAJR0S91dboOZ4expmCc8o6joVzsHNJYTJfDtSJehdKjTzYuO/vsRigOOoQZ0dJEPl+D4fysBDV+jkOT5sTjp/uKtcfwHwPi03K8GauwvyW0x4N1M+mY+5jN2ZyBZXqVM5dc0wbgldP9QOg5UpB80hfWUZ+0F1MTM=
+deploy:
+  provider: npm
+  email: kyan.ql.he@gmail.com
+  api_key:
+    secure: G58hf18DK3OzBUnSflTj9z4HPImAVxa9v/VKCvnG9gqaRyDtjoHweZWjzEu2K+ThtMOTbDCJx86KEOkHxKnjYPoXPbhHwK6LlfzRqv2rwsqkJLG0EirPecZA2aeTkxZBqf4camLIJY8GL9v0FiwB7CZ5QHlxhluhnZj+N6kPkaU=
+  on:
+    tags: true
+    repo: cybertk/abao
