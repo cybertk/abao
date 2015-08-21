@@ -20,16 +20,17 @@
 
 ## Installation
 
-[Node.js][] and [NPM][] is required.
+Install stable version
 
-    $ npm install -g abao
+    npm install -g abao
 
-[Node.js]: https://npmjs.org/
-[NPM]: https://npmjs.org/
+Install latest developement version in GitHub branch
+
+    npm install -g git://github.com/cybertk/abao.git#master
 
 ## Get Started Testing Your API
 
-    $ abao api.raml http://api.example.com
+    abao api.raml http://api.example.com
 
 ## Writing testable RAML
 
