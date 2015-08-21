@@ -46,7 +46,9 @@ describe "Command line interface", ->
       assert.equal exitStatus, 1
 
     it 'should print error message to stderr', ->
-      assert.include stderr, 'Error: ENOENT, open'
+      # See https://travis-ci.org/cybertk/abao/jobs/76656192#L479
+      # iojs behaviour is different from nodejs
+      assert.include stderr, 'Error: ENOENT'
 
 
   describe "Arguments with existing raml and responding server", () ->
