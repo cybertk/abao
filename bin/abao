@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+require('coffee-script/register')
+
 var optimist = require('optimist');
 var path = require('path');
 var pjson = require('../package.json');

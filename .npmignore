@@ -1,4 +1,4 @@
-src/
 test/
+lib/*.js
 .travis.yml
 Gruntfile.coffee
