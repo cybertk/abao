@@ -282,3 +282,27 @@ describe "Command line interface", ->
 
       it 'should print reporters same as `mocha --reporters`', ->
         assert.equal stdout, reporters
+
+    describe 'when run with --schema', () ->
+      before (done) ->
+
+        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schema=./test/fixtures/schemas/*_hooks.*"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            type: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'exit status should be 0', () ->
+        assert.equal exitStatus, 0

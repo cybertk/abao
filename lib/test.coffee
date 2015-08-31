@@ -105,4 +105,4 @@ class Test
       # Update @response
       @response.body = json
 
-module.exports = Test
+module.exports = TestFactory

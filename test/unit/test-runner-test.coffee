@@ -6,7 +6,7 @@ mocha = require 'mocha'
 mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
 
-Test = require '../../lib/test'
+TestFactory = require '../../lib/test'
 
 hooksStub = require '../../lib/hooks'
 suiteStub = ''
@@ -35,7 +35,8 @@ describe 'Test Runner', ->
       beforeHook = ''
       afterHook = ''
       runCallback = ''
-      test = new Test()
+      testFactory = new TestFactory()
+      test = testFactory.create()
       test.name = 'GET /machines -> 200'
       test.request.path = '/machines'
       test.request.method = 'GET'
@@ -148,7 +149,8 @@ describe 'Test Runner', ->
       runner = ''
 
       before (done) ->
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -177,7 +179,8 @@ describe 'Test Runner', ->
     describe 'when test has no respones code', ->
       before (done) ->
 
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -207,7 +210,8 @@ describe 'Test Runner', ->
     describe 'when test has no response schema', ->
       before (done) ->
 
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -241,7 +245,8 @@ describe 'Test Runner', ->
 
       before (done) ->
 
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -276,7 +281,8 @@ describe 'Test Runner', ->
 
       before (done) ->
 
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -312,7 +318,8 @@ describe 'Test Runner', ->
     describe 'list all tests with `names`', ->
       before (done) ->
 
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -351,7 +358,8 @@ describe 'Test Runner', ->
       header = ''
 
       before (done) ->
-        test = new Test()
+        testFactory = new TestFactory()
+        test = testFactory.create()
         test.name = 'GET /machines -> 200'
         test.request.path = '/machines'
         test.request.method = 'GET'
@@ -379,7 +387,8 @@ describe 'Test Runner', ->
 
     describe 'run test with hooks only indicated by `hooks-only`', ->
 
-      test = new Test()
+      testFactory = new TestFactory()
+      test = testFactory.create()
       test.name = 'GET /machines -> 200'
       test.request.path = '/machines'
       test.request.method = 'GET'

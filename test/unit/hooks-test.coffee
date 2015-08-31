@@ -2,7 +2,7 @@ require 'coffee-errors'
 sinon = require 'sinon'
 {assert} = require 'chai'
 
-TestStub = require '../../lib/test'
+TestFactoryStub = require '../../lib/test'
 
 hooks = require '../../lib/hooks'
 
@@ -217,7 +217,8 @@ describe 'Hooks', () ->
 
     describe 'with correponding test', () ->
 
-      test = new TestStub()
+      testFactory = new TestFactoryStub()
+      test = testFactory.create()
       test.name = 'GET /machines -> 200'
       test.request.server = 'http://abao.io'
       test.request.path = '/machines'
@@ -258,7 +259,8 @@ describe 'Hooks', () ->
 
     describe 'with incorreponding test', () ->
 
-      test = new TestStub()
+      testFactory = new TestFactoryStub()
+      test = testFactory.create()
       test.name = 'POST /machines -> 201'
       test.request.server = 'http://abao.io'
       test.request.path = '/machines'
