@@ -5,6 +5,7 @@ chai = require 'chai'
 
 options = require './options'
 addTests = require './add-tests'
+testFactory = require './test'
 addHooks = require './add-hooks'
 Runner = require './test-runner'
 applyConfiguration = require './apply-configuration'
@@ -22,6 +23,9 @@ class Abao
     tests = @tests
     hooks = @hooks
 
+    # init the test factory to inject the json refs schemas
+    factory = new testFactory(config.options.schemas)
+
     async.waterfall [
       # Load RAML
       (callback) ->
@@ -31,7 +35,7 @@ class Abao
       ,
       # Parse tests from RAML
       (raml, callback) ->
-        addTests raml, tests, callback
+        addTests raml, tests, callback, factory
       ,
       # Parse hooks
       (callback) ->

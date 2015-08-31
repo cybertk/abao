@@ -1,7 +1,12 @@
 options =
   hookfiles:
     alias: 'f'
-    description: 'Specifes a pattern to match files with before/after hooks for running tests'
+    description: 'Specifies a pattern to match files with before/after hooks for running tests'
+    default: null
+
+  schemas:
+    alias: 's'
+    description: 'Specifies a pattern to match files schemas that will be loaded so they can be used as JSON refs'
     default: null
 
   names:

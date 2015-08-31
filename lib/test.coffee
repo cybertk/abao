@@ -6,9 +6,27 @@ async = require 'async'
 assert = chai.assert
 chai.use(require 'chai2-json-schema')
 
+fs = require('fs');
+glob = require('glob');
 
 String::contains = (it) ->
   @indexOf(it) != -1
+
+class TestFactory
+  constructor: (schemaLocation) ->
+    if schemaLocation
+
+      files = glob.sync schemaLocation
+      console.error 'Found JSON ref schemas: ' + files
+      console.error ''
+
+      chai.tv4.banUnknown = true;
+
+      for file in files
+        chai.tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
+
+  create: () ->
+    return new Test()
 
 class Test
   constructor: () ->
@@ -87,4 +105,4 @@ class Test
       # Update @response
       @response.body = json
 
-module.exports = Test
+module.exports = TestFactory

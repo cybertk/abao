@@ -38,7 +38,7 @@ describe 'Abao', ->
   describe '#run', ->
 
     abao = ''
-    callback = ;
+    callback = undefined
     before (done) ->
       abao = new Abao()
       callback = sinon.stub()
