@@ -11,7 +11,7 @@ stdout = ''
 report = ''
 exitStatus = null
 
-recievedRequest = {}
+receivedRequest = {}
 
 execCommand = (cmd, callback) ->
   stderr = ''
@@ -134,7 +134,7 @@ describe "Command line interface", ->
 
     describe "when adding additional headers with -h", ->
 
-      recievedRequest = {}
+      receivedRequest = {}
 
       before (done) ->
         cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -h Accept:application/json"
@@ -142,7 +142,7 @@ describe "Command line interface", ->
         app = express()
 
         app.get '/machines', (req, res) ->
-          recievedRequest = req
+          receivedRequest = req
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -157,7 +157,7 @@ describe "Command line interface", ->
         server.on 'close', done
 
       it 'should have an additional header in the request', () ->
-        assert.equal recievedRequest.headers.accept, 'application/json'
+        assert.equal receivedRequest.headers.accept, 'application/json'
 
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
@@ -184,7 +184,7 @@ describe "Command line interface", ->
 
     describe 'when loading hooks with --hookfiles', () ->
 
-      recievedRequest = {}
+      receivedRequest = {}
 
       before (done) ->
         cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hookfiles=./test/fixtures/*_hooks.*"
@@ -192,7 +192,7 @@ describe "Command line interface", ->
         app = express()
 
         app.get '/machines', (req, res) ->
-          recievedRequest = req
+          receivedRequest = req
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -207,8 +207,8 @@ describe "Command line interface", ->
         server.on 'close', done
 
       it 'should modify the transaction with hooks', () ->
-        assert.equal recievedRequest.headers['header'], '123232323'
-        assert.equal recievedRequest.query['key'], 'value'
+        assert.equal receivedRequest.headers['header'], '123232323'
+        assert.equal receivedRequest.query['key'], 'value'
 
       it 'should print message to stdout and stderr', ->
         assert.include stdout, 'before-hook-GET-machines'
