@@ -12,7 +12,7 @@ requestStub = sinon.stub()
 requestStub.restore = () ->
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
-testFactory = proxyquire '../../lib/test-factory', {
+testFactory = proxyquire '../../lib/test', {
   'request': requestStub
 }
 
