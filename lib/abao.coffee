@@ -24,7 +24,7 @@ class Abao
     hooks = @hooks
 
     # init the test factory to inject the json refs schemas
-    factory = new testFactory(config.options.schemas)
+    factory = new testFactory(config.options.verbose, config.options.schemas)
 
     async.waterfall [
       # Load RAML
@@ -39,7 +39,7 @@ class Abao
       ,
       # Parse hooks
       (callback) ->
-        addHooks hooks, config.options.hookfiles
+        addHooks hooks, config.options.hookfiles, config.options.verbose
         callback()
       ,
       # Run tests

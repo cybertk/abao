@@ -40,6 +40,11 @@ options =
     description: "set test-case timeout in milliseconds"
     default: 2000
 
+  verbose:
+    alias: "v"
+    description: "set 'verbose' on: Add extra information to the output: + actual used path, + actual read used hookfiles + actual used JSON schemas"
+    default: false
+
   reporters:
     description: "Display available reporters"
 

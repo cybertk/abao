@@ -25,6 +25,7 @@ applyConfiguration = (config) ->
     ramlPath: null
     server: null
     options:
+      schemas: null
       reporters: false
       reporter: null
       header: null
@@ -33,6 +34,7 @@ applyConfiguration = (config) ->
       grep: ''
       invert: false
       'hooks-only': false
+      verbose: false
 
   # normalize options and config
   for own key, value of config

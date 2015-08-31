@@ -6,13 +6,14 @@ glob = require 'glob'
 async = require 'async'
 
 
-addHooks = (hooks, pattern) ->
+addHooks = (hooks, pattern, verbose) ->
 
     return unless pattern
 
     files = glob.sync pattern
 
-    console.error 'Found Hookfiles: ' + files
+    if (verbose)
+      console.error 'Found Hookfiles: ' + files
 
     try
       for file in files

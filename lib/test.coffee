@@ -13,12 +13,16 @@ String::contains = (it) ->
   @indexOf(it) != -1
 
 class TestFactory
-  constructor: (schemaLocation) ->
+  constructor: (verbose, schemaLocation) ->
+    @verbose = verbose
+
     if schemaLocation
 
       files = glob.sync schemaLocation
-      console.error 'Found JSON ref schemas: ' + files
-      console.error ''
+
+      if @verbose
+        console.error 'Found JSON ref schemas: ' + files
+        console.error ''
 
       chai.tv4.banUnknown = true;
 
@@ -26,12 +30,15 @@ class TestFactory
         chai.tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: () ->
-    return new Test()
+    test = new Test()
+    test.verbose = @verbose
+    return test
 
 class Test
   constructor: () ->
     @name = ''
     @skip = false
+    @verbose = false
 
     @request =
       server: ''
@@ -55,6 +62,23 @@ class Test
       path = path.replace "{#{key}}", value
     return path
 
+  fullUrl: () ->
+    path = @request.server + @request.path
+
+    for key, value of @request.params
+      path = path.replace "{#{key}}", value
+
+    query = '?'
+    for key, value of @request.query
+      query += key + '=' + value + '&'
+
+    #if the query ends with an & we remove the last & AND add the query to the complete url
+    if (query.substr(-1) == '&' )
+      path = query.substr(0,-1)
+
+    #add whitespace and return the used path
+    return '    > Used path: ' + path
+
   run: (callback) ->
     assertResponse = @assertResponse
 
@@ -62,6 +86,10 @@ class Test
     options['url'] = @url()
     options['body'] = JSON.stringify @request.body
     options['qs'] = @request.query
+
+    # extra output with exact call made to the service that we are testing
+    if (@verbose)
+      console.log @fullUrl()
 
     async.waterfall [
       (callback) ->
