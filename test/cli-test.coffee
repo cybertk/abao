@@ -286,7 +286,7 @@ describe "Command line interface", ->
     describe 'when run with --schema', () ->
       before (done) ->
 
-        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schema=./test/fixtures/schemas/*_hooks.*"
+        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
 
         app = express()
 
@@ -306,3 +306,27 @@ describe "Command line interface", ->
 
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
+
+    describe 'when run with --schema and expecting error', () ->
+      before (done) ->
+
+        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
+
+        app = express()
+
+        app.get '/machines', (req, res) ->
+          res.setHeader 'Content-Type', 'application/json'
+          machine =
+            typO: 'bulldozer'
+            name: 'willy'
+          response = [machine]
+          res.status(200).send response
+
+        server = app.listen PORT, () ->
+          execCommand cmd, () ->
+            server.close()
+
+        server.on 'close', done
+
+      it 'exit status should be 1', () ->
+        assert.equal exitStatus, 1
