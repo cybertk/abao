@@ -12,7 +12,7 @@ requestStub = sinon.stub()
 requestStub.restore = () ->
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
-testFactory = proxyquire '../../lib/test', {
+TestFactory = proxyquire '../../lib/test', {
   'request': requestStub
 }
 
@@ -29,7 +29,7 @@ describe 'Test', ->
 
       before (done) ->
 
-        testFact = new testFactory()
+        testFact = new TestFactory()
         test = testFact.create()
         test.name = 'POST /machines -> 201'
         test.request.server = 'http://abao.io'
@@ -96,7 +96,7 @@ describe 'Test', ->
 
       before (done) ->
 
-        testFact = new testFactory()
+        testFact = new TestFactory()
         test = testFact.create()
         test.name = 'PUT /machines/{machine_id} -> 200'
         test.request.server = 'http://abao.io'
@@ -156,7 +156,7 @@ describe 'Test', ->
   describe '#url', ->
 
     describe 'when call with path does not contain param', ->
-      testFact = new testFactory()
+      testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines'
 
@@ -164,7 +164,7 @@ describe 'Test', ->
         assert.equal test.url(), '/machines'
 
     describe 'when call with path contains param', ->
-      testFact = new testFactory()
+      testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
       test.request.params =
@@ -184,7 +184,7 @@ describe 'Test', ->
     responseStub = ''
     bodyStub = ''
 
-    testFact = new testFactory()
+    testFact = new TestFactory()
     test = testFact.create()
     test.response.status = 201
     test.response.schema = {
