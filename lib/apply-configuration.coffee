@@ -34,7 +34,6 @@ applyConfiguration = (config) ->
       grep: ''
       invert: false
       'hooks-only': false
-      verbose: false
 
   # normalize options and config
   for own key, value of config
