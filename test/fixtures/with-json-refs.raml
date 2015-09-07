@@ -1,0 +1,20 @@
+#%RAML 0.8
+title: World Music API
+version: v1
+resourceTypes:
+  - resource:
+     get:
+       headers:
+         Abao-API-Key:
+           type: string
+           example: abcdef
+       description: Get <<resourcePathName|!singularize>> by Identifier
+       responses:
+         200:
+           body:
+             application/json:
+               schema: <<resourceSchema>>
+/machines:
+ type:
+   resource:
+     resourceSchema: !include schemas/with-json-refs.json

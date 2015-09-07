@@ -12,8 +12,7 @@ requestStub = sinon.stub()
 requestStub.restore = () ->
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
-
-Test = proxyquire '../../lib/test', {
+TestFactory = proxyquire '../../lib/test', {
   'request': requestStub
 }
 
@@ -24,12 +23,14 @@ describe 'Test', ->
 
     describe 'of simple test', ->
 
+      testFact = ''
       test = ''
       machine = ''
 
       before (done) ->
 
-        test = new Test()
+        testFact = new TestFactory()
+        test = testFact.create()
         test.name = 'POST /machines -> 201'
         test.request.server = 'http://abao.io'
         test.request.path = '/machines'
@@ -95,7 +96,8 @@ describe 'Test', ->
 
       before (done) ->
 
-        test = new Test()
+        testFact = new TestFactory()
+        test = testFact.create()
         test.name = 'PUT /machines/{machine_id} -> 200'
         test.request.server = 'http://abao.io'
         test.request.path = '/machines/{machine_id}'
@@ -150,18 +152,69 @@ describe 'Test', ->
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
 
+    describe 'Init a TestFactory', ->
+
+      globStub = {}
+      globStub.sync = sinon.spy((location) ->
+        return [location]
+      )
+
+      fsStub = {}
+      fsStub.readFileSync = sinon.spy(() ->
+        return '{ "text": "example" }'
+      )
+
+      chaiStub = { tv4: {}}
+      chaiStub.use = sinon.stub()
+      chaiStub.tv4.banUnknown = false
+      chaiStub.tv4.addSchema = sinon.spy()
+
+      TestTestFactory = proxyquire '../../lib/test', {
+        'fs': fsStub,
+        'glob': globStub,
+        'chai': chaiStub
+      }
+
+      it 'test TestFactory without parameter', ->
+        new TestTestFactory('')
+        assert.isFalse globStub.sync.called
+        assert.isFalse fsStub.readFileSync.called
+        assert.isTrue chaiStub.use.called
+        assert.isFalse chaiStub.tv4.banUnknown
+        assert.isFalse chaiStub.tv4.addSchema.called
+
+      it 'test TestFactory with name 1', ->
+        new TestTestFactory('thisisaword')
+        assert.isTrue globStub.sync.calledWith('thisisaword')
+        assert.isTrue fsStub.readFileSync.calledOnce
+        assert.isTrue fsStub.readFileSync.calledWith('thisisaword','utf8')
+        assert.isTrue chaiStub.use.called
+        assert.isTrue chaiStub.tv4.banUnknown
+        assert.isTrue chaiStub.tv4.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+
+      it 'test TestFactory with name 2', ->
+        new TestTestFactory('thisIsAnotherWord')
+        assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
+        assert.isTrue fsStub.readFileSync.calledTwice
+        assert.isTrue fsStub.readFileSync.calledWith('thisIsAnotherWord','utf8')
+        assert.isTrue chaiStub.use.called
+        assert.isTrue chaiStub.tv4.banUnknown
+        assert.isTrue chaiStub.tv4.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+
 
   describe '#url', ->
 
     describe 'when call with path does not contain param', ->
-      test = new Test()
+      testFact = new TestFactory()
+      test = testFact.create()
       test.request.path = '/machines'
 
       it 'should return origin path', ->
         assert.equal test.url(), '/machines'
 
     describe 'when call with path contains param', ->
-      test = new Test()
+      testFact = new TestFactory()
+      test = testFact.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
       test.request.params =
         machine_id: 'tianmao'
@@ -180,7 +233,8 @@ describe 'Test', ->
     responseStub = ''
     bodyStub = ''
 
-    test = new Test()
+    testFact = new TestFactory()
+    test = testFact.create()
     test.response.status = 201
     test.response.schema = {
       $schema: 'http://json-schema.org/draft-04/schema#'

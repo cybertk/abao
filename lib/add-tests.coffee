@@ -2,8 +2,6 @@ async = require 'async'
 _ = require 'underscore'
 csonschema = require 'csonschema'
 
-Test = require './test'
-
 parseSchema = (source) ->
   if source.contains('$schema')
     #jsonschema
@@ -22,11 +20,12 @@ parseHeaders = (raml) ->
 
   headers
 
-# addTests(raml, tests, [parent], callback)
-addTests = (raml, tests, parent, callback) ->
+# addTests(raml, tests, [parent], callback, config)
+addTests = (raml, tests, parent, callback, testFactory) ->
 
   # Handle 3th optional param
   if _.isFunction(parent)
+    testFactory = callback
     callback = parent
     parent = null
 
@@ -58,7 +57,7 @@ addTests = (raml, tests, parent, callback) ->
       for status, res of api.responses
 
         # Append new test to tests
-        test = new Test
+        test = testFactory.create()
         tests.push test
 
         # Update test
@@ -87,7 +86,7 @@ addTests = (raml, tests, parent, callback) ->
       return callback(err) if err
 
       # Recursive
-      addTests resource, tests, {path, params}, callback
+      addTests resource, tests, {path, params}, callback, testFactory
   , callback
 
 

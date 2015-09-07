@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "http://example.api.com/jsonrefs/machine#",
+  "title": "Machine-Array",
+  "oneOf": [
+    {
+      "type": "array",
+      "items": {
+        "$ref": "http://example.api.com/jsonrefs/definitions#/definitions/machine"
+      }
+    }
+  ],
+  "additionalProperties": false
+}

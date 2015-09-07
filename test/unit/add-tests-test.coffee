@@ -6,7 +6,7 @@ proxyquire = require('proxyquire').noCallThru()
 
 mochaStub = require 'mocha'
 
-Test = require '../../lib/test'
+TestFactory = require '../../lib/test'
 addTests = proxyquire '../../lib/add-tests', {
   'mocha': mochaStub
 }
@@ -18,6 +18,7 @@ describe '#addTests', ->
     describe 'when raml contains single get', ->
 
       tests = []
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -27,7 +28,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
       after ->
         tests = []
@@ -65,6 +66,7 @@ describe '#addTests', ->
     describe 'when raml contains one GET and one POST', ->
 
       tests = []
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -74,7 +76,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
       after ->
         tests = []
@@ -111,6 +113,7 @@ describe '#addTests', ->
     describe 'when raml includes multiple referencing schemas', ->
 
       tests = []
+      testFactory = new TestFactory
       callback = ''
 
       before (done) ->
@@ -120,7 +123,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
       after ->
         tests = []
@@ -154,6 +157,7 @@ describe '#addTests', ->
     describe 'when raml has inline and included schemas', ->
 
       tests = []
+      testFactory = new TestFactory
       callback = ''
 
       before (done) ->
@@ -163,7 +167,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
       after ->
         tests = []
@@ -197,6 +201,7 @@ describe '#addTests', ->
     describe 'when raml contains three-levels endpoints', ->
 
       tests = []
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -206,7 +211,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
 
       after ->
@@ -236,6 +241,7 @@ describe '#addTests', ->
     describe 'when raml has resource not defined method', ->
 
       tests = []
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -245,7 +251,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
 
       after ->
@@ -263,6 +269,7 @@ describe '#addTests', ->
     describe 'when raml has invalid request body example', ->
 
       tests = []
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -288,7 +295,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           sinon.stub console, 'warn'
-          addTests data, tests, callback
+          addTests data, tests, callback, testFactory
         , done
 
       after ->
