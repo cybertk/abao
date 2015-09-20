@@ -26,7 +26,7 @@ Install stable version
 
 Install latest developement version in GitHub branch
 
-    npm install -g git://github.com/cybertk/abao.git#master
+    npm install -g github:cybertk/abao
 
 ## Get Started Testing Your API
 
