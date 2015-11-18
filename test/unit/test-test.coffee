@@ -164,42 +164,38 @@ describe 'Test', ->
         return '{ "text": "example" }'
       )
 
-      chaiStub = { tv4: {}}
-      chaiStub.use = sinon.stub()
-      chaiStub.tv4.banUnknown = false
-      chaiStub.tv4.addSchema = sinon.spy()
+      tv4Stub = {}
+      tv4Stub.banUnknown = false
+      tv4Stub.addSchema = sinon.spy()
 
       TestTestFactory = proxyquire '../../lib/test', {
         'fs': fsStub,
         'glob': globStub,
-        'chai': chaiStub
+        'tv4': tv4Stub
       }
 
       it 'test TestFactory without parameter', ->
         new TestTestFactory('')
         assert.isFalse globStub.sync.called
         assert.isFalse fsStub.readFileSync.called
-        assert.isTrue chaiStub.use.called
-        assert.isFalse chaiStub.tv4.banUnknown
-        assert.isFalse chaiStub.tv4.addSchema.called
+        assert.isFalse tv4Stub.banUnknown
+        assert.isFalse tv4Stub.addSchema.called
 
       it 'test TestFactory with name 1', ->
         new TestTestFactory('thisisaword')
         assert.isTrue globStub.sync.calledWith('thisisaword')
         assert.isTrue fsStub.readFileSync.calledOnce
         assert.isTrue fsStub.readFileSync.calledWith('thisisaword','utf8')
-        assert.isTrue chaiStub.use.called
-        assert.isTrue chaiStub.tv4.banUnknown
-        assert.isTrue chaiStub.tv4.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+        assert.isTrue tv4Stub.banUnknown
+        assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
       it 'test TestFactory with name 2', ->
         new TestTestFactory('thisIsAnotherWord')
         assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
         assert.isTrue fsStub.readFileSync.calledTwice
         assert.isTrue fsStub.readFileSync.calledWith('thisIsAnotherWord','utf8')
-        assert.isTrue chaiStub.use.called
-        assert.isTrue chaiStub.tv4.banUnknown
-        assert.isTrue chaiStub.tv4.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+        assert.isTrue tv4Stub.banUnknown
+        assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
 
   describe '#url', ->

@@ -2,12 +2,11 @@ chai = require 'chai'
 request = require 'request'
 _ = require 'underscore'
 async = require 'async'
+tv4 = require 'tv4'
+fs = require 'fs'
+glob = require 'glob'
 
 assert = chai.assert
-chai.use(require 'chai2-json-schema')
-
-fs = require('fs');
-glob = require('glob');
 
 String::contains = (it) ->
   @indexOf(it) != -1
@@ -20,10 +19,10 @@ class TestFactory
       console.error 'Found JSON ref schemas: ' + files
       console.error ''
 
-      chai.tv4.banUnknown = true;
+      tv4.banUnknown = true;
 
       for file in files
-        chai.tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
+        tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: () ->
     return new Test()
@@ -96,7 +95,8 @@ class Test
       """
 
       json = validateJson()
-      assert.jsonSchema json, schema, """
+      result = tv4.validateResult json, schema
+      assert.ok result.valid, """
         Got unexpected response body:
         #{JSON.stringify(json, null, 4)}
         Error
