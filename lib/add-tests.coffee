@@ -37,7 +37,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
     path = resource.relativeUri
     params = {}
     query = {}
-    console.log('callback addtests' +'dir resoure :/n')
+    # console.log('callback addtests' +'dir resoure :/n')
     # console.log(JSON.stringify(resource, null, 2))
     # console.log(JSON.stringify(resource.resources[0].methods, null, 2))
 
@@ -45,14 +45,14 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
     if parent
       path = parent.path + path
       params = _.clone parent.params
-      queryparent = _.clone parent.query
-      console.log('parent query is :')
-      console.log(JSON.stringify(queryparent, null, 2))
+      # queryparent = _.clone parent.query
+      # console.log('parent query is :')
+      # console.log(JSON.stringify(queryparent, null, 2))
 
 
     # Setup param
     if resource.uriParameters
-      console.dir('your uriParameters' + resource.uriParameters)
+      # console.dir('your uriParameters' + resource.uriParameters)
       for key, param of resource.uriParameters
         params[key] = param.example
 
@@ -66,14 +66,14 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
       # Setup query
       if api.queryParameters
 
-        console.log('your methods.queryParameters is ' + api.queryParameters )
-        console.log(JSON.stringify(api.queryParameters, null, 2))
+        # console.log('your methods.queryParameters is ' + api.queryParameters )
+        # console.log(JSON.stringify(api.queryParameters, null, 2))
 
         for qkey, qvalue of api.queryParameters
           query[qkey] = qvalue.example
           # console.log('qkey is :'  + 'qvalue is : qvalue.example' )
-        console.log('the queryParameters is:' + query )
-        console.log(JSON.stringify(query, null, 2))
+        # console.log('the queryParameters is:' + query )
+        # console.log(JSON.stringify(query, null, 2))
 
 
 
@@ -100,12 +100,12 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           catch
             console.warn "cannot parse JSON example request body for #{test.name}"
         test.request.params = params
-        console.log('this test queryParameters is:' + query )
-        console.log(JSON.stringify(query, null, 2))
-        console.log(test.request)
+        # console.log('this test queryParameters is:' + query )
+        # console.log(JSON.stringify(query, null, 2))
+        # console.log(test.request)
         test.request.query = query
-        console.log('this test queryParameters is:' + query )
-        console.log(JSON.stringify(query, null, 2))
+        # console.log('this test queryParameters is:' + query )
+        # console.log(JSON.stringify(query, null, 2))
 
         # Update test.response
         test.response.status = status
