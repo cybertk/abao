@@ -114,7 +114,7 @@ If `beforeAll`, `afterAll`, `before` and `after` are called multiple times, the 
 - `path` - API endpoint path, parsed from RAML.
 - `method` - http method, parsed from RAML.
 - `params` - URI parameters, parsed from RAML `uriParameters` section, default to `{}`.
-- `query` - object containing querystring values to be appended to the `path`, default to `{}`.
+- `query` - object containing querystring values to be appended to the `path`,parsed from RAML `queryParameters` section default to `{}`.
 - `headers` - http headers, parsed from RAML `headers` section, default to `{}`.
 - `body` - entity body for PATCH, POST and PUT requests. Must be a JSON-serializable object. Parsed from RAML `example` section, default to `{}`
 
