@@ -4,10 +4,12 @@ _ = require 'underscore'
 
 
 class TestRunner
-  constructor: (server, options = {}) ->
-    @server = server
-    @options = options
-    @mocha = new Mocha options
+  constructor: (config) ->
+    @accessToken = config.accessToken
+    @server = config.server
+    @version = config.version
+    @options = config.options or {}
+    @mocha = new Mocha @options
 
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
@@ -26,6 +28,11 @@ class TestRunner
       suite.addTest new Mocha.Test 'Skip as no hooks defined'
       return
 
+    # Not GET method for this test
+    if test.request.method isnt 'GET' and options['read-only']
+      suite.addTest new Mocha.Test 'Skip as is not GET method'
+      return
+
     # Setup hooks
     if hooks
       suite.beforeAll _.bind (done) ->
@@ -40,11 +47,14 @@ class TestRunner
     # Vote test name
     title = if test.response.schema then 'Validate response code and body' else 'Validate response code only'
     suite.addTest new Mocha.Test title, _.bind (done) ->
+      # Run actual test case below
       @test.run done
     , {test}
 
   run: (tests, hooks, callback) ->
     server = @server
+    accessToken = @accessToken
+    version = @version
     options = @options
     addTestToMocha = @addTestToMocha
     mocha = @mocha
@@ -59,9 +69,15 @@ class TestRunner
 
           # Update test.request
           test.request.server = server
-          _.extend(test.request.headers, options.header)
+          test.request.version = version
+          test.request.query =
+            access_token: accessToken
 
-          addTestToMocha test, hooks
+          _.extend(test.request.headers, options.header)
+          if options.grep and test.request.path.match(options.grep)
+            addTestToMocha test, hooks
+          else
+            addTestToMocha test, hooks
           done()
         , callback
       , # Run mocha

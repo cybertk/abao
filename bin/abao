@@ -8,8 +8,8 @@ var pjson = require('../package.json');
 var Abao = require('../lib/abao');
 
 var argv = optimist
-    .usage("Usage: \n  abao <path to raml> <api_endpoint> [OPTIONS]" +
-    "\n\nExample: \n  " + "abao ./api.raml http://api.example.com")
+    .usage("Usage: \n  abao <path to raml> <api_endpoint> <access_token> [OPTIONS]" +
+    "\n\nExample: \n  " + "abao ./api.raml http://api.example.com eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjR6Z3lreWU1Z2IifQ.eyJ1aWQiOiI1NGNiNjM0YWJhMWI4MjkzMzQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NjU3OWU0ZjhmNWU4OGFlNDk4YjQ2ZjkifQ.o_wkfghQcX8rTyBr8Eu76rKiiBpQ_bCoUdD0saCAYpQ")
     .options(Abao.options)
     .wrap(80)
     .argv;
@@ -26,7 +26,7 @@ if (argv.version === true) {
   process.exit(0);
 }
 
-if (argv.reporters === true) {
+if (argv.reporters) {
   // Copied from node_modules/mocha/_mocha
   console.log();
   console.log('    dot - dot matrix');
@@ -56,6 +56,10 @@ if (argv._[1] === undefined && !argv.names) {
   console.error("Error: Must specify api endpoint.");
   argError = true;
 }
+if (argv._[2] === undefined && !argv.names) {
+  console.error("Error: Must specify api access token.");
+  argError = true;
+}
 if (argError) {
   console.error("\n");
   optimist.showHelp(fn=console.error);
@@ -65,6 +69,7 @@ if (argError) {
 configuration = {
   'ramlPath': argv._[0],
   'server': argv._[1],
+  'accessToken': argv._[2],
   'options': argv
 };
 

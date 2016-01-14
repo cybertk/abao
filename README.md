@@ -22,15 +22,15 @@
 
 Install stable version
 
-    npm install -g abao
-
-Install latest developement version in GitHub branch
-
-    npm install -g github:cybertk/abao
+    npm install -g frontnode/abao
 
 ## Get Started Testing Your API
 
-    abao api.raml http://api.example.com
+    abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Imp5OXFwbDRqbmoifQ.eyJ1aWQiOiI1NGExNDYxZWI4MTM3NDgwMDQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NTQ5YWI2ZGI4MTM3NDdhMTQ4YjQ1NmEifQ.SdnfjnBANrZaqMZhjAjwf90fHpREPGCVR88ichhB0XY
+
+## Test part of your APIs
+
+    abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Imp5OXFwbDRqbmoifQ.eyJ1aWQiOiI1NGExNDYxZWI4MTM3NDgwMDQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NTQ5YWI2ZGI4MTM3NDdhMTQ4YjQ1NmEifQ.SdnfjnBANrZaqMZhjAjwf90fHpREPGCVR88ichhB0XY -g /cap
 
 ## Writing testable RAML
 
@@ -128,28 +128,31 @@ If `beforeAll`, `afterAll`, `before` and `after` are called multiple times, the 
 ## Command Line Options
 
 ```
-Usage:
-  abao <path to raml> <api_endpoint> [OPTIONS]
+Usage: 
+  abao <path to raml> <api_endpoint> <access_token> [OPTIONS]
 
-Example:
-  abao ./api.raml http://api.example.com
+Example: 
+  abao ./api.raml http://api.example.com eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjR6Z3lreWU1Z2IifQ.eyJ1aWQiOiI1NGNiNjM0YWJhMWI4MjkzMzQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NjU3OWU0ZjhmNWU4OGFlNDk4YjQ2ZjkifQ.o_wkfghQcX8rTyBr8Eu76rKiiBpQ_bCoUdD0saCAYpQ
 
 Options:
-  --hookfiles, -f   Specifes a pattern to match files with before/after hooks
+  --hookfiles, -f   Specifies a pattern to match files with before/after hooks
                     for running tests                            [default: null]
+  --schemas, -s     Specifies a pattern to match files schemas that will be
+                    loaded so they can be used as JSON refs      [default: null]
   --names, -n       Only list names of requests (for use in a hookfile). No
                     requests are made.                          [default: false]
   --reporter, -r    Specify the reporter to use                [default: "spec"]
   --header, -h      Extra header to include in every request. The header must
                     be in KEY:VALUE format, e.g. '-h Accept:application/json'.
                     This option can be used multiple times to add multiple
-                    headers
-  --hooks-only, -H  Run test only if defined either before or after hooks
-  --grep, -g        only run tests matching <pattern>
-  --invert, -i      inverts --grep matches
+                    headers                                                     
+  --hooks-only, -H  Run test only if defined either before or after hooks       
+  --read-only, -R   Run test only for GET methods                               
+  --grep, -g        only run tests for path matching <regular expression>       
+  --invert, -i      inverts --grep matches                                      
   --timeout, -t     set test-case timeout in milliseconds        [default: 2000]
-  --reporters       Display available reporters
-  --help            Show usage information
+  --reporters       Display available reporters                                 
+  --help            Show usage information                                      
   --version         Show version number
 ```
 
@@ -165,4 +168,3 @@ Any contribution is more than welcome!
 [RAML]: http://raml.org
 [mocha]: http://mochajs.org
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cybertk/abao/trend.png)](https://bitdeli.com/free "Bitdeli Badge")

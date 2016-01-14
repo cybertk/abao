@@ -27,9 +27,13 @@ options =
     alias: "H"
     description: "Run test only if defined either before or after hooks"
 
+  'read-only':
+    alias: "R"
+    description: "Run test only for GET methods"
+
   grep:
     alias: "g"
-    description: "only run tests matching <pattern>"
+    description: "only run tests for path matching <regular expression>"
 
   invert:
     alias: "i"

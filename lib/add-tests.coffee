@@ -55,6 +55,8 @@ addTests = (raml, tests, parent, callback, testFactory) ->
 
       # Iterate response status
       for status, res of api.responses
+        # Skip other status code and only keep the 200 status code for positive validation by default
+        continue if status isnt '200'
 
         # Append new test to tests
         test = testFactory.create()
@@ -80,12 +82,12 @@ addTests = (raml, tests, parent, callback, testFactory) ->
         test.response.schema = null
         if (res?.body?['application/json']?.schema)
           test.response.schema = parseSchema res.body['application/json'].schema
-        
+
       callback()
     , (err) ->
       return callback(err) if err
 
-      # Recursive
+      # Add all tests for a resource path
       addTests resource, tests, {path, params}, callback, testFactory
   , callback
 

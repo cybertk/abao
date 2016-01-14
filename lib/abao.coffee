@@ -35,6 +35,7 @@ class Abao
       ,
       # Parse tests from RAML
       (raml, callback) ->
+        config.version = raml.version
         addTests raml, tests, callback, factory
       ,
       # Parse hooks
@@ -44,7 +45,7 @@ class Abao
       ,
       # Run tests
       (callback) ->
-        runner = new Runner config.server, config.options
+        runner = new Runner config
         runner.run tests, hooks, callback
     ], done
 

@@ -35,6 +35,7 @@ class Test
     @request =
       server: ''
       path: ''
+      version: ''
       method: 'GET'
       params: {}
       query: {}
@@ -48,8 +49,7 @@ class Test
       body: null
 
   url: () ->
-    path = @request.server + @request.path
-
+    path = @request.server + '/' + @request.version + @request.path
     for key, value of @request.params
       path = path.replace "{#{key}}", value
     return path
@@ -64,42 +64,50 @@ class Test
 
     async.waterfall [
       (callback) ->
+        # Send request
         request options, (error, response, body) ->
-          callback null, error, response, body
+          callback null, error, response, body, options
       ,
-      (error, response, body, callback) ->
-        assertResponse(error, response, body)
+      (error, response, body, options, callback) ->
+        # Assert response
+        assertResponse error, response, body, options
         callback()
     ], callback
 
-  assertResponse: (error, response, body) =>
+  assertResponse: (error, response, body, options) =>
+    # TODO: Add more assertion and show more detailed information
     assert.isNull error
     assert.isNotNull response, 'Response'
 
     # Status code
     assert.equal response.statusCode, @response.status, """
-      Got unexpected response code:
+      Response code does not match definition in RAML file
+      * Response raw data:
       #{body}
-      Error
+      * Assertion error
     """
 
     # Body
     if @response.schema
       schema = @response.schema
       validateJson = _.partial JSON.parse, body
+
       body = '[empty]' if body is ''
       assert.doesNotThrow validateJson, JSON.SyntaxError, """
-        Invalid JSON:
+        Server response data is not JSON format
+        * Response raw data:
         #{body}
-        Error
+        * Assertion error
       """
 
       json = validateJson()
-      result = tv4.validateResult json, schema
+      result = tv4.validateResult json, schema, true, true
       assert.ok result.valid, """
-        Got unexpected response body:
+        Server response data does not match RAML schema definition
+        * Error message: #{result?.error?.message}
+        * Response JSON data:
         #{JSON.stringify(json, null, 4)}
-        Error
+        * Assertion error
       """
 
       # Update @response
