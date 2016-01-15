@@ -87,6 +87,9 @@ class Test
       * Assertion error
     """
 
+    if @isCase
+      console.log @response
+
     # Body
     if @response.schema
       schema = @response.schema

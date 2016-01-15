@@ -17,6 +17,7 @@
 - Verify that each endpoint request body defined in RAML is supported in service - verify by validating the JSON schema
 - Verify that each endpoint response HTTP headers defined in RAML are supported in service
 - Verify that each endpoint response body defined in RAML is supported in service - verify by validating the JSON schema
+- Verify test data defined in files which support defining multiple test cases - verify based on [test case definition](#test-case-definition)
 
 ## Installation
 
@@ -35,6 +36,11 @@ Install stable version
 ## Writing testable RAML
 
 **Abao** validates the response from server against jsonschema defines in [RAML][], so there must be **schema** section in defined in [RAML][].
+
+### Test Case definition
+
+//TODO
+Every test case is defined based on configuration (JSON format)
 
 ## Hooks
 
