@@ -39,7 +39,7 @@ class Abao
         # Parse tests from RAML
         addTests raml, tests, callback, factory
         # Add cases configuration from test folder
-        addCases raml, tests, callback, factory
+        addCases '', raml, tests, callback, factory
       ,
       # Parse hooks
       (callback) ->

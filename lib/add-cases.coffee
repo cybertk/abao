@@ -8,10 +8,10 @@ parseFolderPath = (path, method) ->
   [path.replace(/\/\{.+?\}/g, ''), method.toLowerCase()].join('/')
 
 
-# addCases(raml, tests, [parent], callback, config)
-addCases = (raml, tests, parent, callback, testFactory) ->
+# addCases(basePath, raml, tests, [parent], callback, config)
+addCases = (basePath, raml, tests, parent, callback, testFactory) ->
   # TODO: Make it a configuration
-  baseTestFolder = 'test'
+  baseTestFolder = basePath or 'test'
 
   # Handle 3th optional param
   if _.isFunction(parent)
@@ -43,9 +43,10 @@ addCases = (raml, tests, parent, callback, testFactory) ->
     async.each resource.methods, (api, callback) ->
       method = api.method.toUpperCase()
       caseFolder = baseTestFolder + parseFolderPath(path, api.method)
+
       glob("#{caseFolder}/*.json", (err, files) ->
 
-        [].forEach((file) ->
+        files.forEach((file) ->
           json = fs.readFileSync(file, 'utf-8')
           definition = JSON.parse json
 
@@ -64,12 +65,9 @@ addCases = (raml, tests, parent, callback, testFactory) ->
           test.request.headers = definition.headers or {}
           # Use json as default content type
           if not test.request.headers['Content-Type']
-            test.request.headers = [
-              'Content-Type': 'application/json'
-            ]
+            test.request.headers['Content-Type'] = 'application/json'
 
           test.response = definition.response
-          console.log test
         )
       )
 
@@ -78,7 +76,7 @@ addCases = (raml, tests, parent, callback, testFactory) ->
       return callback(err) if err
 
       # Add all tests for a resource path
-      addCases resource, tests, {path, params}, callback, testFactory
+      addCases basePath, resource, tests, {path, params}, callback, testFactory
   , callback
 
 

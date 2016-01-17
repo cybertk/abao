@@ -55,8 +55,9 @@ addTests = (raml, tests, parent, callback, testFactory) ->
 
       # Iterate response status
       for status, res of api.responses
-        # Skip other status code and only keep the 200 status code for positive validation by default
-        continue if status isnt '200'
+        # Only keep success status code for positive validation by default
+        statusInt = parseInt(status)
+        continue if statusInt < 200 or statusInt >= 300 
 
         # Append new test to tests
         test = testFactory.create()

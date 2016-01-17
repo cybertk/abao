@@ -44,7 +44,13 @@ describe 'Test', ->
         test.request.body =
           body: 'value'
         test.response.status = 201
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = 
+          type: 'object'
+          properties:
+            type: 
+              type: 'string'
+            name:
+              type: 'string'
 
         machine =
           type: 'foo'
@@ -111,7 +117,13 @@ describe 'Test', ->
         test.request.body =
           body: 'value'
         test.response.status = 200
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = 
+          type: 'object'
+          properties: 
+            type: 
+              type: 'string'
+            name: 
+              type: 'string'
 
         machine =
           type: 'foo'

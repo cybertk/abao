@@ -49,7 +49,8 @@ class Test
       body: null
 
   url: () ->
-    path = @request.server + '/' + @request.version + @request.path
+    versionPath = if @request.version then '/' + @request.version else ''
+    path = @request.server + versionPath + @request.path
     for key, value of @request.params
       path = path.replace "{#{key}}", value
     return path
@@ -109,7 +110,11 @@ class Test
         Server response data does not match RAML schema definition
         * Error message: #{result?.error?.message}
         * Response JSON data:
-        #{JSON.stringify(json, null, 4)}
+        #{JSON.stringify(json, null, 2)}
+        * Schema definition:
+        #{JSON.stringify(schema, null, 2)}
+        * Detailed validation result:
+        #{JSON.stringify(result, null, 2)}
         * Assertion error
       """
 

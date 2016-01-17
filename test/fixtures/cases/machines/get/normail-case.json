@@ -1,0 +1,16 @@
+{
+  "query": {
+    "page": 1,
+    "per-page": 10
+  },
+  "headers": {
+    "Abao-API-Key": "test"
+  },
+  "response": {
+    "status": 200,
+    "body": {
+      "type": "Kulu", 
+      "name": "Mike"
+    }
+  }
+}

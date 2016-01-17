@@ -24,7 +24,6 @@ execCommand = (cmd, callback) ->
     stderr = err
     try
       report = JSON.parse out
-
     if error
       exitStatus = error.code
 
@@ -38,7 +37,7 @@ describe "Command line interface", ->
 
   describe "When raml file not found", (done) ->
     before (done) ->
-      cmd = "./bin/abao ./test/fixtures/nonexistent_path.raml http://localhost:#{PORT}"
+      cmd = "./bin/abao ./test/fixtures/nonexistent_path.raml http://localhost:#{PORT} token"
 
       execCommand cmd, done
 
@@ -55,11 +54,11 @@ describe "Command line interface", ->
 
     describe "when executing the command and the server is responding as specified in the raml", () ->
       before (done) ->
-        cmd = "./bin/abao -r json ./test/fixtures/single-get.raml http://localhost:#{PORT}"
+        cmd = "./bin/abao -r json ./test/fixtures/single-get.raml http://localhost:#{PORT} token"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -85,11 +84,11 @@ describe "Command line interface", ->
 
     describe "when executing the command and raml includes other ramls", () ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/include_other_raml.raml http://localhost:#{PORT}"
+        cmd = "./bin/abao ./test/fixtures/include_other_raml.raml http://localhost:#{PORT} token"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -113,11 +112,11 @@ describe "Command line interface", ->
 
     describe "when using additional reporters with -r", ->
       before (done) ->
-        cmd = "./bin/abao -r spec ./test/fixtures/single-get.raml http://localhost:#{PORT}"
+        cmd = "./bin/abao -r spec ./test/fixtures/single-get.raml http://localhost:#{PORT} token"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -139,11 +138,11 @@ describe "Command line interface", ->
       receivedRequest = {}
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -h Accept:application/json"
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} token -h Accept:application/json"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           receivedRequest = req
           res.setHeader 'Content-Type', 'application/json'
           machine =
@@ -189,11 +188,11 @@ describe "Command line interface", ->
       receivedRequest = {}
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hookfiles=./test/fixtures/*_hooks.*"
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} token --hookfiles=./test/fixtures/*_hooks.*"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           receivedRequest = req
           res.setHeader 'Content-Type', 'application/json'
           machine =
@@ -219,11 +218,11 @@ describe "Command line interface", ->
 
     describe 'when run with --hooks-only', () ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hooks-only"
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} token --hooks-only"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -247,12 +246,12 @@ describe "Command line interface", ->
       cost = ''
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --timeout 100"
+        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} token --timeout 100"
 
         app = express()
 
         t0 = ''
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           t0 = new Date
 
         server = app.listen PORT, () ->
@@ -288,11 +287,11 @@ describe "Command line interface", ->
     describe 'when run with --schema', () ->
       before (done) ->
 
-        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
+        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} token --schemas=./test/fixtures/schemas/*.json"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             type: 'bulldozer'
@@ -312,11 +311,11 @@ describe "Command line interface", ->
     describe 'when run with --schema and expecting error', () ->
       before (done) ->
 
-        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
+        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} token --schemas=./test/fixtures/schemas/*.json"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.get '/v1/machines', (req, res) ->
           res.setHeader 'Content-Type', 'application/json'
           machine =
             typO: 'bulldozer'
