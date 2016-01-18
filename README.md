@@ -86,6 +86,16 @@ Test case is defined as JSON format, these parameters are optional based on your
 - `response.schema` - Expected schema of http response, parsed from RAML `schema` section.
 - `response.headers` - Headers object got from testing server, default to `{}`
 
+If you just want to validate the response match the schema definition, just define the input you need, abao will do the rest.
+
+```
+{
+  "params": {
+    "email": "iqixing00005@163.com"
+  }
+}
+```
+
 
 ## Hooks
 
@@ -205,6 +215,14 @@ Options:
   --reporters       Display available reporters                                 
   --help            Show usage information                                      
   --version         Show version number
+```
+
+## Test Stage Account
+
+This is only valid for stage account `iqixing00005@163.com`
+
+```
+abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Inc5c3c0OXlvbDEifQ.eyJ1aWQiOiI1NTVlZDg1NTEzNzQ3MzQ1NjI4YjQ1ODIiLCJzY29wZXMiOltdLCJhcHAiOiI1NTc1NGYwMTEzNzQ3MzAzNmY4YjQ1NzIifQ.25Hhbn0Z2Qpt6lU5E5HFpKUEWbavCqM10KQqTK5p5Ro -g /channel -s 'schemas/**/*.json'
 ```
 
 

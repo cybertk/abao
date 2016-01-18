@@ -78,8 +78,9 @@ class TestRunner
           # Update test.request
           test.request.server = server
           test.request.version = version
-          test.request.query =
-            access_token: accessToken
+          if not test.isAuthCheck
+            test.request.query =
+              access_token: accessToken
 
           _.extend(test.request.headers, options.header)
           if options.grep and test.request.path.match(options.grep)

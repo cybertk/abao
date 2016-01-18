@@ -27,6 +27,44 @@ parseFolderPath = (path, method, status) ->
   path = path.replace(/\{.+\}$/, 'detail')
   [path.replace(/\/\{.+?\}/g, ''), method.toLowerCase(), status].join('/')
 
+addTest = (tests, path, method, testFactory, status) ->
+  test = testFactory.create()
+  tests.push test
+  test.name = "#{method} #{path} -> #{status}"
+
+  test.request.path = path
+  test.request.method = method
+  test.request.headers['Content-Type'] = 'application/json'
+
+  test.response.status = status
+  test
+
+addAuthCase = (tests, path, method, testFactory) ->
+  test = addTest(tests, path, method, testFactory, '401')
+  test.isAuthCheck = true
+
+addPaginationCase = (tests, path, method, testFactory) ->
+  test = addTest(tests, path, method, testFactory, '200')
+  test.request.query =
+    page: parseInt(Math.random() * 1000)
+  test.response.schema =
+    type: 'object'
+    properties:
+      items:
+        type: 'array'
+      page:
+        type: 'integer'
+      'per_page':
+        type: 'integer'
+      total:
+        type: 'integer'
+    '$schema': 'http://json-schema.org/draft-04/schema',
+    required: [
+      'items',
+      'page',
+      'per_page',
+      'total'
+    ]
 
 addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
   responses = []
@@ -35,6 +73,13 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
     responses.push
       status: status
       res: res
+
+  # Add auth validation
+  addAuthCase tests, path, method, testFactory
+
+  # Add pagination validation
+  if method is 'GET' and path.match(/\/.+s$/) and path.indexOf('{') is -1
+    addPaginationCase tests, path, method, testFactory
 
   async.each responses, (obj, callback) ->
     caseFolder = baseCaseFolder + parseFolderPath(path, method, obj.status)
@@ -65,6 +110,7 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
           test.response = definition.response
 
           # Update test.response
+          test.response = {} if not test.response
           test.response.status = obj.status
           test.response.schema = null
           if (obj.res?.body?['application/json']?.schema)
