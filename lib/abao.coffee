@@ -5,7 +5,6 @@ chai = require 'chai'
 
 options = require './options'
 addTests = require './add-tests'
-addCases = require './add-cases'
 TestFactory = require './test'
 addHooks = require './add-hooks'
 Runner = require './test-runner'
@@ -36,12 +35,9 @@ class Abao
         , callback
       ,
       (raml, callback) ->
-        # Parse tests from RAML
-        addTests raml, tests, callback, factory
-        # Add cases configuration from test folder
-        addCases '', raml, tests, callback, factory
+        # Parse tests from RAML and cases definition
+        addTests raml, tests, callback, factory, config.baseCaseFolder
       ,
-      # Parse hooks
       (callback) ->
         addHooks hooks, config.options.hookfiles
         callback()

@@ -11,6 +11,8 @@ addTests = proxyquire '../../lib/add-tests', {
   'mocha': mochaStub
 }
 
+baseCaseFolder = "#{__dirname}/../fixtures/cases"
+
 describe '#addTests', ->
 
   describe '#run', ->
@@ -28,7 +30,7 @@ describe '#addTests', ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, callback, testFactory
+          addTests data, tests, callback, testFactory, baseCaseFolder
         , done
       after ->
         tests = []
@@ -36,14 +38,28 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 1 test', ->
-        assert.lengthOf tests, 1
+      it 'should added 2 test', ->
+        assert.lengthOf tests, 2
 
       it 'should set test.name', ->
-        assert.equal tests[0].name, 'GET /machines -> 200'
+        assert.equal tests[0].name, 'Case: GET /machines -> 200'
+        assert.equal tests[1].name, 'GET /machines -> 200'
 
       it 'should setup test.request', ->
         req = tests[0].request
+
+        assert.equal req.path, '/machines'
+        assert.deepEqual req.params, {}
+        assert.deepEqual req.query,
+          page: 1
+          'per-page': 10
+        assert.deepEqual req.headers,
+          'Abao-API-Key': 'test'
+          'Content-Type': 'application/json'
+        assert.deepEqual req.body, {}
+        assert.equal req.method, 'GET'
+
+        req = tests[1].request
 
         assert.equal req.path, '/machines'
         assert.deepEqual req.params, {}
@@ -55,6 +71,14 @@ describe '#addTests', ->
 
       it 'should setup test.response', ->
         res = tests[0].response
+
+        assert.equal res.status, 200
+        assert.deepEqual res.body,
+          type: 'Kulu'
+          name: 'Mike'
+        assert.ok not res.headers
+
+        res = tests[1].response
 
         assert.equal res.status, 200
         schema = res.schema
@@ -148,7 +172,7 @@ describe '#addTests', ->
 
       it 'should setup test.response', ->
         res = tests[0].response
-        
+
         assert.equal res.status, 200
         assert.equal res.schema?.properties?.chick?.type, "string"
         assert.isNull res.headers
@@ -192,7 +216,7 @@ describe '#addTests', ->
 
       it 'should setup test.response', ->
         res = tests[0].response
-        
+
         assert.equal res.status, 200
         assert.equal res.schema?.properties?.type["$ref"], "type2"
         assert.isNull res.headers
