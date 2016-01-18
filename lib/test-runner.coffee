@@ -14,6 +14,14 @@ class TestRunner
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
     options = @options
+    for key, value of test.request.params
+      if not value
+        # Only show information for matched routes
+        if options.grep and test.request.path.match(options.grep)
+          testName = "#{test.request.method} #{test.request.path} -> #{test.response.status}"
+          tip = 'You need to define it in the example field for uriParameters'
+          console.warn "[warn] #{testName} with invalid param { #{key} : #{value} } (Skipped) #{tip}"
+        return
 
     # Generate Test Suite
     suite = Mocha.Suite.create mocha.suite, test.name

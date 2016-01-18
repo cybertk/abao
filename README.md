@@ -39,8 +39,53 @@ Install stable version
 
 ### Test Case definition
 
-//TODO
-Every test case is defined based on configuration (JSON format)
+Every test case is defined based on configuration (JSON format), the resource path is mapped to the related folder path, examples below:
+
+```
+# Pattern
+method path status -> Test folder path
+
+# Handle single resouce
+GET /members/{id} 200 -> test/members/detail/get/200
+GET /members/{id} 422 -> test/members/detail/get/422
+POST /members/{id} 200 -> test/members/detail/get/200
+PUT /members/{id} 200 -> test/members/detail/get/200
+DELETE /members/{id} 200 -> test/members/detail/get/200
+
+# Batch operations
+GET /members 200 -> test/members/get/200
+POST /members 200 -> test/members/post/200
+PUT /members 200 -> test/members/put/200
+DELETE /members 200 -> test/members/delete/200
+```
+
+Test case file name can be defined as any name you like, but you had better use the case desription as the name to make it more clear, example file `invalid-email.json`, the test case definition only check response based on your request parameters.
+
+```
+{
+  "params": {
+    "email": "test"
+  },
+  "response": {
+    "body": {
+      "message": "not found"
+    }
+  }
+}
+```
+
+Test case is defined as JSON format, these parameters are optional based on your needs:
+
+- `params` - URI parameters, parsed from RAML `uriParameters` section, default to `{}`.
+- `query` - object containing querystring values to be appended to the `path`, default to `{}`.
+- `headers` - http headers, parsed from RAML `headers` section, default to `{'Content-Type': 'application/json'}`.
+- `body` - entity body for PATCH, POST and PUT requests. Must be a JSON-serializable object. Parsed from RAML `example` section, default to `{}`
+
+- `response.status` - Expected http response code, parsed from RAML.
+- `response.body` - http json body got from testing server. default to `null`
+- `response.schema` - Expected schema of http response, parsed from RAML `schema` section.
+- `response.headers` - Headers object got from testing server, default to `{}`
+
 
 ## Hooks
 
