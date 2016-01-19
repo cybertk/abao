@@ -27,16 +27,32 @@ parseFolderPath = (path, method, status) ->
   path = path.replace(/\{.+\}$/, 'detail')
   [path.replace(/\/\{.+?\}/g, ''), method.toLowerCase(), status].join('/')
 
-addTest = (tests, path, method, testFactory, status) ->
+addTest = (tests, path, method, testFactory, status, definition, res, headers) ->
   test = testFactory.create()
   tests.push test
   test.name = "#{method} #{path} -> #{status}"
 
   test.request.path = path
   test.request.method = method
-  test.request.headers['Content-Type'] = 'application/json'
 
+  # Only use the definition for params in case the lack of example in RAML
+  test.request.params = definition?.params or {}
+  test.request.query = definition?.query or {}
+  test.request.body = definition?.body or {}
+  test.request.headers = definition?.headers or {}
+  _.extend(test.request.headers, parseHeaders(headers)) if headers
+  # Use json as default content type
+  if not test.request.headers['Content-Type']
+    test.request.headers['Content-Type'] = 'application/json'
+
+  test.response = definition?.response or {}
+
+  # Update test.response
   test.response.status = status
+  test.response.schema = null
+  if (res?.body?['application/json']?.schema)
+    test.response.schema = parseSchema res.body['application/json'].schema
+
   test
 
 addAuthCase = (tests, path, method, testFactory) ->
@@ -45,6 +61,7 @@ addAuthCase = (tests, path, method, testFactory) ->
 
 addPaginationCase = (tests, path, method, testFactory) ->
   test = addTest(tests, path, method, testFactory, '200')
+  test.name = 'Pagination ' + test.name
   test.request.query =
     page: parseInt(Math.random() * 1000)
   test.response.schema =
@@ -90,31 +107,17 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
           json = fs.readFileSync(file, 'utf-8')
           definition = JSON.parse json
 
+          # Add depended test cases
+          if definition.depends
+            if typeof definition.depends is 'string'
+              definition.depends = [definition.depends]
+            for depend in definition.depends
+              [filePath, path, method, status] = depend.match /(.+)\/(\w+)\/(\d+)\/.+\.json$/
+              dependDef = JSON.parse(fs.readFileSync("#{baseCaseFolder}#{depend}", 'utf8'))
+              addTest(tests, path, method, testFactory, status, dependDef)
+
           # Append new test to tests
-          test = testFactory.create()
-          tests.push test
-          test.name = "#{method} #{path} -> #{obj.status}"
-
-          test.request.path = path
-          test.request.method = method
-          # Only use the definition for params in case the lack of example in RAML
-          test.request.params = definition.params or {}
-          test.request.query = definition.query or {}
-          test.request.body = definition.body or {}
-          test.request.headers = definition.headers or {}
-          _.extend(test.request.headers, parseHeaders(api.headers))
-          # Use json as default content type
-          if not test.request.headers['Content-Type']
-            test.request.headers['Content-Type'] = 'application/json'
-
-          test.response = definition.response
-
-          # Update test.response
-          test.response = {} if not test.response
-          test.response.status = obj.status
-          test.response.schema = null
-          if (obj.res?.body?['application/json']?.schema)
-            test.response.schema = parseSchema obj.res.body['application/json'].schema
+          addTest(tests, path, method, testFactory, obj.status, definition, obj.res, api.headers)
 
           callback()
         , (err) ->

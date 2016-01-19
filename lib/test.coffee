@@ -90,46 +90,48 @@ class Test
       * Assertion error
     """
 
-    # Parse JSON payload
-    validateJson = _.partial JSON.parse, body
+    if body is ''
+      console.warn 'The response body is empty'
+    else
+      # Parse JSON payload
+      validateJson = _.partial JSON.parse, body
 
-    body = '[empty]' if body is ''
-    assert.doesNotThrow validateJson, JSON.SyntaxError, """
-      Server response data is not JSON format
-      * Request JSON options:
-      #{JSON.stringify(options, null, 2)}
-      * Response raw data:
-      #{body}
-      * Assertion error
-    """
-
-    json = validateJson()
-
-    # Validate based on case sample
-    if @response.body
-      expectedBody = @response.body
-      assert.deepEqual json, expectedBody
-
-    # Validate based on schema
-    if @response.schema
-      schema = @response.schema
-
-      result = tv4.validateResult json, schema, true, true
-      assert.ok result.valid, """
-        Server response data does not match RAML schema definition
-        * Error message: #{result?.error?.message}
+      assert.doesNotThrow validateJson, JSON.SyntaxError, """
+        Server response data is not JSON format
         * Request JSON options:
         #{JSON.stringify(options, null, 2)}
-        * Response JSON data:
-        #{JSON.stringify(json, null, 2)}
-        * Schema definition:
-        #{JSON.stringify(schema, null, 2)}
-        * Detailed validation result:
-        #{JSON.stringify(result, null, 2)}
+        * Response raw data:
+        #{body}
         * Assertion error
       """
 
-      # Update @response
-      @response.body = json
+      json = validateJson()
+
+      # Validate based on case sample
+      if @response.body
+        expectedBody = @response.body
+        assert.deepEqual json, expectedBody
+
+      # Validate based on schema
+      if @response.schema
+        schema = @response.schema
+
+        result = tv4.validateResult json, schema, true, true
+        assert.ok result.valid, """
+          Server response data does not match RAML schema definition
+          * Error message: #{result?.error?.message}
+          * Request JSON options:
+          #{JSON.stringify(options, null, 2)}
+          * Response JSON data:
+          #{JSON.stringify(json, null, 2)}
+          * Schema definition:
+          #{JSON.stringify(schema, null, 2)}
+          * Detailed validation result:
+          #{JSON.stringify(result, null, 2)}
+          * Assertion error
+        """
+
+        # Update @response
+        @response.body = json
 
 module.exports = TestFactory

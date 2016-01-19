@@ -222,7 +222,7 @@ Options:
 This is only valid for stage account `iqixing00005@163.com`
 
 ```
-abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Inc5c3c0OXlvbDEifQ.eyJ1aWQiOiI1NTVlZDg1NTEzNzQ3MzQ1NjI4YjQ1ODIiLCJzY29wZXMiOltdLCJhcHAiOiI1NTc1NGYwMTEzNzQ3MzAzNmY4YjQ1NzIifQ.25Hhbn0Z2Qpt6lU5E5HFpKUEWbavCqM10KQqTK5p5Ro -g /channel -s 'schemas/**/*.json'
+abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Inc5c3c0OXlvbDEifQ.eyJ1aWQiOiI1NTVlZDg1NTEzNzQ3MzQ1NjI4YjQ1ODIiLCJzY29wZXMiOltdLCJhcHAiOiI1NTc1NGYwMTEzNzQ3MzAzNmY4YjQ1NzIifQ.25Hhbn0Z2Qpt6lU5E5HFpKUEWbavCqM10KQqTK5p5Ro -g '/members' -s 'schemas/**/*.json' -f hooks/*.coffee
 ```
 
 
