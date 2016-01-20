@@ -108,6 +108,18 @@ afterAll (done) ->
 
 If `beforeAll`, `afterAll`, `before` and `after` are called multiple times, the callbacks are executed serially in the order they were called.
 
+**Abao** provides hook to allow the content of the response to be
+checked within the test:
+
+```coffee
+{test} = require 'hooks'
+
+test 'GET /machines -> 200', (response, body, done) ->
+    assert.deepEqual(JSON.parse(body), ["machine1", "machine2"])
+    assert.equal(headers["content-type"], 'application/json; charset=utf-8')
+	return done()
+```
+
 ### test.request
 
 - `server` - Server address, provided from CLI.
