@@ -2,6 +2,7 @@ sms = require("source-map-support").install({handleUncaughtExceptions: false})
 raml = require 'raml-parser'
 async = require 'async'
 chai = require 'chai'
+fs = require 'fs'
 
 options = require './options'
 addTests = require './add-tests'
@@ -27,9 +28,23 @@ class Abao
     factory = new TestFactory(config.options.schemas)
 
     async.waterfall [
+      # Load configuration
+      (callback) ->
+        fs.readFile(config.configPath, 'utf8' ,(err, data) ->
+          try
+            data = JSON.parse data
+            for key, value of data
+              config[key] = value
+            callback(err)
+          catch err
+            console.error 'Config file is not a valid JSON file'
+            callback(err)
+        )
+      ,
       # Load RAML
       (callback) ->
         raml.loadFile(config.ramlPath).then (raml) ->
+          # Use the version definition in RAML
           config.version = raml.version
           callback(null, raml)
         , callback

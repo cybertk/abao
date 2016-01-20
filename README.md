@@ -27,17 +27,19 @@ Install stable version
 
 ## Get Started Testing Your API
 
-    abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Imp5OXFwbDRqbmoifQ.eyJ1aWQiOiI1NGExNDYxZWI4MTM3NDgwMDQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NTQ5YWI2ZGI4MTM3NDdhMTQ4YjQ1NmEifQ.SdnfjnBANrZaqMZhjAjwf90fHpREPGCVR88ichhB0XY
+    abao api.raml config.json
 
 ## Test part of your APIs
 
-    abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Imp5OXFwbDRqbmoifQ.eyJ1aWQiOiI1NGExNDYxZWI4MTM3NDgwMDQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NTQ5YWI2ZGI4MTM3NDdhMTQ4YjQ1NmEifQ.SdnfjnBANrZaqMZhjAjwf90fHpREPGCVR88ichhB0XY -g /cap
+    abao api.raml config.json -g /cap
 
 ## Writing testable RAML
 
 **Abao** validates the response from server against jsonschema defines in [RAML][], so there must be **schema** section in defined in [RAML][].
 
 ### Test Case definition
+
+#### Basic definition
 
 Every test case is defined based on configuration (JSON format), the resource path is mapped to the related folder path, examples below:
 
@@ -96,6 +98,59 @@ If you just want to validate the response match the schema definition, just defi
 }
 ```
 
+#### Add case dependencies
+
+Sometimes your test case may depend on other cases:
+
+* The test case result in database updation, and your case depend on it
+* The test case will return some data used in another case (Not supported yet)
+
+You can specify it with `depends` field:
+
+```
+{
+  "params": {
+    "email": "iqixing00005@163.com"
+  },
+  "depends": "/users/post/200/normal.json"
+}
+```
+
+The `depend` field can be either a string or and array (depend on multiple cases), the value should the case file path under `base test folder`.
+
+#### Clear database data
+
+Only mongoDB is supported now, the DSN for mongoDB is configured in the `config.json` file specified in command
+
+```
+{
+  "db": {
+    "type": "mongodb",
+    "dsn": "username:password@example.com/mydb"
+  }
+}
+```
+
+You just need to define the query condition for mongo to find the data you want to remove after the test
+
+```
+{
+  "body": {
+    "name": "testuser",
+    "avatar": "http://static.image.com/test.png"
+  },
+  "destroy": {
+    "model": "user",
+    "query": {
+      "name": "testuser"
+    }
+  }
+}
+```
+
+The `destroy` field support both array and object, in case that you may need to clear multiple records.
+
+**Notice:** You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification).
 
 ## Hooks
 

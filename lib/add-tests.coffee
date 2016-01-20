@@ -53,6 +53,8 @@ addTest = (tests, path, method, testFactory, status, definition, res, headers) -
   if (res?.body?['application/json']?.schema)
     test.response.schema = parseSchema res.body['application/json'].schema
 
+  test.destroy = definition?.destroy
+
   test
 
 addAuthCase = (tests, path, method, testFactory) ->
@@ -107,6 +109,7 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
           json = fs.readFileSync(file, 'utf-8')
           definition = JSON.parse json
 
+          destroy = []
           # Add depended test cases
           if definition.depends
             if typeof definition.depends is 'string'
@@ -114,8 +117,15 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
             for depend in definition.depends
               [filePath, path, method, status] = depend.match /(.+)\/(\w+)\/(\d+)\/.+\.json$/
               dependDef = JSON.parse(fs.readFileSync("#{baseCaseFolder}#{depend}", 'utf8'))
+              # Delete the destory handling for the dependencies
+              if dependDef.destroy
+                destroy = destroy.concat(dependDef.destroy)
+                delete dependDef.destroy
               addTest(tests, path, method, testFactory, status, dependDef)
 
+          # Move the destory handling to the next case
+          definition.destroy = [] if not definition.destroy
+          definition.destroy = destroy.concat definition.destroy
           # Append new test to tests
           addTest(tests, path, method, testFactory, obj.status, definition, obj.res, api.headers)
 

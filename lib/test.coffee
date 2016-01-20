@@ -131,7 +131,7 @@ class Test
           * Assertion error
         """
 
-        # Update @response
-        @response.body = json
+      # Update @response
+      @response.body = json
 
 module.exports = TestFactory

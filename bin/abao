@@ -8,8 +8,8 @@ var pjson = require('../package.json');
 var Abao = require('../lib/abao');
 
 var argv = optimist
-    .usage("Usage: \n  abao <path to raml> <api_endpoint> <access_token> [OPTIONS]" +
-    "\n\nExample: \n  " + "abao ./api.raml http://api.example.com eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjR6Z3lreWU1Z2IifQ.eyJ1aWQiOiI1NGNiNjM0YWJhMWI4MjkzMzQ4YjQ1NjciLCJzY29wZXMiOltdLCJhcHAiOiI1NjU3OWU0ZjhmNWU4OGFlNDk4YjQ2ZjkifQ.o_wkfghQcX8rTyBr8Eu76rKiiBpQ_bCoUdD0saCAYpQ")
+    .usage("Usage: \n  abao <path to raml> <config file path> [OPTIONS]" +
+    "\n\nExample: \n  " + "abao ./api.raml ./config.json")
     .options(Abao.options)
     .wrap(80)
     .argv;
@@ -53,11 +53,12 @@ if (argv._[0] === undefined) {
   argError = true;
 }
 if (argv._[1] === undefined && !argv.names) {
-  console.error("Error: Must specify api endpoint.");
-  argError = true;
-}
-if (argv._[2] === undefined && !argv.names) {
-  console.error("Error: Must specify api access token.");
+  console.error("Error: Must specify server related configuration.");
+  console.error("Example:");
+  console.error("{");
+  console.error('   "domain": "http://127.0.0.1:9091",');
+  console.error('   "token": "xxx"');
+  console.error("}");
   argError = true;
 }
 if (argError) {
@@ -68,8 +69,7 @@ if (argError) {
 
 configuration = {
   'ramlPath': argv._[0],
-  'server': argv._[1],
-  'accessToken': argv._[2],
+  'configPath': argv._[1],
   'options': argv
 };
 

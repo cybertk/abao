@@ -1,19 +1,40 @@
 Mocha = require 'mocha'
 async = require 'async'
 _ = require 'underscore'
+mongo = require 'mongojs'
 
 
 class TestRunner
   constructor: (config) ->
-    @accessToken = config.accessToken
-    @server = config.server
-    @version = config.version
+    @config = config
     @options = config.options or {}
     @mocha = new Mocha @options
+    if @config.db and @config.db.type is 'mongodb'
+      @db = mongo(@config.db.dsn)
+
+  removeMongoRecord: (model, query) =>
+    db = @db
+    config = @config
+    (callback) ->
+      mergedQuery =
+        accountId: mongo.ObjectId(config.accountId)
+
+      _.extend mergedQuery, query
+
+      db.collection(model).remove(mergedQuery, (err, result) ->
+        if err
+          console.error "Fail to clear #{model} data with query:"
+          console.error "#{JSON.stringify(mergedQuery, null, 2)}"
+          callback err
+        else
+          console.log "Remove #{model} #{result.n} records"
+          callback null
+      )
 
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
     options = @options
+    removeMongoRecord = @removeMongoRecord
     for key, value of test.request.params
       if not value
         # Only show information for matched routes
@@ -51,6 +72,18 @@ class TestRunner
         @hooks.runAfter @test, done
       , {hooks, test}
 
+    suite.afterAll _.bind (done) ->
+      @test.destroy = [@test.destroy] if @test.destroy and not _.isArray @test.destroy
+      tasks = _.map @test.destroy, (item) ->
+        removeMongoRecord(item.model, item.query)
+
+      if tasks.length
+        async.waterfall(tasks, done)
+      else
+        done()
+
+    , {test}
+
     # Setup test
     # Vote test name
     title = if test.response.schema then 'Validate response code and body' else 'Validate response code only'
@@ -60,9 +93,7 @@ class TestRunner
     , {test}
 
   run: (tests, hooks, callback) ->
-    server = @server
-    accessToken = @accessToken
-    version = @version
+    config = @config
     options = @options
     addTestToMocha = @addTestToMocha
     mocha = @mocha
@@ -76,11 +107,11 @@ class TestRunner
             return done()
 
           # Update test.request
-          test.request.server = server
-          test.request.version = version
+          test.request.server = config.server
+          test.request.version = config.version
           if not test.isAuthCheck
             test.request.query =
-              access_token: accessToken
+              access_token: config.accessToken
 
           _.extend(test.request.headers, options.header)
           if options.grep and test.request.path.match(options.grep)

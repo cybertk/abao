@@ -18,9 +18,6 @@ addHooks = (hooks, pattern) ->
       for file in files
         proxyquire path.resolve(process.cwd(), file), {
           'hooks': hooks
-          'mongojs': require 'mongojs'
-          'async': require 'async'
-          'extend': require 'extend'
         }
     catch error
       console.error 'Skipping hook loading...'
