@@ -110,8 +110,7 @@ class TestRunner
           test.request.server = config.server
           test.request.version = config.version
           if not test.isAuthCheck
-            test.request.query =
-              access_token: config.accessToken
+            _.extend(test.request.query, {access_token: config.accessToken})
 
           _.extend(test.request.headers, options.header)
           if options.grep and test.request.path.match(options.grep)

@@ -30,16 +30,19 @@ class Abao
     async.waterfall [
       # Load configuration
       (callback) ->
-        fs.readFile(config.configPath, 'utf8' ,(err, data) ->
-          try
-            data = JSON.parse data
-            for key, value of data
-              config[key] = value
-            callback(err)
-          catch err
-            console.error 'Config file is not a valid JSON file'
-            callback(err)
-        )
+        if config.configPath
+          fs.readFile(config.configPath, 'utf8' ,(err, data) ->
+            try
+              data = JSON.parse data
+              for key, value of data
+                config[key] = value
+              callback(err)
+            catch err
+              console.error 'Config file is not a valid JSON file'
+              callback(err)
+          )
+        else
+          callback()
       ,
       # Load RAML
       (callback) ->

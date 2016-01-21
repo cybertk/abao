@@ -61,6 +61,8 @@ PUT /members 200 -> test/members/put/200
 DELETE /members 200 -> test/members/delete/200
 ```
 
+**Notice:** The detail type API (like `/resource/{id}`) should be place the detail folder in `test/resource` folder, just as the mapping relationship example shown above.
+
 Test case file name can be defined as any name you like, but you had better use the case desription as the name to make it more clear, example file `invalid-email.json`, the test case definition only check response based on your request parameters.
 
 ```
@@ -97,6 +99,71 @@ If you just want to validate the response match the schema definition, just defi
   }
 }
 ```
+
+**Notice:** If you don't need to pass anything for the API, you can just put an empty file.
+
+#### Data verification rule
+
+The tool verify response data in two ways.
+
+1. Verify the schema defined in RAML file (check required field and field type)
+
+Take the schema defined in raml folder below as a simple example.
+
+```
+{
+  "id": "user"
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "User name"
+    },
+    "name": {
+      "type": "string",
+      "description": "User name"
+    },
+    "friends": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "User ID"
+          }
+        }
+      }
+    }
+  },
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "required": [
+    "id"
+    "name"
+  ]
+}
+```
+
+`abao` will verify that the response is an object and the object has two required field `id` and `name`, and their type are `string`. The `friend` field type is also checke if the response contains the field.
+
+2. Verify that the response body deep matches if the body field is defined in the test case JSON file **(the example defined in RAML will not be used)**.
+
+Take the test case defined in `test` folder as a simple example:
+
+```
+{
+  "params": {
+    "email": "test"
+  },
+  "response": {
+    "body": {
+      "message": "not found"
+    }
+  }
+}
+```
+
+`abao` will verify that the response is an object and the field is deeply equaled.
 
 #### Add case dependencies
 
@@ -277,7 +344,7 @@ Options:
 This is only valid for stage account `iqixing00005@163.com`
 
 ```
-abao api.raml http://127.0.0.1:9091 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6Inc5c3c0OXlvbDEifQ.eyJ1aWQiOiI1NTVlZDg1NTEzNzQ3MzQ1NjI4YjQ1ODIiLCJzY29wZXMiOltdLCJhcHAiOiI1NTc1NGYwMTEzNzQ3MzAzNmY4YjQ1NzIifQ.25Hhbn0Z2Qpt6lU5E5HFpKUEWbavCqM10KQqTK5p5Ro -g '/members' -s 'schemas/**/*.json' -f hooks/*.coffee
+abao api.raml http://127.0.0.1:9091 config.json -g '/members' -s 'schemas/**/*.json'
 ```
 
 

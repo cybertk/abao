@@ -30,12 +30,15 @@ parseFolderPath = (path, method, status) ->
 addTest = (tests, path, method, testFactory, status, definition, res, headers) ->
   test = testFactory.create()
   tests.push test
-  test.name = "#{method} #{path} -> #{status}"
+  name = if definition?.name then definition?.name else ''
+  test.name = "#{method} #{path} -> #{status} : #{name}"
 
   test.request.path = path
   test.request.method = method
 
   # Only use the definition for params in case the lack of example in RAML
+  test.loadtest = definition?.loadtest
+
   test.request.params = definition?.params or {}
   test.request.query = definition?.query or {}
   test.request.body = definition?.body or {}
@@ -62,28 +65,11 @@ addAuthCase = (tests, path, method, testFactory) ->
   test.isAuthCheck = true
 
 addPaginationCase = (tests, path, method, testFactory) ->
-  test = addTest(tests, path, method, testFactory, '200')
-  test.name = 'Pagination ' + test.name
+  # Resource not available case
+  test = addTest(tests, path, method, testFactory, '204')
+  test.name = 'Big page number: ' + test.name
   test.request.query =
-    page: parseInt(Math.random() * 1000)
-  test.response.schema =
-    type: 'object'
-    properties:
-      items:
-        type: 'array'
-      page:
-        type: 'integer'
-      'per_page':
-        type: 'integer'
-      total:
-        type: 'integer'
-    '$schema': 'http://json-schema.org/draft-04/schema',
-    required: [
-      'items',
-      'page',
-      'per_page',
-      'total'
-    ]
+    page: 1000000
 
 addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
   responses = []
@@ -107,7 +93,10 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
       if files.length and not err
         async.each files, (file, callback) ->
           json = fs.readFileSync(file, 'utf-8')
+          # Support put empty file
+          json = '{}' if not json
           definition = JSON.parse json
+          definition.name = file.slice(0, file.lastIndexOf('.'))
 
           destroy = []
           # Add depended test cases
@@ -121,6 +110,7 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
               if dependDef.destroy
                 destroy = destroy.concat(dependDef.destroy)
                 delete dependDef.destroy
+              delete dependDef.loadtest
               addTest(tests, path, method, testFactory, status, dependDef)
 
           # Move the destory handling to the next case

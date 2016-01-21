@@ -5,6 +5,7 @@ async = require 'async'
 tv4 = require 'tv4'
 fs = require 'fs'
 glob = require 'glob'
+loadtest = require 'loadtest'
 
 assert = chai.assert
 
@@ -63,17 +64,27 @@ class Test
     options['body'] = JSON.stringify @request.body
     options['qs'] = @request.query
 
-    async.waterfall [
-      (callback) ->
-        # Send request
-        request options, (error, response, body) ->
-          callback null, error, response, body, options
-      ,
-      (error, response, body, options, callback) ->
-        # Assert response
-        assertResponse error, response, body, options
+    if @loadtest
+      _.extend options, @loadtest
+      console.log '----This is a load test-----'
+      loadtest.loadTest(options, (err, result)->
+        return console.error('Got an error: %s', err) if err
+        console.log 'Load test result below:'
+        console.log JSON.stringify(result, null, 2)
         callback()
-    ], callback
+      )
+    else
+      async.waterfall [
+        (callback) ->
+          # Send request
+          request options, (error, response, body) ->
+            callback null, error, response, body, options
+        ,
+        (error, response, body, options, callback) ->
+          # Assert response
+          assertResponse error, response, body, options
+          callback()
+      ], callback
 
   assertResponse: (error, response, body, options) =>
     # TODO: Add more assertion and show more detailed information
