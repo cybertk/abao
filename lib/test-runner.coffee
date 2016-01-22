@@ -87,6 +87,7 @@ class TestRunner
     # Setup test
     # Vote test name
     title = if test.response.schema then 'Validate response code and body' else 'Validate response code only'
+    suite.timeout(10000) if test.loadtest
     suite.addTest new Mocha.Test title, _.bind (done) ->
       # Run actual test case below
       @test.run done

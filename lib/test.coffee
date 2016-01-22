@@ -65,11 +65,29 @@ class Test
     options['qs'] = @request.query
 
     if @loadtest
+      if not _.isObject @loadtest
+        @loadtest = {}
+        console.warn '[warn] Loadtest field should be the configuration used by loadtest'
+        console.warn '[warn] Options reference: https://github.com/alexfernandez/loadtest#options'
+      @loadtest.maxSeconds = 2 if not @loadtest.maxSeconds
+      if @loadtest.maxSeconds > 10
+        @loadtest.maxSeconds = 5
+        console.warn 'The load test limited within 10s'
+
       _.extend options, @loadtest
-      console.log '----This is a load test-----'
+      # Add query parameters
+      params = []
+      for key, value of options.qs
+        params.push("#{key}=#{value}")
+      params = params.join '&'
+      options.url = "#{options.url}?#{params}"
+      # Set JSON as default content type if not specified
+      if not options.contentType
+        options.contentType = 'application/json'
+
       loadtest.loadTest(options, (err, result)->
         return console.error('Got an error: %s', err) if err
-        console.log 'Load test result below:'
+        console.log '----Load test result below----'
         console.log JSON.stringify(result, null, 2)
         callback()
       )

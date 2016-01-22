@@ -219,6 +219,76 @@ The `destroy` field support both array and object, in case that you may need to 
 
 **Notice:** You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification).
 
+#### Basic load test
+
+If you specify the `loadtest` field in the case definition, you can make basic load test. The `loadtest` field is an options object, you can find related options [here](https://github.com/alexfernandez/loadtest#options). See example below:
+
+```
+{
+  "params": {
+    "email": "iqixing00005@163.com"
+  },
+  "loadtest": {
+    "concurrency": 1000,
+    "maxRequests": 1000,
+    "maxSeconds": 5
+  }
+}
+```
+
+**Notice:** 
+
+* The default content type is 'application/json' if `contentType` field is not specified
+* The max seconds for load test is 10s
+* If no options is specified, the loadtest will make a 2s duration testing with one concurrency, and show the tips for you as the example below.
+
+
+```
+  GET /members -> 200 : test/members/get/200/normal
+[warn] Loadtest field should be the configuration used by loadtest
+[warn] Options reference: https://github.com/alexfernandez/loadtest#options
+----Load test result below----
+{
+  "totalRequests": 124,
+  "totalErrors": 0,
+  "totalTimeSeconds": 2.002956715,
+  "rps": 62,
+  "meanLatencyMs": 20,
+  "maxLatencyMs": 268,
+  "percentiles": {
+    "50": 7,
+    "90": 11,
+    "95": 28,
+    "99": 266
+  },
+  "errorCodes": {}
+}
+
+```
+
+Normally you can use the options you need to test your API and got the result below:
+
+```
+-----------Load test result below------------
+{
+  "totalRequests": 10,
+  "totalErrors": 0,
+  "totalTimeSeconds": 0.079664075,
+  "rps": 126,
+  "meanLatencyMs": 10,
+  "maxLatencyMs": 12,
+  "percentiles": {
+    "50": 7,
+    "90": 12,
+    "95": 12,
+    "99": 12
+  },
+  "errorCodes": {}
+}
+```
+
+**Notice:** Currently you can only verify the load test result yourself
+
 ## Hooks
 
 **Abao** can be configured to use hookfiles to do basic setup/teardown between each validation (specified with the --hookfiles flag). Hookfiles can be in javascript or coffeescript, and must import the hook methods.
