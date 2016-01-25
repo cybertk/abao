@@ -217,7 +217,11 @@ You just need to define the query condition for mongo to find the data you want 
 
 The `destroy` field support both array and object, in case that you may need to clear multiple records.
 
-**Notice:** You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification).
+**Notice:** 
+
+* You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification). 
+
+* The `query` field named as `id` or `xxx_id` will be transformed as mongo ID automatically, you just need to specify the mongo ID HEX value. You don't need to add `account_id` field as filter, because it is configured in the `config.json` file when command is executed.
 
 #### Basic load test
 

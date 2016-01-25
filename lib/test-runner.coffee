@@ -19,6 +19,10 @@ class TestRunner
       mergedQuery =
         accountId: mongo.ObjectId(config.accountId)
 
+      for key, value of query
+        if key is 'id' or /_id$/.test(key)
+          query[key] = mongo.ObjectId(value)
+
       _.extend mergedQuery, query
 
       db.collection(model).remove(mergedQuery, (err, result) ->
@@ -28,6 +32,25 @@ class TestRunner
           callback err
         else
           console.log "Remove #{model} #{result.n} records"
+          callback null
+      )
+
+  updateMongoRecord: (model, query, update) =>
+    db = @db
+    config = @config
+    (callback) ->
+      mergedQuery =
+        accountId: mongo.ObjectId(config.accountId)
+
+      _.extend mergedQuery, query
+
+      db.collection(model).remove(mergedQuery, update, (err, result) ->
+        if err
+          console.error "Fail to update #{model} data with query:"
+          console.error "#{JSON.stringify(mergedQuery, null, 2)}"
+          callback err
+        else
+          console.log "Updated #{model} #{result.n} records"
           callback null
       )
 
@@ -75,7 +98,10 @@ class TestRunner
     suite.afterAll _.bind (done) ->
       @test.destroy = [@test.destroy] if @test.destroy and not _.isArray @test.destroy
       tasks = _.map @test.destroy, (item) ->
-        removeMongoRecord(item.model, item.query)
+        if item.update
+          updateMongoRecord(item.model, item.query, item.update)
+        else
+          removeMongoRecord(item.model, item.query)
 
       if tasks.length
         async.waterfall(tasks, done)
