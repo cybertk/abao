@@ -24,7 +24,8 @@ parseHeaders = (raml) ->
 
 parseFolderPath = (path, method, status) ->
   method = method.toLowerCase()
-  path = path.replace(/\{.+\}$/, 'detail')
+  if /\}$/.test(path)
+    path = path.slice(0, path.lastIndexOf('{')) + 'detail'
   [path.replace(/\/\{.+?\}/g, ''), method.toLowerCase(), status].join('/')
 
 addTest = (tests, path, method, testFactory, status, definition, res, headers) ->
@@ -64,12 +65,14 @@ addAuthCase = (tests, path, method, testFactory) ->
   test = addTest(tests, path, method, testFactory, '401')
   test.isAuthCheck = true
 
+###
 addPaginationCase = (tests, path, method, testFactory) ->
   # Resource not available case
   test = addTest(tests, path, method, testFactory, '204')
   test.name = 'Big page number: ' + test.name
   test.request.query =
     page: 1000000
+###
 
 addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
   responses = []
@@ -83,8 +86,10 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
   addAuthCase tests, path, method, testFactory
 
   # Add pagination validation
+  ###
   if method is 'GET' and path.match(/\/.+s$/) and path.indexOf('{') is -1
     addPaginationCase tests, path, method, testFactory
+  ###
 
   async.each responses, (obj, callback) ->
     caseFolder = baseCaseFolder + parseFolderPath(path, method, obj.status)
