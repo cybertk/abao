@@ -179,13 +179,20 @@ You can specify it with `depends` field:
   "params": {
     "email": "iqixing00005@163.com"
   },
-  "depends": "/users/post/200/normal.json"
+  "depends": {
+    "path": "/users",
+    "method": "POST",
+    "status": 200,
+    "case": "normal.json"
+  }
 }
 ```
 
-The `depend` field can be either a string or and array (depend on multiple cases), the value should the case file path under `base test folder`.
+The `depends` field can be either an object or and object array (depend on multiple cases), the value should the case file path under `base test folder`.
 
 #### Clear database data
+
+##### Basic usage
 
 Only mongoDB is supported now, the DSN for mongoDB is configured in the `config.json` file specified in command
 
@@ -221,7 +228,34 @@ The `destroy` field support both array and object, in case that you may need to 
 
 * You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification). 
 
-* The `query` field named as `id` or `xxx_id` will be transformed as mongo ID automatically, you just need to specify the mongo ID HEX value. You don't need to add `account_id` field as filter, because it is configured in the `config.json` file when command is executed.
+* The `query` field named as `_id` or `xxxId` will be transformed as mongo ID automatically, you just need to specify the mongo ID HEX value. You don't need to add `account_id` field as filter, because it is configured in the `config.json` file when command is executed.
+
+##### Refer response body in query
+
+You may need to refer the response body got from test case (create a member and refer created member ID), you can use `$` to refer it directly in `destroy` field.
+
+```
+{
+  "body": {
+    "name": "Vincent",
+    "phone": "13345345636"
+  },
+  "destroy": {
+    "model": "user",
+    "query": {
+      "_id": "$member_id"
+    }
+  }
+}
+```
+
+The `member_id` field is got from test case response data, as the example below:
+
+```
+{
+  "member_id": "555ed85513747345628b4581"
+}
+```
 
 #### Basic load test
 

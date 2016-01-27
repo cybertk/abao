@@ -23,7 +23,6 @@ parseHeaders = (raml) ->
   headers
 
 parseFolderPath = (path, method, status) ->
-  method = method.toLowerCase()
   if /\}$/.test(path)
     path = path.slice(0, path.lastIndexOf('{')) + 'detail'
   [path.replace(/\/\{.+?\}/g, ''), method.toLowerCase(), status].join('/')
@@ -32,10 +31,13 @@ addTest = (tests, path, method, testFactory, status, definition, res, headers) -
   test = testFactory.create()
   tests.push test
   name = if definition?.name then definition?.name else ''
-  test.name = "#{method} #{path} -> #{status} : #{name}"
+  prefix = ''
+  prefix = 'Depended case:' if definition?.depended
+
+  test.name = "#{prefix} #{method} #{path} -> #{status} : #{name}"
 
   test.request.path = path
-  test.request.method = method
+  test.request.method = method.toUpperCase()
 
   # Only use the definition for params in case the lack of example in RAML
   test.loadtest = definition?.loadtest
@@ -106,17 +108,21 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
           destroy = []
           # Add depended test cases
           if definition.depends
-            if typeof definition.depends is 'string'
+            if typeof definition.depends is 'object' and definition.depends.constructor isnt Array
               definition.depends = [definition.depends]
             for depend in definition.depends
-              [filePath, path, method, status] = depend.match /(.+)\/(\w+)\/(\d+)\/.+\.json$/
-              dependDef = JSON.parse(fs.readFileSync("#{baseCaseFolder}#{depend}", 'utf8'))
+              caseFolder = baseCaseFolder + parseFolderPath(depend.path, depend.method, depend.status)
+              dependFile = "#{caseFolder}/#{depend.case}"
+              dependDef = JSON.parse(fs.readFileSync(dependFile, 'utf8'))
+              dependDef.name = dependFile.slice(0, dependFile.lastIndexOf('.'))
+              # Mark the depended test case
+              dependDef.depended = true
               # Delete the destory handling for the dependencies
               if dependDef.destroy
                 destroy = destroy.concat(dependDef.destroy)
                 delete dependDef.destroy
               delete dependDef.loadtest
-              addTest(tests, path, method, testFactory, status, dependDef)
+              addTest(tests, depend.path, depend.method, testFactory, depend.status, dependDef)
 
           # Move the destory handling to the next case
           definition.destroy = [] if not definition.destroy

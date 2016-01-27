@@ -20,7 +20,7 @@ class TestRunner
         accountId: mongo.ObjectId(config.accountId)
 
       for key, value of query
-        if key is 'id' or /_id$/.test(key)
+        if key is '_id' or /Id$/.test(key)
           query[key] = mongo.ObjectId(value)
 
       _.extend mergedQuery, query
@@ -44,7 +44,7 @@ class TestRunner
 
       _.extend mergedQuery, query
 
-      db.collection(model).remove(mergedQuery, update, (err, result) ->
+      db.collection(model).update(mergedQuery, update, (err, result) ->
         if err
           console.error "Fail to update #{model} data with query:"
           console.error "#{JSON.stringify(mergedQuery, null, 2)}"
@@ -54,10 +54,28 @@ class TestRunner
           callback null
       )
 
+  replaceQureyRef: (query, body) =>
+    for key, value of query
+      if typeof value is 'object'
+        if value.constructor is Array
+          for item in value
+            @replaceQureyRef(item, body)
+        else
+          @replaceQureyRef(value, body)
+      else if typeof value is 'string' and /^\$/.test(value)
+        fileds = value.slice(1).split('.')
+        value = body
+        for field in fileds
+          value = value[field]
+        query[key] = value
+    query
+
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
     options = @options
     removeMongoRecord = @removeMongoRecord
+    updateMongoRecord = @updateMongoRecord
+    replaceQureyRef = @replaceQureyRef
     for key, value of test.request.params
       if not value
         # Only show information for matched routes
@@ -97,7 +115,9 @@ class TestRunner
 
     suite.afterAll _.bind (done) ->
       @test.destroy = [@test.destroy] if @test.destroy and not _.isArray @test.destroy
+      body =  @test.response?.body
       tasks = _.map @test.destroy, (item) ->
+        item.query = replaceQureyRef(item.query, body)
         if item.update
           updateMongoRecord(item.model, item.query, item.update)
         else
