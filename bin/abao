@@ -6,6 +6,7 @@ var optimist = require('optimist');
 var path = require('path');
 var pjson = require('../package.json');
 var Abao = require('../lib/abao');
+var MockService = require('../lib/mock-service');
 
 var argv = optimist
     .usage("Usage: \n  abao <path to raml> <config file path> [OPTIONS]" +
@@ -52,7 +53,7 @@ if (argv._[0] === undefined) {
   console.error("Error: Must specify path to raml file.");
   argError = true;
 }
-if (argv._[1] === undefined && !argv.names) {
+if (argv._[1] === undefined && !argv.names && !argv.mock) {
   console.error("Error: Must specify server related configuration.");
   console.error("Example:");
   console.error("{");
@@ -73,21 +74,35 @@ configuration = {
   'options': argv
 };
 
-abao = new Abao(configuration);
+if (argv.mock) {
+  if (typeof argv.mock !== 'string') {
+    console.warn('You can customize the mock hostinfo, default value is wm.com:3000')
+  }
+  var config = {
+    files: [configuration.ramlPath],
+    hostinfo: argv.mock
+  };
+  mockService = new MockService(config)
+  mockService.start();
 
-abao.run(function(error, failures){
-  if (error) {
-    if (error.message) {
-      console.error(error.message);
+} else {
+
+  abao = new Abao(configuration);
+
+  abao.run(function(error, failures){
+    if (error) {
+      if (error.message) {
+        console.error(error.message);
+      }
+      if (error.stack) {
+        console.error(error.stack);
+      }
+      process.exit(1);
     }
-    if (error.stack) {
-      console.error(error.stack);
+    if (failures > 0) {
+      process.exit(1);
+    } else {
+      process.exit(0);
     }
-    process.exit(1);
-  }
-  if (failures > 0) {
-    process.exit(1);
-  } else {
-    process.exit(0);
-  }
-});
+  });
+}

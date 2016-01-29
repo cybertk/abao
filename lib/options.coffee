@@ -14,6 +14,11 @@ options =
     description: 'Only list names of requests (for use in a hookfile). No requests are made.'
     default: false
 
+  mock:
+    alias: 'm'
+    description: 'Start a mock service based on API RAML definition'
+    default: false
+
   reporter:
     alias: "r"
     description: "Specify the reporter to use"

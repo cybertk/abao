@@ -25,7 +25,7 @@ Install stable version
 
     npm install -g frontnode/abao
 
-## Get Started Testing Your API
+## Get Started
 
     abao api.raml config.json
 
@@ -466,4 +466,10 @@ Any contribution is more than welcome!
 
 [RAML]: http://raml.org
 [mocha]: http://mochajs.org
+
+## TODO
+
+* Support getting response data from depended test case
+* Insert mongodb mock data before test case
+* Support mocking data based on the RAML definition
 
