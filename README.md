@@ -172,7 +172,7 @@ Options:
 
 ## Contribution
 
-Any contribution is more than welcome!
+**abao** is looking for maintainers. If you are intresting, please submit a issue.
 
 [RAML]: http://raml.org
 [mocha]: http://mochajs.org
