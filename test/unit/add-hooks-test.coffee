@@ -90,7 +90,7 @@ describe 'addHooks(hooks, pattern, callback)', () ->
         globStub.sync.restore()
         hooksStub.addHook.restore()
 
-      it 'should log an warning', (done) ->
+      it 'should log a warning', (done) ->
         mute (unmute) ->
           addHooks(hooksStub, pattern)
           assert.ok console.error.called
@@ -105,3 +105,4 @@ describe 'addHooks(hooks, pattern, callback)', () ->
 
           unmute()
           done()
+

@@ -16,7 +16,7 @@ describe '#addTests', ->
 
   describe '#run', ->
 
-    describe 'when raml contains single get', ->
+    describe 'when raml contains single GET', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -311,3 +311,4 @@ describe '#addTests', ->
       it 'should added 1 test', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
+

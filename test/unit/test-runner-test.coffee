@@ -119,25 +119,25 @@ describe 'Test Runner', ->
       it 'should invoke callback with failures', ->
         runCallback.should.be.calledWith null, 0
 
-      it 'should generated mocha suite', ->
+      it 'should generate mocha suite', ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generated mocha test', ->
+      it 'should generate mocha test', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
 
-      it 'should generated hook of suite', ->
+      it 'should generate hook of suite', ->
         assert.ok suiteStub.beforeAll.called
         assert.ok suiteStub.afterAll.called
 
       # describe 'when executed hooks', ->
       #   before (done) ->
       #
-      #   it 'should executed hooks', ->
-      #   # it 'should generated before hook', ->
+      #   it 'should execute hooks', ->
+      #   # it 'should generate before hook', ->
       #     assert.ok hooksStub.runBefore.calledWith(test)
         #
         # it 'should call after hook', ->
@@ -173,10 +173,10 @@ describe 'Test Runner', ->
       after ->
         test.run.restore()
 
-      it 'should called #test.run', ->
+      it 'should call #test.run', ->
         assert.ok test.run.calledOnce
 
-    describe 'when test has no respones code', ->
+    describe 'when test has no response code', ->
       before (done) ->
 
         testFactory = new TestFactory()
@@ -197,12 +197,12 @@ describe 'Test Runner', ->
       it 'should run mocha', ->
         assert.ok runner.mocha.run.called
 
-      it 'should generated mocha suite', ->
+      it 'should generate mocha suite', ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generated pending mocha test', ->
+      it 'should generate pending mocha test', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.ok tests[0].pending
@@ -229,12 +229,12 @@ describe 'Test Runner', ->
       it 'should run mocha', ->
         assert.ok runner.mocha.run.called
 
-      it 'should generated mocha suite', ->
+      it 'should generate mocha suite', ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should not generated pending mocha test', ->
+      it 'should not generate pending mocha test', ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
@@ -274,7 +274,7 @@ describe 'Test Runner', ->
       it 'should call afterAll hook', ->
         afterAllHook.should.have.been.called
 
-    describe 'when beforeAllHooks throws Uncaught Error', ->
+    describe 'when beforeAllHooks throws UncaughtError', ->
 
       beforeAllHook = ''
       afterAllHook = ''
@@ -354,7 +354,7 @@ describe 'Test Runner', ->
 
     describe 'add additional headers with `headers`', ->
 
-      recievedTest = ''
+      receivedTest = ''
       header = ''
 
       before (done) ->
@@ -371,7 +371,7 @@ describe 'Test Runner', ->
 
         runner = new TestRunner 'http://localhost:3000', {header}
         sinon.stub runner.mocha, 'run', (callback) ->
-          recievedTest = _.clone(test)
+          receivedTest = _.clone(test)
           callback()
 
         runner.run [test], hooksStub, done
@@ -383,7 +383,7 @@ describe 'Test Runner', ->
         assert.ok runner.mocha.run.called
 
       it 'should add headers into test', ->
-        assert.deepEqual recievedTest.request.headers, header
+        assert.deepEqual receivedTest.request.headers, header
 
     describe 'run test with hooks only indicated by `hooks-only`', ->
 
@@ -435,3 +435,4 @@ describe 'Test Runner', ->
         # TODO(quanlong): Implement this test
         # console.log suiteStub.addTest.printf('%n-%c-%C')
         # assert.ok suiteStub.addTest.calledWithExactly('GET /machines -> 200')
+

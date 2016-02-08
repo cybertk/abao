@@ -98,7 +98,7 @@ describe 'Hooks', () ->
         assert.isTrue before_called, "before_hook should have been called"
         testDone()
 
-    it 'should work without test specific before', (testDone) ->
+    it 'should work without test-specific before', (testDone) ->
       before_each_called = false
       test_name = "before_test"
       hooks.beforeEach (test, done) ->
@@ -143,7 +143,7 @@ describe 'Hooks', () ->
         assert.isTrue after_called, "after_hook should have been called"
         testDone()
 
-    it 'should work without test specific after', (testDone) ->
+    it 'should work without test-specific after', (testDone) ->
       after_each_called = false
       test_name = "after_test"
       hooks.afterEach (test, done) ->
@@ -215,7 +215,7 @@ describe 'Hooks', () ->
       beforeHook = ''
       afterHook = ''
 
-    describe 'with correponding test', () ->
+    describe 'with corresponding GET test', () ->
 
       testFactory = new TestFactoryStub()
       test = testFactory.create()
@@ -257,7 +257,7 @@ describe 'Hooks', () ->
         it 'should pass #test to hook', ->
           assert.ok afterHook.calledWith(test)
 
-    describe 'with incorreponding test', () ->
+    describe 'with corresponding POST test', () ->
 
       testFactory = new TestFactoryStub()
       test = testFactory.create()
@@ -364,3 +364,4 @@ describe 'Hooks', () ->
       f()
       assert.throw f,
         "Cannot have more than one test with the name: #{test_name}"
+

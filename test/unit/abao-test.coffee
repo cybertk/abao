@@ -30,7 +30,7 @@ describe 'Abao', ->
 
     describe 'with valid config', ->
 
-      it 'should created a new instance', ->
+      it 'should create a new instance', ->
         abao = new Abao()
         abao.should.not.be.null
 
@@ -47,3 +47,4 @@ describe 'Abao', ->
 
     it 'should invoke callback', ->
       callback.should.be.called
+
