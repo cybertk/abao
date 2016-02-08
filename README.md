@@ -24,7 +24,7 @@ Install stable version
 
     npm install -g abao
 
-Install latest developement version in GitHub branch
+Install latest development version in GitHub branch
 
     npm install -g github:cybertk/abao
 
@@ -172,7 +172,7 @@ Options:
 
 ## Contribution
 
-**abao** is looking for maintainers. If you are intresting, please submit a issue.
+**abao** is looking for maintainers. If you are interesting, please submit an issue.
 
 [RAML]: http://raml.org
 [mocha]: http://mochajs.org
