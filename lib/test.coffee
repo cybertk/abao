@@ -80,6 +80,9 @@ class Test
     assert.isNull error
     assert.isNotNull response, 'Response'
 
+    # Headers
+    @response.headers = response.headers
+
     # Status code
     assert.equal response.statusCode, @response.status, """
       Got unexpected response code:
