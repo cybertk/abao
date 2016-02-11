@@ -332,3 +332,4 @@ describe "Command line interface", ->
 
       it 'exit status should be 1', () ->
         assert.equal exitStatus, 1
+

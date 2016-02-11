@@ -286,3 +286,4 @@ describe 'Test', ->
         bodyStub = 'Im invalid'
         fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
         assert.throw fn, chai.AssertionError
+
