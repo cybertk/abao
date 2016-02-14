@@ -44,8 +44,8 @@ $ abao api.raml http://api.example.com
 
 ## Writing testable RAML
 
-**Abao** validates the HTTP response body against `jsonschema` defines in [RAML][].
-**No response body will be returned if the [RAML][] `schema` section is missing.**
+**Abao** validates the HTTP response body against `schema` defined in [RAML][].
+**No response body will be returned if the corresponding [RAML][] `schema` is missing.**
 However, the response status code can **always** be verified, regardless.
 
 ## Hooks
@@ -139,18 +139,18 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 ### test.request
 
-- `server` - Server address, provided from CLI.
+- `server` - Server address, provided from command line.
 - `path` - API endpoint path, parsed from RAML.
-- `method` - HTTP method, parsed from RAML.
-- `params` - URI parameters, parsed from RAML `uriParameters` section [default: `{}`].
+- `method` - HTTP method, parsed from RAML request method (e.g., `get`).
+- `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
 - `query` - Object containing querystring values to be appended to the `path` [default: `{}`].
-- `headers` - HTTP headers, parsed from RAML `headers` section [default: `{}`].
-- `body` - entity body for PATCH, POST and PUT requests. Must be a JSON-serializable object. Parsed from RAML `example` section [default: `{}`].
+- `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
+- `body` - Entity body for POST, PUT, and PATCH requests. Must be a JSON-serializable object. Parsed from RAML `example` [default: `{}`].
 
 ### test.response
 
-- `status` - Expected HTTP response code, parsed from RAML.
-- `schema` - Expected schema of HTTP response body, parsed from RAML `schema` section.
+- `status` - Expected HTTP response code, parsed from RAML response status.
+- `schema` - Expected schema of HTTP response body, parsed from RAML response `schema`.
 - `headers` - Object containing HTTP response headers from server [default: `{}`].
 - `body` - HTTP response body (JSON-format) from server [default: `null`].
 
@@ -170,18 +170,16 @@ Options:
                     requests are made.                         [default: false]
   --reporter, -r    Specify the reporter to use                [default: 'spec']
   --header, -h      Extra header to include in every request. The header must
-                    be in KEY:VALUE format, e.g. '-h Accept:application/json'.
-                    This option can be used multiple times to add multiple
-                    headers
+                    be in KEY:VALUE format (e.g., '-h Accept:application/json').
+                    This option can be repeated to specify more than one header.
   --hooks-only, -H  Run test only if defined either before or after hooks
   --grep, -g        Only run tests matching <pattern>
-  --invert, -i      Inverts --grep matches
-  --timeout, -t     Set test-case timeout in milliseconds      [default: 2000]
+  --invert, -i      Inverts `--grep` matches
+  --timeout, -t     Set timeout for test cases (milliseconds)  [default: 2000]
   --reporters       Display available reporters
   --help            Show usage information
   --version         Show version number
 ```
-
 
 ## Run Tests
 
