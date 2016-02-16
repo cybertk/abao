@@ -1,0 +1,43 @@
+#%RAML 0.8
+
+title: World Music API
+baseUri: http://example.api.com/{version}
+version: v1
+
+/{songId}:
+  uriParameters:
+    songId:
+        example: "mike-a-beautiful-day"
+  patch:
+    body:
+      application/vnd.api+json:
+        schema: |
+          { "$schema": "http://json-schema.org/schema",
+            "type": "object",
+            "description": "A canonical song",
+            "properties": {
+              "title":  { "type": "string" },
+              "artist": { "type": "string" }
+            },
+            "required": [ "title", "artist" ]
+          }
+        example: |
+          { "title": "A Beautiful Day", "artist": "Mike" }
+      text/plain:
+    responses:
+      200:
+        body:
+          application/vnd.api+json:
+            schema: |
+              { "$schema": "http://json-schema.org/schema",
+                "type": "object",
+                "description": "A canonical song",
+                "properties": {
+                  "title":  { "type": "string" },
+                  "artist": { "type": "string" }
+                },
+                "required": [ "title", "artist" ]
+              }
+            example: |
+              { "title": "A Beautiful Day", "artist": "Mike" }
+          text/plain:
