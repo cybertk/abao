@@ -19,7 +19,7 @@ class TestFactory
       console.error 'Found JSON ref schemas: ' + files
       console.error ''
 
-      tv4.banUnknown = true;
+      tv4.banUnknown = true
 
       for file in files
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
@@ -48,7 +48,7 @@ class Test
       body: null
 
     @contentTest ?= (response, body, done) ->
-        done()
+      done()
 
   url: () ->
     path = @request.server + @request.path
