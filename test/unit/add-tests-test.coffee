@@ -148,7 +148,7 @@ describe '#addTests', ->
 
       it 'should setup test.response', ->
         res = tests[0].response
-        
+
         assert.equal res.status, 200
         assert.equal res.schema?.properties?.chick?.type, "string"
         assert.isNull res.headers
@@ -192,7 +192,7 @@ describe '#addTests', ->
 
       it 'should setup test.response', ->
         res = tests[0].response
-        
+
         assert.equal res.status, 200
         assert.equal res.schema?.properties?.type["$ref"], "type2"
         assert.isNull res.headers
@@ -312,3 +312,46 @@ describe '#addTests', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
+    describe 'when raml contains vendor specifc JSON content-types', ->
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+        ramlParser.loadFile("#{__dirname}/../fixtures/vendor-content-type.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, hooks, callback, testFactory
+        , done
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added a test', ->
+        assert.lengthOf tests, 1
+
+      it 'should setup test.request of PATCH', ->
+        req = tests[0].request
+
+        assert.equal req.path, '/{songId}'
+        assert.deepEqual req.params,
+          songId: 'mike-a-beautiful-day'
+        assert.deepEqual req.query, {}
+        assert.deepEqual req.headers,
+          'Content-Type': 'application/vnd.api+json'
+        assert.deepEqual req.body,
+          title: 'A Beautiful Day'
+          artist: 'Mike'
+        assert.equal req.method, 'PATCH'
+
+      it 'should setup test.response of PATCH', ->
+        res = tests[0].response
+
+        assert.equal res.status, 200
+        schema = res.schema
+        assert.equal schema.properties.title.type, 'string'
+        assert.equal schema.properties.artist.type, 'string'
