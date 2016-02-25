@@ -12,20 +12,22 @@ class TestRunner
     if @config.db and @config.db.type is 'mongodb'
       @db = mongo(@config.db.dsn)
 
+  transformQuery: (query) =>
+    mergedQuery =
+      accountId: mongo.ObjectId(@config.accountId)
+
+    for key, value of query
+      if key is '_id' or /Id$/.test(key)
+        query[key] = mongo.ObjectId(value)
+
+    _.extend mergedQuery, query
+
   removeMongoRecord: (model, query) =>
     db = @db
-    config = @config
+    transformQuery = @transformQuery
     (callback) ->
-      mergedQuery =
-        accountId: mongo.ObjectId(config.accountId)
-
-      for key, value of query
-        if key is '_id' or /Id$/.test(key)
-          query[key] = mongo.ObjectId(value)
-
-      _.extend mergedQuery, query
-
-      db.collection(model).remove(mergedQuery, (err, result) ->
+      query = transformQuery(query)
+      db.collection(model).remove(query, (err, result) ->
         if err
           console.error "Fail to clear #{model} data with query:"
           console.error "#{JSON.stringify(mergedQuery, null, 2)}"
@@ -37,14 +39,10 @@ class TestRunner
 
   updateMongoRecord: (model, query, update) =>
     db = @db
-    config = @config
+    transformQuery = @transformQuery
     (callback) ->
-      mergedQuery =
-        accountId: mongo.ObjectId(config.accountId)
-
-      _.extend mergedQuery, query
-
-      db.collection(model).update(mergedQuery, update, (err, result) ->
+      query = transformQuery(query)
+      db.collection(model).update(query, update, (err, result) ->
         if err
           console.error "Fail to update #{model} data with query:"
           console.error "#{JSON.stringify(mergedQuery, null, 2)}"
