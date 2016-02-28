@@ -113,4 +113,6 @@ class Test
       # Update @response
       @response.body = json
 
+
 module.exports = TestFactory
+

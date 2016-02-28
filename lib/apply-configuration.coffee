@@ -48,4 +48,6 @@ applyConfiguration = (config) ->
 
   return configuration
 
+
 module.exports = applyConfiguration
+
