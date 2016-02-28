@@ -16,7 +16,7 @@ describe '#addTests', ->
 
   describe '#run', ->
 
-    describe 'when raml contains single GET', ->
+    describe 'when RAML contains single GET', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -63,7 +63,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when raml contains one GET and one POST', ->
+    describe 'when RAML contains one GET and one POST', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -110,7 +110,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when raml includes multiple referencing schemas', ->
+    describe 'when RAML includes multiple referencing schemas', ->
 
       tests = []
       testFactory = new TestFactory
@@ -154,7 +154,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when raml has inline and included schemas', ->
+    describe 'when RAML has inline and included schemas', ->
 
       tests = []
       testFactory = new TestFactory
@@ -198,7 +198,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when raml contains three-levels endpoints', ->
+    describe 'when RAML contains three-levels endpoints', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -238,7 +238,7 @@ describe '#addTests', ->
         assert.deepEqual test.request.params,
           machine_id: '1'
 
-    describe 'when raml has resource not defined method', ->
+    describe 'when RAML has resource not defined method', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -266,7 +266,7 @@ describe '#addTests', ->
       it 'should set test.name', ->
         assert.equal tests[0].name, 'GET /root/machines -> 200'
 
-    describe 'when raml has invalid request body example', ->
+    describe 'when RAML has invalid request body example', ->
 
       tests = []
       testFactory = new TestFactory()
@@ -308,7 +308,7 @@ describe '#addTests', ->
       it 'should give a warning', ->
         assert.ok console.warn.called
 
-      it 'should added 1 test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
