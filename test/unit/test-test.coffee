@@ -16,6 +16,8 @@ TestFactory = proxyquire '../../lib/test', {
   'request': requestStub
 }
 
+ABAO_IO_SERVER = 'http://abao.io'
+
 
 describe 'Test', ->
 
@@ -34,7 +36,7 @@ describe 'Test', ->
         test = testFact.create()
         contentTestCalled = false
         test.name = 'POST /machines -> 201'
-        test.request.server = 'http://abao.io'
+        test.request.server = "#{ABAO_IO_SERVER}"
         test.request.path = '/machines'
         test.request.method = 'POST'
         test.request.params =
@@ -66,7 +68,7 @@ describe 'Test', ->
 
       it 'should call #request', ->
         requestStub.should.be.calledWith
-          url: 'http://abao.io/machines'
+          url: "#{ABAO_IO_SERVER}/machines"
           method: 'POST'
           headers:
             key: 'value'
@@ -80,7 +82,7 @@ describe 'Test', ->
 
       it 'should not modify @request', ->
         request = test.request
-        assert.equal request.server, 'http://abao.io'
+        assert.equal request.server, "#{ABAO_IO_SERVER}"
         assert.equal request.path, '/machines'
         assert.equal request.method, 'POST'
         assert.deepEqual request.params, {param: 'value'}
@@ -110,7 +112,7 @@ describe 'Test', ->
         testFact = new TestFactory()
         test = testFact.create()
         test.name = 'PUT /machines/{machine_id} -> 200'
-        test.request.server = 'http://abao.io'
+        test.request.server = "#{ABAO_IO_SERVER}"
         test.request.path = '/machines/{machine_id}'
         test.request.method = 'PUT'
         test.request.params =
@@ -136,7 +138,7 @@ describe 'Test', ->
 
       it 'should call #request', ->
         requestStub.should.be.calledWith
-          url: 'http://abao.io/machines/1'
+          url: "#{ABAO_IO_SERVER}/machines/1"
           method: 'PUT'
           headers:
             key: 'value'
@@ -150,7 +152,7 @@ describe 'Test', ->
 
       it 'should not modify @request', ->
         request = test.request
-        assert.equal request.server, 'http://abao.io'
+        assert.equal request.server, "#{ABAO_IO_SERVER}"
         assert.equal request.path, '/machines/{machine_id}'
         assert.equal request.method, 'PUT'
         assert.deepEqual request.params, {machine_id: '1'}

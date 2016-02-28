@@ -16,6 +16,8 @@ TestRunner = proxyquire '../../lib/test-runner', {
   'hooks': hooksStub
 }
 
+ABAO_IO_SERVER = 'http://abao.io'
+TEST_SERVER = 'http://localhost:3000'
 
 assert = chai.assert
 should = chai.should()
@@ -47,7 +49,7 @@ describe 'Test Runner', ->
       ]"""
 
       before (done) ->
-        runner = new TestRunner "http://abao.io"
+        runner = new TestRunner "#{ABAO_IO_SERVER}"
 
         runCallback = sinon.stub()
         runCallback(done)
@@ -160,7 +162,7 @@ describe 'Test Runner', ->
           name: 'string'
         ]"""
 
-        runner = new TestRunner "http://abao.io"
+        runner = new TestRunner "#{ABAO_IO_SERVER}"
         sinon.stub test, 'run', (callback) ->
            callback()
 
@@ -185,7 +187,7 @@ describe 'Test Runner', ->
         test.request.path = '/machines'
         test.request.method = 'GET'
 
-        runner = new TestRunner "http://localhost:3000"
+        runner = new TestRunner "#{TEST_SERVER}"
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
 
@@ -217,7 +219,7 @@ describe 'Test Runner', ->
         test.request.method = 'GET'
         test.response.status = 200
 
-        runner = new TestRunner "http://localhost:3000"
+        runner = new TestRunner "#{TEST_SERVER}"
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
 
@@ -257,7 +259,7 @@ describe 'Test Runner', ->
 
         hooksStub.afterAllHooks = [afterAllHook]
 
-        runner = new TestRunner "http://localhost:3000"
+        runner = new TestRunner "#{TEST_SERVER}"
         # sinon.stub runner.mocha, 'run', (callback) -> callback()
         testStub = sinon.stub test, 'run'
         testStub.throws('AssertionError')
@@ -296,7 +298,7 @@ describe 'Test Runner', ->
         hooksStub.beforeAllHooks = [beforeAllHook]
         hooksStub.afterAllHooks = [afterAllHook]
 
-        runner = new TestRunner "http://localhost:3000"
+        runner = new TestRunner "#{TEST_SERVER}"
         sinon.stub test, 'run', (callback) ->
           callback()
 
@@ -332,7 +334,7 @@ describe 'Test Runner', ->
         options =
           names: true
 
-        runner = new TestRunner 'http://localhost:3000', options
+        runner = new TestRunner "#{TEST_SERVER}", options
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.spy console, 'log'
 
@@ -369,7 +371,7 @@ describe 'Test Runner', ->
         header =
           key: 'value'
 
-        runner = new TestRunner 'http://localhost:3000', {header}
+        runner = new TestRunner "#{TEST_SERVER}", {header}
         sinon.stub runner.mocha, 'run', (callback) ->
           receivedTest = _.clone(test)
           callback()
@@ -402,7 +404,7 @@ describe 'Test Runner', ->
         options =
           'hooks-only': true
 
-        runner = new TestRunner 'http://localhost:3000', options
+        runner = new TestRunner "#{TEST_SERVER}", options
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
