@@ -50,7 +50,7 @@ describe '#addTests', ->
         assert.deepEqual req.query, {}
         assert.deepEqual req.headers,
           'Abao-API-Key': 'abcdef'
-        assert.deepEqual req.body, {}
+        req.body.should.be.empty
         assert.equal req.method, 'GET'
 
       it 'should setup test.response', ->
@@ -143,7 +143,7 @@ describe '#addTests', ->
         assert.equal req.path, '/machines'
         assert.deepEqual req.params, {}
         assert.deepEqual req.query, {}
-        assert.deepEqual req.body, {}
+        req.body.should.be.empty
         assert.equal req.method, 'GET'
 
       it 'should setup test.response', ->
@@ -187,7 +187,7 @@ describe '#addTests', ->
         assert.equal req.path, '/machines'
         assert.deepEqual req.params, {}
         assert.deepEqual req.query, {}
-        assert.deepEqual req.body, {}
+        req.body.should.be.empty
         assert.equal req.method, 'GET'
 
       it 'should setup test.response', ->
