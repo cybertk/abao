@@ -71,7 +71,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           try
             test.request.body = JSON.parse api.body['application/json']?.example
           catch
-            console.warn "invalid request example of #{test.name}"
+            console.warn "cannot parse JSON example request body for #{test.name}"
         test.request.params = params
 
         # Update test.response
@@ -90,3 +90,4 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
 
 
 module.exports = addTests
+
