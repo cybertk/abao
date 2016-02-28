@@ -12,6 +12,10 @@ addTests = proxyquire '../../lib/add-tests', {
   'mocha': mochaStub
 }
 
+FIXTURE_DIR = "#{__dirname}/../fixtures"
+RAML_DIR = "#{FIXTURE_DIR}"
+
+
 describe '#addTests', ->
 
   describe '#run', ->
@@ -23,7 +27,8 @@ describe '#addTests', ->
       callback = ''
 
       before (done) ->
-        ramlParser.loadFile("#{__dirname}/../fixtures/single-get.raml")
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -36,7 +41,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 1 test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
 
       it 'should set test.name', ->
@@ -71,7 +76,8 @@ describe '#addTests', ->
 
       before (done) ->
 
-        ramlParser.loadFile("#{__dirname}/../fixtures/1-get-1-post.raml")
+        ramlFile = "#{RAML_DIR}/1-get-1-post.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -84,7 +90,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 2 test', ->
+      it 'should add 2 tests', ->
         assert.lengthOf tests, 2
 
       it 'should setup test.request of POST', ->
@@ -118,7 +124,8 @@ describe '#addTests', ->
 
       before (done) ->
 
-        ramlParser.loadFile("#{__dirname}/../fixtures/ref_other_schemas.raml")
+        ramlFile = "#{RAML_DIR}/ref_other_schemas.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -131,7 +138,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 1 test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
 
       it 'should set test.name', ->
@@ -162,7 +169,8 @@ describe '#addTests', ->
 
       before (done) ->
 
-        ramlParser.loadFile("#{__dirname}/../fixtures/inline_and_included_schemas.raml")
+        ramlFile = "#{RAML_DIR}/inline_and_included_schemas.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -175,7 +183,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 1 test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
 
       it 'should set test.name', ->
@@ -206,7 +214,8 @@ describe '#addTests', ->
 
       before (done) ->
 
-        ramlParser.loadFile("#{__dirname}/../fixtures/three-levels.raml")
+        ramlFile = "#{RAML_DIR}/three-levels.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -220,7 +229,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 3 test', ->
+      it 'should add 3 tests', ->
         assert.lengthOf tests, 3
 
       it 'should set test.name', ->
@@ -246,7 +255,8 @@ describe '#addTests', ->
 
       before (done) ->
 
-        ramlParser.loadFile("#{__dirname}/../fixtures/no-method.raml")
+        ramlFile = "#{RAML_DIR}/no-method.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -260,7 +270,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added 1 test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
 
       it 'should set test.name', ->
@@ -312,13 +322,14 @@ describe '#addTests', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
-    describe 'when raml contains vendor specifc JSON content-types', ->
+    describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', ->
       tests = []
       testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
-        ramlParser.loadFile("#{__dirname}/../fixtures/vendor-content-type.raml")
+        ramlFile = "#{RAML_DIR}/vendor-content-type.raml"
+        ramlParser.loadFile(ramlFile)
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -331,7 +342,7 @@ describe '#addTests', ->
       it 'should run callback', ->
         assert.ok callback.called
 
-      it 'should added a test', ->
+      it 'should add 1 test', ->
         assert.lengthOf tests, 1
 
       it 'should setup test.request of PATCH', ->
@@ -355,3 +366,4 @@ describe '#addTests', ->
         schema = res.schema
         assert.equal schema.properties.title.type, 'string'
         assert.equal schema.properties.artist.type, 'string'
+
