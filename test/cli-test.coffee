@@ -36,7 +36,7 @@ execCommand = (cmd, callback) ->
 
 describe "Command line interface", ->
 
-  describe "When raml file not found", (done) ->
+  describe "When RAML file not found", (done) ->
     before (done) ->
       cmd = "./bin/abao ./test/fixtures/nonexistent_path.raml http://localhost:#{PORT}"
 
@@ -51,9 +51,9 @@ describe "Command line interface", ->
       assert.include stderr, 'Error: ENOENT'
 
 
-  describe "Arguments with existing raml and responding server", () ->
+  describe "Arguments with existing RAML and responding server", () ->
 
-    describe "when executing the command and the server is responding as specified in the raml", () ->
+    describe "when executing the command and the server is responding as specified in the RAML", () ->
       before (done) ->
         cmd = "./bin/abao -r json ./test/fixtures/single-get.raml http://localhost:#{PORT}"
 
@@ -76,14 +76,14 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.equal 1, report.tests.length
         assert.equal 1, report.passes.length
 
       it 'should print correct title for response', ->
         assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
-    describe "when executing the command and raml includes other ramls", () ->
+    describe "when executing the command and RAML includes other RAML files", () ->
       before (done) ->
         cmd = "./bin/abao ./test/fixtures/include_other_raml.raml http://localhost:#{PORT}"
 
@@ -106,12 +106,12 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.include stdout, '1 passing'
 
   describe 'when called with arguments', ->
 
-    describe "when using additional reporters with -r", ->
+    describe "when using additional reporters with --reporter", ->
       before (done) ->
         cmd = "./bin/abao -r spec ./test/fixtures/single-get.raml http://localhost:#{PORT}"
 
@@ -134,7 +134,7 @@ describe "Command line interface", ->
       it 'should print using the new reporter', ->
         assert.include stdout, '1 passing'
 
-    describe "when adding additional headers with -h", ->
+    describe "when adding additional headers with --header", ->
 
       receivedRequest = {}
 
@@ -164,11 +164,11 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.include stdout, '1 passing'
 
 
-    describe "when printing test cases with -n", ->
+    describe "when printing test cases with --names", ->
       before (done) ->
         cmd = "./bin/abao ./test/fixtures/single-get.raml -n"
 
