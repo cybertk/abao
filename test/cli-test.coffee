@@ -3,8 +3,18 @@
 express = require 'express'
 
 
+HOSTNAME = 'localhost'
+PORT = 3333
+SERVER = "http://#{HOSTNAME}:#{PORT}"
+
+FIXTURE_DIR = './test/fixtures'
+RAML_DIR = "#{FIXTURE_DIR}"
+HOOK_DIR = "#{FIXTURE_DIR}"
+SCHEMA_DIR = "#{FIXTURE_DIR}/schemas"
+
 CMD_PREFIX = ''
-PORT = '3333'
+ABAO_BIN = './bin/abao'
+MOCHA_BIN = './node_modules/mocha/bin/mocha'
 
 stderr = ''
 stdout = ''
@@ -36,9 +46,10 @@ execCommand = (cmd, callback) ->
 
 describe "Command line interface", ->
 
-  describe "When raml file not found", (done) ->
+  describe "When RAML file not found", (done) ->
     before (done) ->
-      cmd = "./bin/abao ./test/fixtures/nonexistent_path.raml http://localhost:#{PORT}"
+      ramlFile = "#{RAML_DIR}/nonexistent_path.raml"
+      cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER}"
 
       execCommand cmd, done
 
@@ -51,11 +62,12 @@ describe "Command line interface", ->
       assert.include stderr, 'Error: ENOENT'
 
 
-  describe "Arguments with existing raml and responding server", () ->
+  describe "Arguments with existing RAML and responding server", () ->
 
-    describe "when executing the command and the server is responding as specified in the raml", () ->
+    describe "when executing the command and the server is responding as specified in the RAML", () ->
       before (done) ->
-        cmd = "./bin/abao -r json ./test/fixtures/single-get.raml http://localhost:#{PORT}"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --reporter json"
 
         app = express()
 
@@ -76,16 +88,17 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.equal 1, report.tests.length
         assert.equal 1, report.passes.length
 
       it 'should print correct title for response', ->
         assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
-    describe "when executing the command and raml includes other ramls", () ->
+    describe "when executing the command and RAML includes other RAML files", () ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/include_other_raml.raml http://localhost:#{PORT}"
+        ramlFile = "#{RAML_DIR}/include_other_raml.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER}"
 
         app = express()
 
@@ -106,14 +119,15 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.include stdout, '1 passing'
 
   describe 'when called with arguments', ->
 
-    describe "when using additional reporters with -r", ->
+    describe "when using additional reporters with --reporter", ->
       before (done) ->
-        cmd = "./bin/abao -r spec ./test/fixtures/single-get.raml http://localhost:#{PORT}"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --reporter spec"
 
         app = express()
 
@@ -134,12 +148,13 @@ describe "Command line interface", ->
       it 'should print using the new reporter', ->
         assert.include stdout, '1 passing'
 
-    describe "when adding additional headers with -h", ->
+    describe "when adding additional headers with --header", ->
 
       receivedRequest = {}
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} -h Accept:application/json"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --header Accept:application/json"
 
         app = express()
 
@@ -164,13 +179,14 @@ describe "Command line interface", ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests will run', ->
+      it 'should print count of tests run', ->
         assert.include stdout, '1 passing'
 
 
-    describe "when printing test cases with -n", ->
+    describe "when printing test cases with --names", ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml -n"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} --names"
 
         execCommand cmd, done
 
@@ -189,7 +205,8 @@ describe "Command line interface", ->
       receivedRequest = {}
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hookfiles=./test/fixtures/*_hooks.*"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --hookfiles=#{HOOK_DIR}/*_hooks.*"
 
         app = express()
 
@@ -219,7 +236,8 @@ describe "Command line interface", ->
 
     describe 'when run with --hooks-only', () ->
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --hooks-only"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --hooks-only"
 
         app = express()
 
@@ -247,7 +265,8 @@ describe "Command line interface", ->
       cost = ''
 
       before (done) ->
-        cmd = "./bin/abao ./test/fixtures/single-get.raml http://localhost:#{PORT} --timeout 100"
+        ramlFile = "#{RAML_DIR}/single-get.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --timeout 100"
 
         app = express()
 
@@ -275,9 +294,9 @@ describe "Command line interface", ->
       reporters = ''
 
       before (done) ->
-        execCommand './node_modules/mocha/bin/mocha --reporters', ->
+        execCommand "#{MOCHA_BIN} --reporters", ->
           reporters = stdout
-          execCommand './bin/abao --reporters', done
+          execCommand "#{ABAO_BIN} --reporters", done
 
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
@@ -287,8 +306,8 @@ describe "Command line interface", ->
 
     describe 'when run with --schema', () ->
       before (done) ->
-
-        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
+        ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
         app = express()
 
@@ -311,8 +330,8 @@ describe "Command line interface", ->
 
     describe 'when run with --schema and expecting error', () ->
       before (done) ->
-
-        cmd = "./bin/abao ./test/fixtures/with-json-refs.raml http://localhost:#{PORT} --schemas=./test/fixtures/schemas/*.json"
+        ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
         app = express()
 

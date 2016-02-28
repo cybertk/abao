@@ -6,7 +6,7 @@ options =
 
   schemas:
     alias: 's'
-    description: 'Specifies a pattern to match files schemas that will be loaded so they can be used as JSON refs'
+    description: 'Specifies a pattern to match schema files to be loaded for use as JSON refs'
     default: null
 
   names:
@@ -49,4 +49,6 @@ options =
   version:
     description: "Show version number"
 
+
 module.exports = options
+

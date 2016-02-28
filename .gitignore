@@ -1,7 +1,7 @@
 # Mac shit
 .DS_Store
 
-# Logs
+# Logfiles
 logs
 *.log
 
@@ -27,6 +27,8 @@ build/Release
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
 
-# Coffee genereated
+# Generated from CoffeeScript source
 lib/*.js
+tests/unit/*.js
 .idea/
+

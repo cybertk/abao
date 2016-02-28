@@ -6,6 +6,8 @@ TestFactoryStub = require '../../lib/test'
 
 hooks = require '../../lib/hooks'
 
+ABAO_IO_SERVER = 'http://abao.io'
+
 describe 'Hooks', () ->
 
   describe 'when adding before hook', () ->
@@ -220,7 +222,7 @@ describe 'Hooks', () ->
       testFactory = new TestFactoryStub()
       test = testFactory.create()
       test.name = 'GET /machines -> 200'
-      test.request.server = 'http://abao.io'
+      test.request.server = "#{ABAO_IO_SERVER}"
       test.request.path = '/machines'
       test.request.method = 'GET'
       test.request.params =
@@ -262,7 +264,7 @@ describe 'Hooks', () ->
       testFactory = new TestFactoryStub()
       test = testFactory.create()
       test.name = 'POST /machines -> 201'
-      test.request.server = 'http://abao.io'
+      test.request.server = "#{ABAO_IO_SERVER}"
       test.request.path = '/machines'
       test.request.method = 'POST'
       test.request.params =

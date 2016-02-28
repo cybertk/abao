@@ -67,4 +67,6 @@ class Hooks
   hasName: (name) =>
     _.has(@beforeHooks, name) || _.has(@afterHooks, name)
 
+
 module.exports = new Hooks()
+
