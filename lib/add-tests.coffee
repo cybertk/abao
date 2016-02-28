@@ -66,10 +66,13 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
         test.request.path = path
         test.request.method = method
         test.request.headers = parseHeaders(api.headers)
-        if api.body?['application/json']
-          test.request.headers['Content-Type'] = 'application/json'
+
+        # select compatible content-type in request body (to support vendor tree types, i.e. application/vnd.api+json)
+        contentType = (type for type of api.body when type.match(/^application\/(.*\+)?json/i))?[0]
+        if contentType
+          test.request.headers['Content-Type'] = contentType
           try
-            test.request.body = JSON.parse api.body['application/json']?.example
+            test.request.body = JSON.parse api.body[contentType]?.example
           catch
             console.warn "cannot parse JSON example request body for #{test.name}"
         test.request.params = params
@@ -77,9 +80,17 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
         # Update test.response
         test.response.status = status
         test.response.schema = null
-        if (res?.body?['application/json']?.schema)
-          test.response.schema = parseSchema res.body['application/json'].schema
-        
+
+        if res?.body
+          # expect content-type of response body to be identical to request body
+          if contentType && res.body[contentType]?.schema
+            test.response.schema = parseSchema res.body[contentType].schema
+          # otherwise filter in responses section for compatible content-types (vendor tree, i.e. application/vnd.api+json)
+          else
+            contentType = (type for type of res.body when type.match(/^application\/(.*\+)?json/i))?[0]
+            if res.body[contentType]?.schema
+              test.response.schema = parseSchema res.body[contentType].schema
+
       callback()
     , (err) ->
       return callback(err) if err
