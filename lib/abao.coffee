@@ -1,7 +1,6 @@
 sms = require("source-map-support").install({handleUncaughtExceptions: false})
 raml = require 'raml-parser'
 async = require 'async'
-chai = require 'chai'
 
 options = require './options'
 addTests = require './add-tests'
