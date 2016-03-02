@@ -1,5 +1,4 @@
 async = require 'async'
-_ = require 'underscore'
 
 class Hooks
   constructor: () ->
@@ -49,23 +48,30 @@ class Hooks
       callback(err)
 
   runBefore: (test, callback) =>
-    return callback() unless (@beforeHooks[test.name] or @beforeEachHooks)
+    beforeHook = @getMatchingHook @beforeHooks, test.name
+    return callback() unless (beforeHook or @beforeEachHooks)
 
-    hooks = @beforeEachHooks.concat(@beforeHooks[test.name] ? [])
+    hooks = @beforeEachHooks.concat(beforeHook ? [])
     async.eachSeries hooks, (hook, callback) ->
       hook test, callback
     , callback
 
   runAfter: (test, callback) =>
-    return callback() unless (@afterHooks[test.name] or @afterEachHooks)
+    afterHook = @getMatchingHook @afterHooks, test.name
+    return callback() unless (afterHook or @afterEachHooks)
 
-    hooks = (@afterHooks[test.name] ? []).concat(@afterEachHooks)
+    hooks = (afterHook ? []).concat(@afterEachHooks)
     async.eachSeries hooks, (hook, callback) ->
       hook test, callback
     , callback
 
   hasName: (name) =>
-    _.has(@beforeHooks, name) || _.has(@afterHooks, name)
+    (@getMatchingHook @beforeHooks, name) || (@getMatchingHook @afterHooks, name)
+
+  getMatchingHook: (hooks, name) =>
+    for key,value of hooks
+      if name.match key
+        return value
 
 
 module.exports = new Hooks()
