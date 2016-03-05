@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-require('coffee-script/register')
+require('coffee-script/register');
 
 var optimist = require('optimist');
 var path = require('path');
@@ -8,8 +8,8 @@ var pjson = require('../package.json');
 var Abao = require('../lib/abao');
 
 var argv = optimist
-    .usage("Usage: \n  abao <path to raml> <api_endpoint> [OPTIONS]" +
-    "\n\nExample: \n  " + "abao ./api.raml http://api.example.com")
+    .usage("Usage: \n  abao </path/to/raml> [OPTIONS]" +
+    "\n\nExample: \n  " + "abao api.raml --server http://api.example.com")
     .options(Abao.options)
     .wrap(80)
     .argv;
@@ -49,11 +49,7 @@ if (argv.reporters === true) {
 }
 
 if (argv._[0] === undefined) {
-  console.error("Error: Must specify path to raml file.");
-  argError = true;
-}
-if (argv._[1] === undefined && !argv.names) {
-  console.error("Error: Must specify api endpoint.");
+  console.error("Error: Must specify path to RAML file");
   argError = true;
 }
 if (argError) {
@@ -64,13 +60,12 @@ if (argError) {
 
 configuration = {
   'ramlPath': argv._[0],
-  'server': argv._[1],
   'options': argv
 };
 
 abao = new Abao(configuration);
 
-abao.run(function(error, failures){
+abao.run(function (error, failures) {
   if (error) {
     if (error.message) {
       console.error(error.message);
@@ -80,9 +75,7 @@ abao.run(function(error, failures){
     }
     process.exit(1);
   }
-  if (failures > 0) {
-    process.exit(1);
-  } else {
-    process.exit(0);
-  }
+
+  process.exit(failures > 0 ? 1 : 0);
 });
+

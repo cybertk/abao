@@ -23,8 +23,8 @@ applyConfiguration = (config) ->
 
   configuration =
     ramlPath: null
-    server: null
     options:
+      server: null
       schemas: null
       reporters: false
       reporter: null

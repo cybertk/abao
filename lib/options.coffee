@@ -1,4 +1,8 @@
 options =
+  server:
+    description: 'Specifies the API endpoint to use. The RAML-specified baseUri value will be used if none provided'
+    default: null
+
   hookfiles:
     alias: 'f'
     description: 'Specifies a pattern to match files with before/after hooks for running tests'
