@@ -28,7 +28,7 @@ is valid or not.
 Install stable version
 
 ```bash
-$ npm install -g abao
+$ sudo npm install -g abao
 ```
 
 Install latest development version in GitHub branch
