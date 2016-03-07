@@ -208,6 +208,7 @@ $ npm test
 [JSONSchema]: http://json-schema.org/
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
+[baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cybertk/abao/trend.png)](https://bitdeli.com/free 'Bitdeli Badge')
 
