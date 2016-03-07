@@ -39,8 +39,19 @@ $ sudo npm install -g github:cybertk/abao
 
 ## Get Started Testing Your API
 
+For general usage, an API endpoint (i.e., web service to be tested) **must**
+be specified; this can be done implicitly or explicitly, with the latter
+having priority. If the RAML file to be tested provides a [baseUri][] property,
+the API endpoint is implicitly set to that value.
+
 ```bash
-$ abao api.raml http://api.example.com
+$ abao api.raml
+```
+
+To explicitly specify the API endpoint, use the `--server` argument.
+
+```bash
+$ abao api.raml --server http://localhost:8080
 ```
 
 ## Writing testable RAML
