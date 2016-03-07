@@ -10,8 +10,9 @@
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
 easily plug your API documentation into a Continuous Integration (CI) system
-(e.g., [Travis][], [Jenkins][]) and have API documentation up-to-date, all the time.
-**Abao** uses [Mocha][] for judging if a particular API response is valid or not.
+(e.g., [Travis][], [Jenkins][]) and have API documentation up-to-date, all
+the time. **Abao** uses [Mocha][] for judging if a particular API response
+is valid or not.
 
 ## Features
 
@@ -33,7 +34,7 @@ $ npm install -g abao
 Install latest development version in GitHub branch
 
 ```bash
-$ npm install -g github:cybertk/abao
+$ sudo npm install -g github:cybertk/abao
 ```
 
 ## Get Started Testing Your API
