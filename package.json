@@ -59,7 +59,7 @@
     "raml-parser": "^0.8.10",
     "request": "^2.53.0",
     "source-map-support": "^0.3.2",
-    "tv4": "^1.2.7",
+    "tv4": "https://github.com/CINEPASS/tv4",
     "underscore": "^1.8.2"
   }
 }

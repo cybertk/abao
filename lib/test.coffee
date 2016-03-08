@@ -107,8 +107,15 @@ class Test
 
       json = validateJson()
       result = tv4.validateResult json, schema
+
+      assert.lengthOf result.missing, 0, """
+        Missing / unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
+        #{JSON.stringify(schema, null, 4)}
+        Error
+      """
+
       assert.ok result.valid, """
-        Got unexpected response body:
+        Got unexpected response body: #{result.error?.message}        
         #{JSON.stringify(json, null, 4)}
         Error
       """
