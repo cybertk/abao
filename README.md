@@ -75,7 +75,7 @@ the RAML. You can print a list of the generated names with the `--names` flag.
 
 ### Example
 
-The RAML file used in the examples below can be found [here](../blob/master/test/fixtures/single-get.raml).
+The RAML file used in the examples below can be found [here](../master/test/fixtures/single-get.raml).
 
 Get Names:
 
