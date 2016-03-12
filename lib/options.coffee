@@ -33,15 +33,15 @@ options =
 
   grep:
     alias: "g"
-    description: "only run tests matching <pattern>"
+    description: "Only run tests matching <pattern>"
 
   invert:
     alias: "i"
-    description: "inverts --grep matches"
+    description: "Inverts --grep matches"
 
   timeout:
     alias: "t"
-    description: "set test-case timeout in milliseconds"
+    description: "Set test-case timeout in milliseconds"
     default: 2000
 
   reporters:
