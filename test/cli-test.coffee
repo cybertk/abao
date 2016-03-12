@@ -49,7 +49,7 @@ describe "Command line interface", ->
   describe "When RAML file not found", (done) ->
     before (done) ->
       ramlFile = "#{RAML_DIR}/nonexistent_path.raml"
-      cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER}"
+      cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
 
       execCommand cmd, done
 
@@ -67,7 +67,7 @@ describe "Command line interface", ->
     describe "when executing the command and the server is responding as specified in the RAML", () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --reporter json"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter json"
 
         app = express()
 
@@ -98,7 +98,7 @@ describe "Command line interface", ->
     describe "when executing the command and RAML includes other RAML files", () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/include_other_raml.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER}"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
 
         app = express()
 
@@ -127,7 +127,7 @@ describe "Command line interface", ->
     describe "when using additional reporters with --reporter", ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --reporter spec"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
 
         app = express()
 
@@ -154,7 +154,7 @@ describe "Command line interface", ->
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --header Accept:application/json"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header Accept:application/json"
 
         app = express()
 
@@ -206,7 +206,7 @@ describe "Command line interface", ->
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --hookfiles=#{HOOK_DIR}/*_hooks.*"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hookfiles=#{HOOK_DIR}/*_hooks.*"
 
         app = express()
 
@@ -237,7 +237,7 @@ describe "Command line interface", ->
     describe 'when run with --hooks-only', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --hooks-only"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hooks-only"
 
         app = express()
 
@@ -266,7 +266,7 @@ describe "Command line interface", ->
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --timeout 100"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --timeout 100"
 
         app = express()
 
@@ -307,7 +307,7 @@ describe "Command line interface", ->
     describe 'when run with --schema', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/with-json-refs.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
         app = express()
 
@@ -331,7 +331,7 @@ describe "Command line interface", ->
     describe 'when run with --schema and expecting error', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/with-json-refs.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
+        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
         app = express()
 

@@ -1,4 +1,8 @@
 options =
+  server:
+    description: 'Specifies the API endpoint to use. The RAML-specified baseUri value will be used if none provided'
+    default: null
+
   hookfiles:
     alias: 'f'
     description: 'Specifies a pattern to match files with before/after hooks for running tests'
@@ -29,15 +33,15 @@ options =
 
   grep:
     alias: "g"
-    description: "only run tests matching <pattern>"
+    description: "Only run tests matching <pattern>"
 
   invert:
     alias: "i"
-    description: "inverts --grep matches"
+    description: "Inverts --grep matches"
 
   timeout:
     alias: "t"
-    description: "set test-case timeout in milliseconds"
+    description: "Set test-case timeout in milliseconds"
     default: 2000
 
   reporters:

@@ -10,8 +10,9 @@
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
 easily plug your API documentation into a Continuous Integration (CI) system
-(e.g., [Travis][], [Jenkins][]) and have API documentation up-to-date, all the time.
-**Abao** uses [Mocha][] for judging if a particular API response is valid or not.
+(e.g., [Travis][], [Jenkins][]) and have API documentation up-to-date, all
+the time. **Abao** uses [Mocha][] for judging if a particular API response
+is valid or not.
 
 ## Features
 
@@ -36,10 +37,23 @@ Install latest development version in GitHub branch
 $ npm install -g github:cybertk/abao
 ```
 
+Un*x users will likely need to run these commands using `sudo`.
+
 ## Get Started Testing Your API
 
+For general usage, an API endpoint (i.e., web service to be tested) **must**
+be specified; this can be done implicitly or explicitly, with the latter
+having priority. If the RAML file to be tested provides a [baseUri][] property,
+the API endpoint is implicitly set to that value.
+
 ```bash
-$ abao api.raml http://api.example.com
+$ abao api.raml
+```
+
+To explicitly specify the API endpoint, use the `--server` argument.
+
+```bash
+$ abao api.raml --server http://localhost:8080
 ```
 
 ## Writing testable RAML
@@ -54,13 +68,14 @@ However, the response status code can **always** be verified, regardless.
 each validation (specified with the `--hookfiles` flag). Hookfiles can be
 written in either JavaScript or CoffeeScript, and must import the hook methods.
 
-**NOTE**: The hookfile's extension **must** be `.coffee` if it's written in
-CoffeeScript.
+**NOTE**: CoffeeScript files **must** use file extension `.coffee`.
 
 Requests are identified by their name, which is derived from the structure of
 the RAML. You can print a list of the generated names with the `--names` flag.
 
 ### Example
+
+The RAML file used in the examples below can be found [here](../master/test/fixtures/single-get.raml).
 
 Get Names:
 
@@ -69,27 +84,32 @@ $ abao single-get.raml --names
 GET /machines -> 200
 ```
 
-Write a hookfile `test_machines_hooks.js` in **JavaScript**:
+Write a hookfile in *JavaScript* named `test_machines_hooks.js`:
 
 ```js
-var hooks = require('hooks');
+var hooks = require('hooks'),
+    assert = require('chai').assert;
 
-hooks.before('GET /machines -> 200', function(test, done) {
-    test.request.query = {color: 'red'};
+hooks.before('GET /machines -> 200', function (test, done) {
+    test.request.query = {
+      color: 'red'
+    };
     done();
 });
 
-hooks.after('GET /machines -> 200', function(test, done) {
+hooks.after('GET /machines -> 200', function (test, done) {
     machine = test.response.body[0];
     console.log(machine.name);
     done();
 });
 ```
 
-Write a hookfile `test_machines_hooks.coffee` in **CoffeeScript**:
+Alternately, write the same hookfile in *CoffeeScript* named
+`test_machines_hooks.coffee`:
 
 ```coffee
 {before, after} = require 'hooks'
+{assert} = require 'chai'
 
 before 'GET /machines -> 200', (test, done) ->
   test.request.query =
@@ -102,10 +122,10 @@ after 'GET /machines -> 200', (test, done) ->
   done()
 ```
 
-Run validation:
+Run validation with *JavaScript* hookfile (from above):
 
 ```bash
-$ abao single-get.raml http://api.example.com --hookfiles=*_hooks.*
+$ abao single-get.raml --hookfiles=test_machines_hooks.js
 ```
 
 **Abao** also supports callbacks before and after all tests:
@@ -130,6 +150,7 @@ within the test:
 
 ```coffee
 {test} = require 'hooks'
+{assert} = require 'chai'
 
 test 'GET /machines -> 200', (response, body, done) ->
     assert.deepEqual(JSON.parse(body), ["machine1", "machine2"])
@@ -158,24 +179,29 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 ```
 Usage:
-  abao </path/to/raml> <api_endpoint> [OPTIONS]
+  abao </path/to/raml> [OPTIONS]
 
 Example:
-  abao ./api.raml http://api.example.com
+  abao api.raml --server http://api.example.com
 
 Options:
+  --server          Specifies the API endpoint to use. The RAML-specified
+                    baseUri value will be used if none provided [default: null]
   --hookfiles, -f   Specifes a pattern to match files with before/after hooks
-                    for running tests                          [default: null]
+                    for running tests                           [default: null]
+  --schemas, -s     Specifies a pattern to match schema files to be loaded for
+                    use as JSON refs                            [default: null]
   --names, -n       Only list names of requests (for use in a hookfile). No
-                    requests are made.                         [default: false]
+                    requests are made.                          [default: false]
   --reporter, -r    Specify the reporter to use                [default: 'spec']
   --header, -h      Extra header to include in every request. The header must
                     be in KEY:VALUE format (e.g., '-h Accept:application/json').
-                    This option can be repeated to specify more than one header.
+                    This option can be used multiple times to add multiple
+                    headers                                                     
   --hooks-only, -H  Run test only if defined either before or after hooks
   --grep, -g        Only run tests matching <pattern>
   --invert, -i      Inverts `--grep` matches
-  --timeout, -t     Set timeout for test cases (milliseconds)  [default: 2000]
+  --timeout, -t     Set test-case timeout in milliseconds       [default: 2000]
   --reporters       Display available reporters
   --help            Show usage information
   --version         Show version number
@@ -189,13 +215,15 @@ $ npm test
 
 ## Contribution
 
-**Abao** is looking for maintainers. If you are interested, please submit an issue.
+**Abao** is always looking for new ideas to make the codebase useful.
+If you think of something that would make life easier, please submit an issue.
 
 [RAML]: http://raml.org/
 [Mocha]: http://mochajs.org/
 [JSONSchema]: http://json-schema.org/
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
+[baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cybertk/abao/trend.png)](https://bitdeli.com/free 'Bitdeli Badge')
 

@@ -5,8 +5,8 @@ baseUri: http://example.api.com/{version}
 version: v1
 
 schemas:
-  - type1: !include ./type1.json
-  - type2: !include ./type2.json
+  - type1: !include schemas/type1.json
+  - type2: !include schemas/type2.json
 
 /machines:
   get:

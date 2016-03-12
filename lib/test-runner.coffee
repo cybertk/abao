@@ -4,8 +4,9 @@ _ = require 'underscore'
 
 
 class TestRunner
-  constructor: (server, options = {}) ->
-    @server = server
+  constructor: (options) ->
+    @server = options.server
+    delete options.server
     @options = options
     @mocha = new Mocha options
 
@@ -56,6 +57,9 @@ class TestRunner
           if options.names
             console.log test.name
             return done()
+
+          # none shall pass without...
+          return callback(new Error 'no API endpoint specified') if !server
 
           # Update test.request
           test.request.server = server

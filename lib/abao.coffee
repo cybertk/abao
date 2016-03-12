@@ -39,11 +39,14 @@ class Abao
       ,
       # Parse tests from RAML
       (raml, callback) ->
+        if !config.options.server
+          if 'baseUri' in raml
+            config.options.server = raml.baseUri
         addTests raml, tests, hooks, callback, factory
       ,
       # Run tests
       (callback) ->
-        runner = new Runner config.server, config.options
+        runner = new Runner config.options
         runner.run tests, hooks, callback
     ], done
 
