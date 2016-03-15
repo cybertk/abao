@@ -33,7 +33,7 @@ describe 'addHooks(hooks, pattern, callback)', () ->
 
   describe 'with valid pattern', () ->
 
-    pattern = './**/*_hooks.*'
+    pattern = './test/**/*_hooks.*'
 
     it 'should return files', (done)->
       mute (unmute) ->
