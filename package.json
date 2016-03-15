@@ -52,7 +52,7 @@
     "coffee-script": "~1.9.1",
     "csonschema": "^0.5.1",
     "fs": "0.0.2",
-    "glob": "^4.4.1",
+    "glob": "^7.0.3",
     "jsonlint": "^1.6.2",
     "mocha": "~2.2.1",
     "optimist": "^0.6.1",
