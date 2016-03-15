@@ -36,7 +36,7 @@
     "grunt-coffeelint": "^0.0.15",
     "grunt-contrib-watch": "~1.0.0",
     "grunt-mocha-test": "~0.12.7",
-    "grunt-shell": "^1.1.2",
+    "grunt-shell": "^1.2.1",
     "jit-grunt": "~0.9.1",
     "mocha-phantom-coverage-reporter": "^0.1.0",
     "mute": "^1.0.0",
