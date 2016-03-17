@@ -230,6 +230,25 @@ The `destroy` field support both array and object, in case that you may need to 
 
 * The `query` field named as `_id` or `xxxId` will be transformed as mongo ID automatically, you just need to specify the mongo ID HEX value. You don't need to add `account_id` field as filter, because it is configured in the `config.json` file when command is executed.
 
+* If you don't need the default transformaion for `_id` or `xxxId` field and keep the raw value, you can set the value starting with `!` symbol as the example below:
+
+```
+{
+  "body": {
+    "name": "Vincent",
+    "phone": "13345345636"
+  },
+  "destroy": {
+    "model": "user",
+    "query": {
+      "userId": "!555ed85513747345"
+    }
+  }
+}
+```
+
+The query will use `555ed85513747345` as userId value to delete record.
+
 ##### Refer response body in query
 
 You may need to refer the response body got from test case (create a member and refer created member ID), you can use `$` to refer it directly in `destroy` field.
