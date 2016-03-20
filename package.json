@@ -1,6 +1,6 @@
 {
   "name": "abao",
-  "version": "0.4.0-beta.5",
+  "version": "0.4.0-beta.6",
   "description": "RAML testing tool",
   "bin": "bin/abao",
   "main": "lib/index.js",
@@ -55,12 +55,12 @@
     "glob": "^7.0.3",
     "jsonlint": "^1.6.2",
     "mocha": "~2.4.5",
-    "optimist": "^0.6.1",
     "proxyquire": "^1.3.1",
     "raml-parser": "^0.8.10",
     "request": "^2.53.0",
     "source-map-support": "^0.4.0",
     "tv4": "^1.2.7",
-    "underscore": "^1.8.2"
+    "underscore": "^1.8.2",
+    "yargs": "~4.3.2"
   }
 }

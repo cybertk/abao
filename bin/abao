@@ -2,12 +2,12 @@
 
 require('coffee-script/register');
 
-var optimist = require('optimist');
 var path = require('path');
 var pjson = require('../package.json');
+var yargs = require('yargs');
 var Abao = require('../lib/abao');
 
-var argv = optimist
+var argv = yargs
     .usage("Usage: \n  abao </path/to/raml> [OPTIONS]" +
     "\n\nExample: \n  " + "abao api.raml --server http://api.example.com")
     .options(Abao.options)
@@ -17,7 +17,7 @@ var argv = optimist
 var argError = false;
 
 if (argv.help === true) {
-  optimist.showHelp(fn=console.error);
+  yargs.showHelp(fn=console.log);
   process.exit(0);
 }
 
@@ -54,7 +54,7 @@ if (argv._[0] === undefined) {
 }
 if (argError) {
   console.error("\n");
-  optimist.showHelp(fn=console.error);
+  yargs.showHelp(fn=console.error);
   process.exit(1);
 }
 
@@ -65,7 +65,7 @@ configuration = {
 
 abao = new Abao(configuration);
 
-abao.run(function (error, failures) {
+abao.run(function (error, nfailures) {
   if (error) {
     if (error.message) {
       console.error(error.message);
@@ -76,6 +76,6 @@ abao.run(function (error, failures) {
     process.exit(1);
   }
 
-  process.exit(failures > 0 ? 1 : 0);
+  process.exit(nfailures > 0 ? 1 : 0);
 });
 
