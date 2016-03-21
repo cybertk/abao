@@ -31,7 +31,7 @@
     "coveralls": "^2.11.2",
     "express": "^4.12.0",
     "grunt": "~0.4.5",
-    "grunt-cli": "~0.1.13",
+    "grunt-cli": "~1.0.0",
     "grunt-coffeecov": "^0.1.5",
     "grunt-coffeelint": "^0.0.15",
     "grunt-contrib-watch": "~1.0.0",
