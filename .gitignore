@@ -30,5 +30,4 @@ node_modules
 # Generated from CoffeeScript source
 lib/*.js
 tests/unit/*.js
-.idea/
 
