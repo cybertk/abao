@@ -53,6 +53,8 @@ options =
   version:
     description: 'Show version number and exit'
 
+  'generate-hooks':
+    description: "Generate skeleton hooks file"
 
 module.exports = options
 

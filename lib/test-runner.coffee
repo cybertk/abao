@@ -1,7 +1,7 @@
 Mocha = require 'mocha'
 async = require 'async'
 _ = require 'underscore'
-
+generateHooks = require './hooks-generator'
 
 class TestRunner
   constructor: (options) ->
@@ -44,18 +44,19 @@ class TestRunner
       @test.run done
     , {test}
 
-  run: (tests, hooks, callback) ->
+  run: (tests, hooks, done) ->
     server = @server
     options = @options
     addTestToMocha = @addTestToMocha
     mocha = @mocha
+    names = []
 
     async.waterfall [
       (callback) ->
         async.each tests, (test, done) ->
           # list tests
-          if options.names
-            console.log test.name
+          if options.names || options['generate-hooks']
+            names.push test.name
             return done()
 
           # none shall pass without...
@@ -68,9 +69,22 @@ class TestRunner
           addTestToMocha test, hooks
           done()
         , callback
+    , # Write names to console
+      (callback) ->
+        return callback() if not options.names
+
+        for key, name of names
+          console.log name
+        callback
+    , # Generate hooks skeleton file
+      (callback) ->
+        return callback() if not options['generate-hooks']
+
+        generateHooks names, 'hooks.js', callback
+
       , # Run mocha
       (callback) ->
-        return callback(null, 0) if options.names
+        return callback(null, 0) if options.names or options['generate-hooks']
 
         mocha.suite.beforeAll _.bind (done) ->
           @hooks.runBeforeAll done
@@ -81,7 +95,7 @@ class TestRunner
 
         mocha.run (failures) ->
           callback(null, failures)
-    ], callback
+    ], done
 
 
 module.exports = TestRunner
