@@ -3,30 +3,35 @@
 require('coffee-script/register');
 
 var path = require('path');
-var pjson = require('../package.json');
 var yargs = require('yargs');
 var Abao = require('../lib/abao');
 
 var argv = yargs
-    .usage("Usage: \n  abao </path/to/raml> [OPTIONS]" +
-    "\n\nExample: \n  " + "abao api.raml --server http://api.example.com")
+    .usage("Usage:\n  abao </path/to/raml> [OPTIONS]" +
+    "\n\nExample:\n  " + "abao api.raml --server http://api.example.com")
     .options(Abao.options)
     .wrap(80)
+    .check(function (argv) {
+      if (argv.reporters === true) {
+        showReporters();
+        process.exit(0);
+      }
+
+      if (argv._.length < 1) {
+        throw new Error('abao: Must specify path to RAML file');
+      }
+      else if (argv._.length > 1) {
+        throw new Error('abao: Accepts single positional command-line argument');
+      }
+
+      return true;
+    })
+    .help('help', 'Show usage information and exit')
+    .version().describe('version', 'Show version number and exit')
+    .epilog("Website:\n  " + 'https://github.com/cybertk/abao')
     .argv;
 
-var argError = false;
-
-if (argv.help === true) {
-  yargs.showHelp(fn=console.log);
-  process.exit(0);
-}
-
-if (argv.version === true) {
-  console.log(pjson.version);
-  process.exit(0);
-}
-
-if (argv.reporters === true) {
+function showReporters() {
   // Copied from node_modules/mocha/_mocha
   console.log();
   console.log('    dot - dot matrix');
@@ -45,17 +50,6 @@ if (argv.reporters === true) {
   console.log('    markdown - markdown documentation (github flavour)');
   console.log('    nyan - nyan cat!');
   console.log();
-  process.exit(0);
-}
-
-if (argv._[0] === undefined) {
-  console.error("Error: Must specify path to RAML file");
-  argError = true;
-}
-if (argError) {
-  console.error("\n");
-  yargs.showHelp(fn=console.error);
-  process.exit(1);
 }
 
 configuration = {

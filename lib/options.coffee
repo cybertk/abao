@@ -1,58 +1,58 @@
 options =
   server:
-    description: 'Specifies the API endpoint to use'
-    default: '<RAML-specified "baseUri" property>'
+    description: 'Specify the API endpoint to use. The RAML-specified baseUri value will be used if not provided'
+    type: 'string'
 
   hookfiles:
     alias: 'f'
-    description: 'Specifies a pattern to match files with before/after hooks for running tests'
-    default: null
+    description: 'Specify a pattern to match files with before/after hooks for running tests'
+    type: 'string'
 
   schemas:
     alias: 's'
-    description: 'Specifies a pattern to match schema files to be loaded for use as JSON refs'
-    default: null
+    description: 'Specify a pattern to match schema files to be loaded for use as JSON refs'
+    type: 'string'
 
   reporter:
     alias: 'r'
     description: 'Specify the reporter to use'
+    type: 'string'
     default: 'spec'
 
   header:
     alias: 'h'
-    description: 'Extra header to include in every request. The header must be in KEY:VALUE format, e.g. "-h Accept:application/json".\nReuse to add multiple headers'
+    description: 'Add header to include in each request. The header must be in KEY:VALUE format, e.g. "-h Accept:application/json".\nReuse to add multiple headers'
+    type: 'string'
 
   'hooks-only':
     alias: 'H'
     description: 'Run test only if defined either before or after hooks'
+    type: 'boolean'
 
   grep:
     alias: 'g'
     description: 'Only run tests matching <pattern>'
+    type: 'string'
 
   invert:
     alias: 'i'
-    description: 'Inverts --grep matches'
+    description: 'Invert --grep matches'
+    type: 'boolean'
 
   timeout:
     alias: 't'
     description: 'Set test-case timeout in milliseconds'
+    type: 'number'
     default: 2000
 
   names:
     alias: 'n'
     description: 'List names of requests and exit'
-    default: false
+    type: 'boolean'
 
   reporters:
     description: 'Display available reporters and exit'
-
-  help:
-    description: 'Show usage information and exit'
-
-  version:
-    description: 'Show version number and exit'
-
+    type: 'boolean'
 
 module.exports = options
 
