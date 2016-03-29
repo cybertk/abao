@@ -185,26 +185,26 @@ Example:
   abao api.raml --server http://api.example.com
 
 Options:
-  --server          Specifies the API endpoint to use. The RAML-specified
-                    baseUri value will be used if none provided [default: null]
-  --hookfiles, -f   Specifes a pattern to match files with before/after hooks
-                    for running tests                           [default: null]
-  --schemas, -s     Specifies a pattern to match schema files to be loaded for
-                    use as JSON refs                            [default: null]
-  --names, -n       Only list names of requests (for use in a hookfile). No
-                    requests are made.                          [default: false]
-  --reporter, -r    Specify the reporter to use                [default: 'spec']
-  --header, -h      Extra header to include in every request. The header must
-                    be in KEY:VALUE format (e.g., '-h Accept:application/json').
-                    This option can be used multiple times to add multiple
-                    headers                                                     
+  --server          Specify the API endpoint to use. The RAML-specified baseUri
+                    value will be used if not provided                  [string]
+  --hookfiles, -f   Specify a pattern to match files with before/after hooks for
+                    running tests                                       [string]
+  --schemas, -s     Specify a pattern to match schema files to be loaded for use
+                    as JSON refs                                        [string]
+  --reporter, -r    Specify the reporter to use       [string] [default: "spec"]
+  --header, -h      Add header to include in each request. The header must be in
+                    KEY:VALUE format, e.g. "-h Accept:application/json".
+                    Reuse to add multiple headers                       [string]
   --hooks-only, -H  Run test only if defined either before or after hooks
-  --grep, -g        Only run tests matching <pattern>
-  --invert, -i      Inverts `--grep` matches
-  --timeout, -t     Set test-case timeout in milliseconds       [default: 2000]
-  --reporters       Display available reporters
-  --help            Show usage information
-  --version         Show version number
+                                                                       [boolean]
+  --grep, -g        Only run tests matching <pattern>                   [string]
+  --invert, -i      Invert --grep matches                              [boolean]
+  --timeout, -t     Set test-case timeout in milliseconds
+                                                        [number] [default: 2000]
+  --names, -n       List names of requests and exit                    [boolean]
+  --reporters       Display available reporters and exit               [boolean]
+  --help            Show usage information and exit                    [boolean]
+  --version         Show version number and exit                       [boolean]
 ```
 
 ## Run Tests
