@@ -249,6 +249,57 @@ The `destroy` field support both array and object, in case that you may need to 
 
 The query will use `555ed85513747345` as userId value to delete record.
 
+##### Advanced Usage
+
+If you just need to revert the updation for records, you can use `update` field to indicate that this is only an operation for updating records instead of removing records.
+
+```
+{
+  "body": {
+    "name": "testuser",
+    "avatar": "http://static.image.com/test.png"
+  },
+  "destroy": {
+    "model": "user",
+    "query": {
+      "name": "testuser"
+    },
+    "update": {
+      "$set": {
+        "name": "olduser"
+      }
+    }
+  }
+}
+```
+
+The `destroy` field support both array and object, so that you can remove records and update records at the same time.
+
+**Notice:**
+
+* You can use `depends` and `destroy` together, if the depended case has `destroy` field, the actual destraction is executed after the next case is run (so that the next case can rely on the depend case database modification). 
+
+* The `query` field named as `_id` or `xxxId` will be transformed as mongo ID automatically, you just need to specify the mongo ID HEX value. You don't need to add `account_id` field as filter, because it is configured in the `config.json` file when command is executed.
+
+* If you don't need the default transformaion for `_id` or `xxxId` field and keep the raw value, you can set the value starting with `!` symbol as the example below:
+
+```
+{
+  "body": {
+    "name": "Vincent",
+    "phone": "13345345636"
+  },
+  "destroy": {
+    "model": "user",
+    "query": {
+      "userId": "!555ed85513747345"
+    }
+  }
+}
+```
+
+The query will use `555ed85513747345` as userId value to delete record.
+
 ##### Refer response body in query
 
 You may need to refer the response body got from test case (create a member and refer created member ID), you can use `$` to refer it directly in `destroy` field.

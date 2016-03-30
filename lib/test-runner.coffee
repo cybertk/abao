@@ -42,8 +42,10 @@ class TestRunner
     db = @db
     transformQuery = @transformQuery
     (callback) ->
+      options =
+        multi: true
       query = transformQuery(query)
-      db.collection(model).update(query, update, (err, result) ->
+      db.collection(model).update(query, update, options, (err, result) ->
         if err
           console.error "Fail to update #{model} data with query:"
           console.error "#{JSON.stringify(mergedQuery, null, 2)}"
