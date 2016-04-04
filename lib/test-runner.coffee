@@ -1,14 +1,18 @@
 Mocha = require 'mocha'
+Mustache = require 'mustache'
 async = require 'async'
+path = require 'path'
 _ = require 'underscore'
+generateHooks = require './generate-hooks'
 
 
 class TestRunner
-  constructor: (options) ->
+  constructor: (options, ramlFile) ->
     @server = options.server
     delete options.server
     @options = options
     @mocha = new Mocha options
+    @ramlFile = ramlFile
 
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
@@ -39,26 +43,30 @@ class TestRunner
 
     # Setup test
     # Vote test name
-    title = if test.response.schema then 'Validate response code and body' else 'Validate response code only'
+    title = if test.response.schema
+              'Validate response code and body'
+            else
+              'Validate response code only'
     suite.addTest new Mocha.Test title, _.bind (done) ->
       @test.run done
     , {test}
 
-  run: (tests, hooks, callback) ->
+  run: (tests, hooks, done) ->
     server = @server
     options = @options
     addTestToMocha = @addTestToMocha
     mocha = @mocha
+    names = []
 
     async.waterfall [
       (callback) ->
-        async.each tests, (test, done) ->
-          # list tests
-          if options.names
-            console.log test.name
-            return done()
+        async.each tests, (test, cb) ->
+          if options.names || options['generate-hooks']
+            # Save test names for use by next step
+            names.push test.name
+            return cb()
 
-          # none shall pass without...
+          # None shall pass without...
           return callback(new Error 'no API endpoint specified') if !server
 
           # Update test.request
@@ -66,12 +74,26 @@ class TestRunner
           _.extend(test.request.headers, options.header)
 
           addTestToMocha test, hooks
-          done()
+          cb()
         , callback
+      , # Handle options that don't run tests
+      (callback) ->
+        if options['generate-hooks']
+          # Generate hooks skeleton file
+          ramlFile = path.basename @ramlFile
+          templateFile = if options.template
+                           options.template
+                         else
+                           path.join 'templates', 'hookfile.js'
+          generateHooks names, ramlFile, templateFile, done
+        else if options.names
+          # Write names to console
+          console.log name for name in names
+          return done(null, 0)
+        else
+          return callback()
       , # Run mocha
       (callback) ->
-        return callback(null, 0) if options.names
-
         mocha.suite.beforeAll _.bind (done) ->
           @hooks.runBeforeAll done
         , {hooks}
@@ -81,7 +103,7 @@ class TestRunner
 
         mocha.run (failures) ->
           callback(null, failures)
-    ], callback
+    ], done
 
 
 module.exports = TestRunner

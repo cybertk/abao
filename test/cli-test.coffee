@@ -1,12 +1,15 @@
-{assert} = require('chai')
-{exec} = require('child_process')
+{assert} = require 'chai'
+{exec} = require 'child_process'
 express = require 'express'
 
+pjson = require '../package.json'
 
 HOSTNAME = 'localhost'
 PORT = 3333
 SERVER = "http://#{HOSTNAME}:#{PORT}"
 
+TEMPLATE_DIR = './templates'
+DFLT_TEMPLATE_FILE = "#{TEMPLATE_DIR}/hooks.js"
 FIXTURE_DIR = './test/fixtures'
 RAML_DIR = "#{FIXTURE_DIR}"
 HOOK_DIR = "#{FIXTURE_DIR}"
@@ -44,9 +47,123 @@ execCommand = (cmd, callback) ->
     exitStatus = code if exitStatus == null and code != undefined
     callback()
 
-describe "Command line interface", ->
+describe 'Command line interface', ->
 
-  describe "When RAML file not found", (done) ->
+  describe 'When run with "one and done" options', (done) ->
+
+    describe 'when RAML argument unnecessary', () ->
+
+      describe 'when invoked with "--reporters" option', () ->
+        reporters = ''
+
+        before (done) ->
+          execCommand "#{MOCHA_BIN} --reporters", ->
+            reporters = stdout
+            execCommand "#{ABAO_BIN} --reporters", done
+
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
+
+        it 'should print same output as `mocha --reporters`', ->
+          assert.equal stdout, reporters
+
+
+      describe 'when invoked with "--version" option', () ->
+        before (done) ->
+          cmd = "#{ABAO_BIN} --version"
+
+          execCommand cmd, done
+
+        it 'should exit with status 0', ->
+          assert.equal exitStatus, 0
+
+        it 'should print version number to stdout', ->
+          assert.equal stdout.trim(), pjson.version
+
+
+      describe 'when invoked with "--help" option', () ->
+        before (done) ->
+          cmd = "#{ABAO_BIN} --help"
+
+          execCommand cmd, done
+
+        it 'should exit with status 0', ->
+          assert.equal exitStatus, 0
+
+        it 'should print usage to stdout', ->
+          assert.equal stdout.split('\n')[0], 'Usage:'
+
+    describe 'when RAML argument required', () ->
+
+      describe 'when invoked with "--names" option', ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --names"
+
+          execCommand cmd, done
+
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
+
+        it 'should print names', () ->
+          assert.include stdout, 'GET /machines -> 200'
+
+        it 'should not run tests', () ->
+          assert.notInclude stdout, '0 passing'
+
+
+      describe 'when invoked with "--generate-hooks" option', () ->
+        describe 'by itself', () ->
+          before (done) ->
+            ramlFile = "#{RAML_DIR}/single-get.raml"
+            cmd = "#{ABAO_BIN} #{ramlFile} --generate-hooks"
+
+            execCommand cmd, done
+
+          it 'exit status should be 0', () ->
+            assert.equal exitStatus, 0
+
+          it 'should print skeleton hookfile', ->
+            assert.include stdout, '// ABAO hooks file'
+
+          it 'should not run tests', () ->
+            assert.notInclude stdout, '0 passing'
+
+
+        describe 'with "--template" option', () ->
+          before (done) ->
+            templateFile = "#{TEMPLATE_DIR}/hookfile.js"
+            ramlFile = "#{RAML_DIR}/single-get.raml"
+            cmd = "#{ABAO_BIN} #{ramlFile} --generate-hooks --template #{templateFile}"
+
+            execCommand cmd, done
+
+          it 'exit status should be 0', () ->
+            assert.equal exitStatus, 0
+
+          it 'should print skeleton hookfile', ->
+            assert.include stdout, '// ABAO hooks file'
+
+          it 'should not run tests', () ->
+            assert.notInclude stdout, '0 passing'
+
+      describe 'when invoked with "--template" but without "--generate-hooks" option', () ->
+        before (done) ->
+          templateFile = "#{TEMPLATE_DIR}/hookfile.js"
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --template #{templateFile}"
+
+          execCommand cmd, done
+
+        it 'exit status should be 1', () ->
+          assert.equal exitStatus, 1
+
+        it 'should print error message to stderr', ->
+          assert.include stderr, 'Implications failed:'
+          assert.include stderr, 'template -> generate-hooks'
+
+
+  describe 'When RAML file not found', (done) ->
     before (done) ->
       ramlFile = "#{RAML_DIR}/nonexistent_path.raml"
       cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
@@ -62,9 +179,9 @@ describe "Command line interface", ->
       assert.include stderr, 'Error: ENOENT'
 
 
-  describe "Arguments with existing RAML and responding server", () ->
+  describe 'Arguments with existing RAML and responding server', () ->
 
-    describe "when executing the command and the server is responding as specified in the RAML", () ->
+    describe 'when executing the command and the server is responding as specified in the RAML', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter json"
@@ -95,7 +212,7 @@ describe "Command line interface", ->
       it 'should print correct title for response', ->
         assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
-    describe "when executing the command and RAML includes other RAML files", () ->
+    describe 'when executing the command and RAML includes other RAML files', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/include_other_raml.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
@@ -122,233 +239,202 @@ describe "Command line interface", ->
       it 'should print count of tests run', ->
         assert.include stdout, '1 passing'
 
-  describe 'when called with arguments', ->
+    describe 'when called with arguments', ->
 
-    describe "when using additional reporters with --reporter", ->
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
+      describe 'when invoked with "--reporter" option', ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
 
-        app = express()
+          app = express()
 
-        app.get '/machines', (req, res) ->
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            type: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-        server.on 'close', done
+          server.on 'close', done
 
-      it 'should print using the new reporter', ->
-        assert.include stdout, '1 passing'
+        it 'should print using the specified reporter', ->
+          assert.include stdout, '1 passing'
 
-    describe "when adding additional headers with --header", ->
+      describe 'when invoked with "--header" option', ->
 
-      receivedRequest = {}
+        receivedRequest = {}
 
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header Accept:application/json"
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header Accept:application/json"
 
-        app = express()
+          app = express()
 
-        app.get '/machines', (req, res) ->
-          receivedRequest = req
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            type: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
+          app.get '/machines', (req, res) ->
+            receivedRequest = req
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-        server.on 'close', done
+          server.on 'close', done
 
-      it 'should have an additional header in the request', () ->
-        assert.equal receivedRequest.headers.accept, 'application/json'
+        it 'should have an additional header in the request', () ->
+          assert.equal receivedRequest.headers.accept, 'application/json'
 
-      it 'exit status should be 0', () ->
-        assert.equal exitStatus, 0
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
 
-      it 'should print count of tests run', ->
-        assert.include stdout, '1 passing'
+        it 'should print count of tests run', ->
+          assert.include stdout, '1 passing'
 
 
-    describe "when printing test cases with --names", ->
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --names"
+      describe 'when invoked with "--hookfiles" option', () ->
 
-        execCommand cmd, done
+        receivedRequest = {}
 
-      it 'exit status should be 0', () ->
-        assert.equal exitStatus, 0
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hookfiles=#{HOOK_DIR}/*_hooks.*"
 
-      it 'should print names', () ->
-        assert.include stdout, 'GET /machines -> 200'
+          app = express()
 
-      it 'should not run tests', () ->
-        assert.notInclude stdout, '0 passing'
+          app.get '/machines', (req, res) ->
+            receivedRequest = req
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-    describe 'when loading hooks with --hookfiles', () ->
+          server.on 'close', done
 
-      receivedRequest = {}
+        it 'should modify the transaction with hooks', () ->
+          assert.equal receivedRequest.headers['header'], '123232323'
+          assert.equal receivedRequest.query['key'], 'value'
 
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hookfiles=#{HOOK_DIR}/*_hooks.*"
+        it 'should print message to stdout and stderr', ->
+          assert.include stdout, 'before-hook-GET-machines'
+          assert.include stderr, 'after-hook-GET-machines'
 
-        app = express()
 
-        app.get '/machines', (req, res) ->
-          receivedRequest = req
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            type: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
+      describe 'when invoked with "--hooks-only" option', () ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hooks-only"
 
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
+          app = express()
 
-        server.on 'close', done
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
-      it 'should modify the transaction with hooks', () ->
-        assert.equal receivedRequest.headers['header'], '123232323'
-        assert.equal receivedRequest.query['key'], 'value'
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-      it 'should print message to stdout and stderr', ->
-        assert.include stdout, 'before-hook-GET-machines'
-        assert.include stderr, 'after-hook-GET-machines'
+          server.on 'close', done
 
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
 
-    describe 'when run with --hooks-only', () ->
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hooks-only"
+        it 'should not run test without hooks', ->
+          assert.include stdout, '1 pending'
 
-        app = express()
+      describe 'when invoked with "--timeout" option', () ->
+        cost = ''
 
-        app.get '/machines', (req, res) ->
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            type: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/single-get.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --timeout 100"
 
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
+          app = express()
 
-        server.on 'close', done
+          t0 = ''
+          app.get '/machines', (req, res) ->
+            t0 = new Date
 
-      it 'exit status should be 0', () ->
-        assert.equal exitStatus, 0
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              cost = new Date - t0
+              server.close()
 
-      it 'should not run test without hooks', ->
-        assert.include stdout, '1 pending'
+          server.on 'close', done
 
-    describe 'when run with --timeout', () ->
-      cost = ''
+        it 'exit status should be 1', () ->
+          assert.equal exitStatus, 1
 
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --timeout 100"
+        it 'should exit before timeout', ->
+          assert.ok cost < 200
 
-        app = express()
+        it 'should not run test without hooks', ->
+          assert.include stdout, '0 passing'
 
-        t0 = ''
-        app.get '/machines', (req, res) ->
-          t0 = new Date
+      describe 'when invoked with "--schema" option', () ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            cost = new Date - t0
-            server.close()
+          app = express()
 
-        server.on 'close', done
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
-      it 'exit status should be 1', () ->
-        assert.equal exitStatus, 1
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-      it 'should exit before timeout', ->
-        assert.ok cost < 200
+          server.on 'close', done
 
-      it 'should not run test without hooks', ->
-        assert.include stdout, '0 passing'
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
 
-    describe 'when run with --reporters', () ->
-      reporters = ''
+      describe 'when invoked with "--schema" option and expecting error', () ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
 
-      before (done) ->
-        execCommand "#{MOCHA_BIN} --reporters", ->
-          reporters = stdout
-          execCommand "#{ABAO_BIN} --reporters", done
+          app = express()
 
-      it 'exit status should be 0', () ->
-        assert.equal exitStatus, 0
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              typO: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
 
-      it 'should print reporters same as `mocha --reporters`', ->
-        assert.equal stdout, reporters
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
 
-    describe 'when run with --schema', () ->
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/with-json-refs.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
+          server.on 'close', done
 
-        app = express()
-
-        app.get '/machines', (req, res) ->
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            type: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
-
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
-
-        server.on 'close', done
-
-      it 'exit status should be 0', () ->
-        assert.equal exitStatus, 0
-
-    describe 'when run with --schema and expecting error', () ->
-      before (done) ->
-        ramlFile = "#{RAML_DIR}/with-json-refs.raml"
-        cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
-
-        app = express()
-
-        app.get '/machines', (req, res) ->
-          res.setHeader 'Content-Type', 'application/json'
-          machine =
-            typO: 'bulldozer'
-            name: 'willy'
-          response = [machine]
-          res.status(200).send response
-
-        server = app.listen PORT, () ->
-          execCommand cmd, () ->
-            server.close()
-
-        server.on 'close', done
-
-      it 'exit status should be 1', () ->
-        assert.equal exitStatus, 1
+        it 'exit status should be 1', () ->
+          assert.equal exitStatus, 1
 
