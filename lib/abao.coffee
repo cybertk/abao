@@ -1,5 +1,5 @@
 sms = require("source-map-support").install({handleUncaughtExceptions: false})
-raml = require 'raml-parser'
+ramlParser = require 'raml-parser'
 async = require 'async'
 
 options = require './options'
@@ -22,7 +22,7 @@ class Abao
     tests = @tests
     hooks = @hooks
 
-    # init the test factory to inject the json refs schemas
+    # Inject the JSON refs schemas
     factory = new TestFactory(config.options.schemas)
 
     async.waterfall [
@@ -33,7 +33,7 @@ class Abao
       ,
       # Load RAML
       (callback) ->
-        raml.loadFile(config.ramlPath).then (raml) ->
+        ramlParser.loadFile(config.ramlPath).then (raml) ->
           callback(null, raml)
         , callback
       ,

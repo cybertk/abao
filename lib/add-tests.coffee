@@ -2,6 +2,7 @@ async = require 'async'
 _ = require 'underscore'
 csonschema = require 'csonschema'
 
+
 parseSchema = (source) ->
   if source.contains('$schema')
     #jsonschema
