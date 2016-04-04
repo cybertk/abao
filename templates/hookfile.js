@@ -1,8 +1,8 @@
 //
 // ABAO hooks file {{! Mustache template }}
 // Generated from RAML specification
-//   RAML: "{{ramlFile}}"
-//   Date: "{{timestamp}}"
+//   RAML: {{ramlFile}}
+//   Date: {{timestamp}}
 // <https://github.com/cybertk/abao>
 //
 

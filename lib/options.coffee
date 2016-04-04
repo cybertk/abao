@@ -46,7 +46,7 @@ options =
     default: 2000
 
   template:
-    description: 'Specify the template file to use for generating hooks'
+    description: 'Specify template file to use for generating hooks'
     type: 'string'
     normalize: true
 

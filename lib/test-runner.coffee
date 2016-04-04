@@ -56,6 +56,7 @@ class TestRunner
     options = @options
     addTestToMocha = @addTestToMocha
     mocha = @mocha
+    ramlFile = path.basename @ramlFile
     names = []
 
     async.waterfall [
@@ -80,7 +81,6 @@ class TestRunner
       (callback) ->
         if options['generate-hooks']
           # Generate hooks skeleton file
-          ramlFile = path.basename @ramlFile
           templateFile = if options.template
                            options.template
                          else

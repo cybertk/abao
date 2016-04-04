@@ -46,7 +46,7 @@ class Abao
       ,
       # Run tests
       (callback) ->
-        runner = new Runner config.options
+        runner = new Runner config.options, config.ramlPath
         runner.run tests, hooks, callback
     ], done
 
