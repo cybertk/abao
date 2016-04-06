@@ -8,8 +8,10 @@ glob = require 'glob'
 
 assert = chai.assert
 
+
 String::contains = (it) ->
   @indexOf(it) != -1
+
 
 class TestFactory
   constructor: (schemaLocation) ->
@@ -26,6 +28,7 @@ class TestFactory
 
   create: (name, contentTest) ->
     return new Test(name, contentTest)
+
 
 class Test
   constructor: (@name, @contentTest) ->

@@ -1,6 +1,7 @@
 async = require 'async'
 _ = require 'underscore'
 
+
 class Hooks
   constructor: () ->
     @beforeHooks = {}

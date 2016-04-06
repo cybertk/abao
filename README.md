@@ -84,7 +84,16 @@ $ abao single-get.raml --names
 GET /machines -> 200
 ```
 
-Write a hookfile in *JavaScript* named `test_machines_hooks.js`:
+**Abao** can generate a hookfile to help validate more than just the
+response code for each path.
+
+```bash
+$ abao single-get.raml --generate-hooks > test_machines_hooks.js
+
+```
+
+Then edit the *JavaScript* hookfile `test_machines_hooks.js` created in the
+previous step to add request parameters and response validation logic.
 
 ```js
 var hooks = require('hooks'),

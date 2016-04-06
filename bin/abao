@@ -10,7 +10,7 @@ var argv = yargs
     .usage("Usage:\n  abao </path/to/raml> [OPTIONS]" +
     "\n\nExample:\n  " + "abao api.raml --server http://api.example.com")
     .options(Abao.options)
-    .wrap(80)
+    .implies('template', 'generate-hooks')
     .check(function (argv) {
       if (argv.reporters === true) {
         showReporters();
@@ -26,6 +26,7 @@ var argv = yargs
 
       return true;
     })
+    .wrap(80)
     .help('help', 'Show usage information and exit')
     .version().describe('version', 'Show version number and exit')
     .epilog("Website:\n  " + 'https://github.com/cybertk/abao')

@@ -1,4 +1,3 @@
-
 applyConfiguration = (config) ->
 
   coerceToArray = (value) ->
@@ -35,11 +34,11 @@ applyConfiguration = (config) ->
       invert: false
       'hooks-only': false
 
-  # normalize options and config
+  # Normalize options and config
   for own key, value of config
     configuration[key] = value
 
-  # coerce some options into an dict
+  # Coerce some options into an dict
   configuration.options.header = coerceToDict(configuration.options.header)
 
   # TODO(quanlong): OAuth2 Bearer Token
