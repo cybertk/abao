@@ -327,6 +327,39 @@ The `member_id` field is got from test case response data, as the example below:
 }
 ```
 
+#### Redis Support
+
+##### Basic usage
+
+**Redis** commands is supported now, the redis is configured in the `config.json` file specified in command
+
+```
+{
+  "redis": {
+    "url": "redis://127.0.0.1:6379/1"
+  }
+}
+```
+
+You just need to define the commands for redis after the test:
+
+```
+{
+  "body": {
+    "name": "testuser",
+    "avatar": "http://static.image.com/test.png"
+  },
+  "destroy": {
+    "redis": {
+      "commands": [
+        ["inc", "visit_total"],
+        ["set", "set_key", "value"]
+      ]
+    }
+  }
+}
+```
+
 #### Basic load test
 
 If you specify the `loadtest` field in the case definition, you can make basic load test. The `loadtest` field is an options object, you can find related options [here](https://github.com/alexfernandez/loadtest#options). See example below:

@@ -2,7 +2,7 @@ Mocha = require 'mocha'
 async = require 'async'
 _ = require 'underscore'
 mongo = require 'mongojs'
-
+RedisClient = require './redis-client'
 
 class TestRunner
   constructor: (config) ->
@@ -11,6 +11,8 @@ class TestRunner
     @mocha = new Mocha @options
     if @config.db and @config.db.type is 'mongodb'
       @db = mongo(@config.db.dsn)
+    if @config.redis
+      @redis= new RedisClient(@config.redis.url)
 
   transformQuery: (query) =>
     mergedQuery =
@@ -74,6 +76,7 @@ class TestRunner
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
     options = @options
+    redis = @redis
     removeMongoRecord = @removeMongoRecord
     updateMongoRecord = @updateMongoRecord
     replaceQureyRef = @replaceQureyRef
@@ -119,6 +122,14 @@ class TestRunner
       body =  @test.response?.body
       tasks = _.map @test.destroy, (item) ->
         item.query = replaceQureyRef(item.query, body)
+
+        if item.redis?.commands?
+          if not redis?
+            console.error 'No redis configuration in config.json...'
+          else
+            console.log 'Execute redis command: ', item.redis.commands
+            redis.exec item.redis.commands
+
         if item.update
           updateMongoRecord(item.model, item.query, item.update)
         else
