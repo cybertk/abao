@@ -190,6 +190,43 @@ You can specify it with `depends` field:
 
 The `depends` field can be either an object or and object array (depend on multiple cases), the value should the case file path under `base test folder`.
 
+##### Refer depends data in params, query and body
+
+You may need to refer the depends response body (depends on a member creation API and refer created member ID), you can use `$` to refer it directly in `params` and `body` field.
+
+```
+{
+  "params": {
+    "email": "$email"
+  },
+  "query": {
+    "id": "$id"
+  },
+  "body": {
+    "channel_name": "$channel.name"
+  },
+  "depends": {
+    "path": "/members",
+    "method": "POST",
+    "status": 200,
+    "case": "normal.json"
+  }
+}
+```
+
+The `id`, `email` and `channel_name` field is got from test case response data, as the example below:
+
+```
+{
+  "id": "555ed85513747345"
+  "email": "test@126.com",
+  "channel": {
+    "name": "testchannel",
+    "origin": "wechat"
+  }
+}
+```
+
 #### Clear database data
 
 ##### Basic usage
@@ -555,7 +592,7 @@ Options:
 This is only valid for stage account `iqixing00005@163.com`
 
 ```
-abao api.raml http://127.0.0.1:9091 config.json -g '/members' -s 'schemas/**/*.json'
+abao api.raml config.json -g '/members' -s 'schemas/**/*.json'
 ```
 
 
@@ -572,7 +609,13 @@ Any contribution is more than welcome!
 
 ## TODO
 
-* Support getting response data from depended test case
+* Support getting response data from depended test case for multiple depends (only support one depends for the moment)
 * Insert mongodb mock data before test case
 * Support mocking data based on the RAML definition
+* Use hooks instead of test case for dependencies
+
+## Bug
+
+* Can not verify required fields and field type based on schema definition in some cases
+* Grep option will filter the depended test case if not matched
 

@@ -2,6 +2,7 @@ Mocha = require 'mocha'
 async = require 'async'
 _ = require 'underscore'
 mongo = require 'mongojs'
+util = require './util'
 RedisClient = require './redis-client'
 
 class TestRunner
@@ -57,29 +58,14 @@ class TestRunner
           callback null
       )
 
-  replaceQureyRef: (query, body) =>
-    for key, value of query
-      if typeof value is 'object'
-        if value.constructor is Array
-          for item in value
-            @replaceQureyRef(item, body)
-        else
-          @replaceQureyRef(value, body)
-      else if typeof value is 'string' and /^\$/.test(value)
-        fileds = value.slice(1).split('.')
-        value = body
-        for field in fileds
-          value = value[field]
-        query[key] = value
-    query
-
   addTestToMocha: (test, hooks) =>
     mocha = @mocha
     options = @options
     redis = @redis
     removeMongoRecord = @removeMongoRecord
     updateMongoRecord = @updateMongoRecord
-    replaceQureyRef = @replaceQureyRef
+    replaceQueryRef = util.replaceRef
+    # Skip case with empty parameter value
     for key, value of test.request.params
       if not value
         # Only show information for matched routes
@@ -121,7 +107,7 @@ class TestRunner
       @test.destroy = [@test.destroy] if @test.destroy and not _.isArray @test.destroy
       body =  @test.response?.body
       tasks = _.map @test.destroy, (item) ->
-        item.query = replaceQureyRef(item.query, body)
+        item.query = replaceQueryRef(item.query, body)
 
         if item.redis?.commands?
           if not redis?
@@ -159,7 +145,7 @@ class TestRunner
 
     async.waterfall [
       (callback) ->
-        async.each tests, (test, done) ->
+        async.forEachOf tests, (test, index, done) ->
           # list tests
           if options.names
             console.log test.name
@@ -172,10 +158,13 @@ class TestRunner
             _.extend(test.request.query, {access_token: config.accessToken})
 
           _.extend(test.request.headers, options.header)
-          if options.grep and test.request.path.match(options.grep)
-            addTestToMocha test, hooks
-          else
-            addTestToMocha test, hooks
+
+          # Store previous test reference for refering response data later on
+          if index > 0
+            prevTest = tests[index - 1]
+            test.prevTest = prevTest if prevTest.depended
+
+          addTestToMocha test, hooks
           done()
         , callback
       , # Run mocha

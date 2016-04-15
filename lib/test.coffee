@@ -6,6 +6,7 @@ tv4 = require 'tv4'
 fs = require 'fs'
 glob = require 'glob'
 loadtest = require 'loadtest'
+util = require './util'
 
 assert = chai.assert
 
@@ -32,6 +33,10 @@ class Test
   constructor: () ->
     @name = ''
     @skip = false
+    @depended = false
+    @loadtest = null
+    @destroy = null
+    @prevTest = null
 
     @request =
       server: ''
@@ -58,6 +63,13 @@ class Test
 
   run: (callback) ->
     assertResponse = @assertResponse
+
+    # Replace params, query and body reference if its previous task has depended field
+    if @prevTest
+      prevRespBody = @prevTest.response.body
+      util.replaceRef(@request.query, prevRespBody)
+      util.replaceRef(@request.params, prevRespBody)
+      util.replaceRef(@request.body, prevRespBody)
 
     options = _.pick @request, 'headers', 'method'
     options['url'] = @url()

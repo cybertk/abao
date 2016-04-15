@@ -60,6 +60,7 @@ addTest = (tests, path, method, testFactory, status, definition, res, headers) -
     test.response.schema = parseSchema res.body['application/json'].schema
 
   test.destroy = definition?.destroy
+  test.depended = definition?.depended
 
   test
 
@@ -120,8 +121,8 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
               # Delete the destory handling for the dependencies
               if dependDef.destroy
                 destroy = destroy.concat(dependDef.destroy)
-                delete dependDef.destroy
-              delete dependDef.loadtest
+                dependDef.destroy = null
+              dependDef.loadtest = null
               addTest(tests, depend.path, depend.method, testFactory, depend.status, dependDef)
 
           # Move the destory handling to the next case
@@ -140,16 +141,8 @@ addCases = (tests, api, path, method, testFactory, callback, baseCaseFolder) ->
   , (err) ->
     return callback(err) if err
 
-addTests = (raml, tests, basePath, callback, testFactory, baseCaseFolder) ->
-
-  # Handle 3th optional param
-  if _.isFunction(basePath)
-    baseCaseFolder = testFactory
-    testFactory = callback
-    callback = basePath
-    basePath = ''
-
-  # TODO: Make it a configuration
+addTests = (raml, tests, callback, testFactory, baseCaseFolder, basePath) ->
+  basePath = '' if not basePath
   baseCaseFolder = 'test' if not baseCaseFolder
 
   return callback() unless raml.resources
@@ -157,7 +150,6 @@ addTests = (raml, tests, basePath, callback, testFactory, baseCaseFolder) ->
   # Iterate endpoint
   async.each raml.resources, (resource, callback) ->
     path = resource.relativeUri
-
     # Apply parent path
     path = basePath + path if basePath
 
@@ -172,7 +164,7 @@ addTests = (raml, tests, basePath, callback, testFactory, baseCaseFolder) ->
       return callback(err) if err
 
     # Add all tests for a resource path
-    addTests resource, tests, path, callback, testFactory, baseCaseFolder
+    addTests resource, tests, callback, testFactory, baseCaseFolder, path
   , callback
 
 
