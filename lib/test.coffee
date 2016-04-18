@@ -116,6 +116,17 @@ class Test
           callback()
       ], callback
 
+  getPartial: (target, expected) =>
+    # Get target object with deleted properties based on expected object properties
+    cloned = _.clone target
+    for key, value of cloned
+      expectedValue = expected[key]
+      if _.isUndefined expectedValue
+        delete cloned[key]
+      else if _.isObject(value) and not _.isArray(value)
+        cloned[key] = @getPartial(value, expectedValue)
+    cloned
+
   assertResponse: (error, response, body, options) =>
     # TODO: Add more assertion and show more detailed information
     assert.isNull error
@@ -151,7 +162,8 @@ class Test
       # Validate based on case sample
       if @response.body
         expectedBody = @response.body
-        assert.deepEqual json, expectedBody
+        partial = @getPartial json, expectedBody
+        assert.deepEqual partial, expectedBody
 
       # Validate based on schema
       if @response.schema
