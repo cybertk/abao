@@ -30,6 +30,9 @@ class TestRunner
     db = @db
     transformQuery = @transformQuery
     (callback) ->
+      if not query
+        callback null
+        return
       query = transformQuery(query)
       db.collection(model).remove(query, (err, result) ->
         if err
@@ -45,6 +48,9 @@ class TestRunner
     db = @db
     transformQuery = @transformQuery
     (callback) ->
+      if not query
+        callback null
+        return
       options =
         multi: true
       query = transformQuery(query)

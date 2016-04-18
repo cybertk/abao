@@ -1,6 +1,6 @@
 module.exports = {
   replaceRef: (target, data) ->
-    return if not data
+    return target if not data
     for key, value of target
       if typeof value is 'object'
         if value.constructor is Array
