@@ -54,8 +54,6 @@ module.exports = (grunt) ->
         command: 'cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js lib'
 
   grunt.registerTask 'uploadCoverage', ->
-    return grunt.log.ok 'Bypass uploading' unless process.env['TRAVIS'] is 'true'
-
     grunt.task.run 'shell:coveralls'
 
   grunt.registerTask "default", [
@@ -67,7 +65,6 @@ module.exports = (grunt) ->
     "coffeelint"
     "coffeecov"
     "mochaTest"
-    "uploadCoverage"
   ]
 
   return

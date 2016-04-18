@@ -20,3 +20,5 @@ deploy:
   on:
     tags: true
     repo: cybertk/abao
+after_success:
+  - grunt uploadCoverage
