@@ -137,6 +137,14 @@ Run validation with *JavaScript* hookfile (from above):
 $ abao single-get.raml --hookfiles=test_machines_hooks.js
 ```
 
+Also you can specify what test **Abao** should skip:
+
+```js
+var hooks = require('hooks');
+
+hooks.skip('DELETE /machines/{machineId} -> 204');
+```
+
 **Abao** also supports callbacks before and after all tests:
 
 ```coffee

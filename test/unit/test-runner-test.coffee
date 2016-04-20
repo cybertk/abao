@@ -218,6 +218,46 @@ describe 'Test Runner', ->
         assert.equal tests.length, 1
         assert.ok tests[0].pending
 
+    describe 'when test skipped in hooks', ->
+      before (done) ->
+
+        testFactory = new TestFactory()
+        test = testFactory.create()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+        test.response.status = 200
+        test.response.schema = """[
+          type: 'string'
+          name: 'string'
+        ]"""
+
+        options =
+          server: "#{SERVER}"
+
+        runner = new TestRunner options
+        sinon.stub runner.mocha, 'run', (callback) -> callback()
+        sinon.stub test, 'run', (callback) -> callback()
+        hooksStub.skippedTests = [test.name]
+        runner.run [test], hooksStub, done
+
+      after ->
+        hooksStub.skippedTests = []
+        runner.mocha.run.restore()
+
+      it 'should run mocha', ->
+        assert.ok runner.mocha.run.called
+
+      it 'should generate mocha suite', ->
+        suites = runner.mocha.suite.suites
+        assert.equal suites.length, 1
+        assert.equal suites[0].title, 'GET /machines -> 200'
+
+      it 'should generate pending mocha test', ->
+        tests = runner.mocha.suite.suites[0].tests
+        assert.equal tests.length, 1
+        assert.ok tests[0].pending
+
     describe 'when test has no response schema', ->
       before (done) ->
 
