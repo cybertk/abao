@@ -70,7 +70,6 @@ class TestRunner
     redis = @redis
     removeMongoRecord = @removeMongoRecord
     updateMongoRecord = @updateMongoRecord
-    replaceQueryRef = util.replaceRef
     # Skip case with empty parameter value
     for key, value of test.request.params
       if not value
@@ -113,7 +112,7 @@ class TestRunner
       @test.destroy = [@test.destroy] if @test.destroy and not _.isArray @test.destroy
       body =  @test.response?.body
       tasks = _.map @test.destroy, (item) ->
-        item.query = replaceQueryRef(item.query, body)
+        item.query = util.replaceRef(item.query, body)
 
         if item.redis?.commands?
           if not redis?
