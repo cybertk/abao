@@ -1,4 +1,8 @@
 #!/usr/bin/env node
+//
+// abao
+// RAML-based API automated testing tool
+//
 
 require('coffee-script/register');
 
