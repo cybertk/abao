@@ -11,6 +11,7 @@ class Hooks
     @beforeEachHooks = []
     @afterEachHooks = []
     @contentTests = {}
+    @skippedTests = []
 
   before: (name, hook) =>
     @addHook(@beforeHooks, name, hook)
@@ -65,8 +66,14 @@ class Hooks
       hook test, callback
     , callback
 
+  skip: (name) =>
+    @skippedTests.push name
+
   hasName: (name) =>
     _.has(@beforeHooks, name) || _.has(@afterHooks, name)
+
+  skipped: (name) =>
+    @skippedTests.indexOf(name) != -1
 
 
 module.exports = new Hooks()

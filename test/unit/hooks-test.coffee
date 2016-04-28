@@ -367,3 +367,27 @@ describe 'Hooks', () ->
       assert.throw f,
         "Cannot have more than one test with the name: #{test_name}"
 
+  describe 'when check skipped', () ->
+
+    beforeEach () ->
+      hooks.skippedTests = ['foo']
+
+    afterEach () ->
+      hooks.skippedTests = []
+
+    it 'should return true if in skippedTests', ->
+      assert.ok hooks.skipped 'foo'
+
+    it 'should return false if not in skippedTests', ->
+      assert.notOk hooks.skipped 'buz'
+
+  describe 'when successfully skip test', () ->
+
+    afterEach () ->
+      hooks.skippedTests = []
+
+    test_name = "content_test_test"
+
+    it 'should get added to the set of hooks', () ->
+      hooks.skip test_name
+      assert.include(hooks.skippedTests, test_name)

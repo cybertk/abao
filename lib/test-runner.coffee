@@ -31,6 +31,11 @@ class TestRunner
       suite.addTest new Mocha.Test 'Skip as no hooks defined'
       return
 
+    # Test skipped in hook file
+    if hooks.skipped(test.name)
+      suite.addTest new Mocha.Test 'Skipped in hooks'
+      return
+
     # Setup hooks
     if hooks
       suite.beforeAll _.bind (done) ->
