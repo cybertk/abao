@@ -12,10 +12,11 @@ module.exports = (grunt) ->
       all:
         files: [
           "Gruntfile.coffee"
-          "src/**/*.coffee"
+          "lib/**/*.coffee"
           "test/**/*.coffee"
         ]
         tasks: [
+          "coffeecov"
           "mochaTest"
         ]
         options:
@@ -25,7 +26,7 @@ module.exports = (grunt) ->
       default:
         src: [
           'Gruntfile.coffee'
-          'src/**/*.coffee'
+          'lib/**/*.coffee'
           'test/**/*.coffee'
         ]
       options: {
