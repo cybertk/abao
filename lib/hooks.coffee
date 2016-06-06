@@ -31,7 +31,7 @@ class Hooks
   afterEach: (hook) =>
     @afterEachHooks.push(hook)
 
-  addHook: (hooks, name, hook) =>
+  addHook: (hooks, name, hook) ->
     if hooks[name]
       hooks[name].push hook
     else

@@ -52,7 +52,7 @@ describe 'Test Runner', ->
         options =
           server: "#{ABAO_IO_SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options , ''
 
         runCallback = sinon.stub()
         runCallback(done)
@@ -168,7 +168,7 @@ describe 'Test Runner', ->
         options =
           server: "#{ABAO_IO_SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub test, 'run', (callback) ->
           callback()
 
@@ -196,7 +196,7 @@ describe 'Test Runner', ->
         options =
           server: "#{SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
 
@@ -235,7 +235,7 @@ describe 'Test Runner', ->
         options =
           server: "#{SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
         hooksStub.skippedTests = [test.name]
@@ -271,7 +271,7 @@ describe 'Test Runner', ->
         options =
           server: "#{SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.stub test, 'run', (callback) -> callback()
 
@@ -314,7 +314,7 @@ describe 'Test Runner', ->
         options =
           server: "#{SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         # sinon.stub runner.mocha, 'run', (callback) -> callback()
         testStub = sinon.stub test, 'run'
         testStub.throws('AssertionError')
@@ -356,7 +356,7 @@ describe 'Test Runner', ->
         options =
           server: "#{SERVER}"
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub test, 'run', (callback) ->
           callback()
 
@@ -392,7 +392,7 @@ describe 'Test Runner', ->
         options =
           names: true
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run', (callback) -> callback()
         sinon.spy console, 'log'
 
@@ -433,7 +433,7 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
           header: header
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run', (callback) ->
           receivedTest = _.clone(test)
           callback()
@@ -467,7 +467,7 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
           'hooks-only': true
 
-        runner = new TestRunner options
+        runner = new TestRunner options, ''
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create

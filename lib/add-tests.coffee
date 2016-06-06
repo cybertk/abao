@@ -86,7 +86,8 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           # expect content-type of response body to be identical to request body
           if contentType && res.body[contentType]?.schema
             test.response.schema = parseSchema res.body[contentType].schema
-          # otherwise filter in responses section for compatible content-types (vendor tree, i.e. application/vnd.api+json)
+          # otherwise filter in responses section for compatible content-types
+          # (vendor tree, i.e. application/vnd.api+json)
           else
             contentType = (type for type of res.body when type.match(/^application\/(.*\+)?json/i))?[0]
             if res.body[contentType]?.schema
