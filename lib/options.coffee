@@ -21,7 +21,8 @@ options =
 
   header:
     alias: 'h'
-    description: 'Add header to include in each request. Header must be in KEY:VALUE format (e.g., "-h Accept:application/json").\nReuse option to add multiple headers'
+    description: 'Add header to include in each request. Header must be in KEY:VALUE format ' +
+      '(e.g., "-h Accept:application/json").\nReuse option to add multiple headers'
     type: 'string'
 
   'hooks-only':
