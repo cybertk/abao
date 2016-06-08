@@ -3,7 +3,7 @@ module.exports = (grunt) ->
   require('time-grunt') grunt
 
   # Dynamically load npm tasks
-  require('jit-grunt') grunt
+  require('load-grunt-config') grunt
 
   grunt.initConfig
 
