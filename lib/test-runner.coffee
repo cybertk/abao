@@ -20,9 +20,8 @@ class TestRunner
       accountId: mongo.ObjectId(@config.accountId)
 
     for key, value of query
-      if (key is '_id' or /Id$/.test(key)) and value.indexOf('!') isnt 0
-        query[key] = mongo.ObjectId(value)
-      query[key] = value.replace(/^!/, '') if typeof value is 'string'
+      if (key is '_id' or /Id$/.test(key))
+          query[key] = if value.indexOf('!') isnt 0 then mongo.ObjectId(value) else value.slice(1)
 
     _.extend mergedQuery, query
 
