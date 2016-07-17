@@ -321,3 +321,25 @@ describe '#addTests', ->
       it 'should add 1 test', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
+
+    describe 'when there is required query parameter with example value', ->
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/required_query_parameter.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, callback, testFactory
+        , done
+
+      after ->
+        tests = []
+
+      it 'should append query parameters with example value', ->
+        assert.equal tests[0].request.query['quux'], 'foo'
+

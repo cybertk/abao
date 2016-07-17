@@ -59,7 +59,8 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
       # Setup query
       if api.queryParameters
         for qkey, qvalue of api.queryParameters
-          query[qkey] = qvalue.example
+          if (!!qvalue.required)
+            query[qkey] = qvalue.example
 
 
       # Iterate response status
