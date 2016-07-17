@@ -367,3 +367,26 @@ describe '#addTests', ->
         assert.equal schema.properties.title.type, 'string'
         assert.equal schema.properties.artist.type, 'string'
 
+
+    describe 'when there is required query parameter with example value', ->
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile("#{RAML_DIR}/required_query_parameter.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, hooks, callback, testFactory
+        , done
+
+      after ->
+        tests = []
+
+      it 'should append query parameters with example value', ->
+        console.log tests
+        assert.equal tests[0].request.query['quux'], 'foo'
+
