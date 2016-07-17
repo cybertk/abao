@@ -322,48 +322,24 @@ describe '#addTests', ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
-    describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', ->
+    describe 'when there is required query parameter with example value', ->
       tests = []
       testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
-        ramlFile = "#{RAML_DIR}/vendor-content-type.raml"
-        ramlParser.loadFile(ramlFile)
+
+        ramlParser.loadFile("#{__dirname}/../fixtures/required_query_parameter.raml")
         .then (data) ->
           callback = sinon.stub()
           callback.returns(done())
 
-          addTests data, tests, hooks, callback, testFactory
+          addTests data, tests, callback, testFactory
         , done
+
       after ->
         tests = []
 
-      it 'should run callback', ->
-        assert.ok callback.called
-
-      it 'should add 1 test', ->
-        assert.lengthOf tests, 1
-
-      it 'should setup test.request of PATCH', ->
-        req = tests[0].request
-
-        assert.equal req.path, '/{songId}'
-        assert.deepEqual req.params,
-          songId: 'mike-a-beautiful-day'
-        assert.deepEqual req.query, {}
-        assert.deepEqual req.headers,
-          'Content-Type': 'application/vnd.api+json'
-        assert.deepEqual req.body,
-          title: 'A Beautiful Day'
-          artist: 'Mike'
-        assert.equal req.method, 'PATCH'
-
-      it 'should setup test.response of PATCH', ->
-        res = tests[0].response
-
-        assert.equal res.status, 200
-        schema = res.schema
-        assert.equal schema.properties.title.type, 'string'
-        assert.equal schema.properties.artist.type, 'string'
+      it 'should append query parameters with example value', ->
+        assert.equal tests[0].request.query['quux'], 'foo'
 

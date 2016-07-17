@@ -17,7 +17,7 @@ is valid or not.
 ## Features
 
 - Verify that each endpoint defined in RAML exists in service
-- Verify that URL params for each endpoint defined in RAML are supported in service 
+- Verify that URL params for each endpoint defined in RAML are supported in service
 - Verify that HTTP request headers for each endpoint defined in RAML are supported in service
 - Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
 - Verify that HTTP response headers for each endpoint defined in RAML are supported in service
@@ -179,11 +179,11 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 - `server` - Server address, provided from command line.
 - `path` - API endpoint path, parsed from RAML.
-- `method` - HTTP method, parsed from RAML request method (e.g., `get`).
-- `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
-- `query` - Object containing querystring values to be appended to the `path` [default: `{}`].
-- `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
-- `body` - Entity body for POST, PUT, and PATCH requests. Must be a JSON-serializable object. Parsed from RAML `example` [default: `{}`].
+- `method` - http method, parsed from RAML.
+- `params` - URI parameters, parsed from RAML `uriParameters` section, default to `{}`.
+- `query` - object containing querystring values to be appended to the `path`, default to `{}`.
+- `headers` - http headers, parsed from RAML `headers` section, default to `{}`.
+- `body` - entity body for PATCH, POST and PUT requests. Must be a JSON-serializable object. Parsed from RAML `example` section, default to `{}`
 
 ### test.response
 

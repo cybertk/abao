@@ -36,6 +36,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
   async.each raml.resources, (resource, callback) ->
     path = resource.relativeUri
     params = {}
+    query = {}
 
     # Apply parent properties
     if parent
@@ -47,12 +48,20 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
       for key, param of resource.uriParameters
         params[key] = param.example
 
+
     # In case of issue #8, resource does not define methods
     resource.methods ?= []
 
     # Iterate response method
     async.each resource.methods, (api, callback) ->
       method = api.method.toUpperCase()
+
+      # Setup query
+      if api.queryParameters
+        for qkey, qvalue of api.queryParameters
+          if (!!qvalue.required)
+            query[qkey] = qvalue.example
+
 
       # Iterate response status
       for status, res of api.responses
@@ -75,23 +84,16 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           try
             test.request.body = JSON.parse api.body[contentType]?.example
           catch
-            console.warn "cannot parse JSON example request body for #{test.name}"
+            console.warn "invalid request example of #{test.name}"
+        # console.dir('your params is ' + params)
         test.request.params = params
+        test.request.query = query
 
         # Update test.response
         test.response.status = status
         test.response.schema = null
-
-        if res?.body
-          # expect content-type of response body to be identical to request body
-          if contentType && res.body[contentType]?.schema
-            test.response.schema = parseSchema res.body[contentType].schema
-          # otherwise filter in responses section for compatible content-types
-          # (vendor tree, i.e. application/vnd.api+json)
-          else
-            contentType = (type for type of res.body when type.match(/^application\/(.*\+)?json/i))?[0]
-            if res.body[contentType]?.schema
-              test.response.schema = parseSchema res.body[contentType].schema
+        if (res?.body?['application/json']?.schema)
+          test.response.schema = parseSchema res.body['application/json'].schema
 
       callback()
     , (err) ->
