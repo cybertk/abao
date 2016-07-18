@@ -36,6 +36,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
   async.each raml.resources, (resource, callback) ->
     path = resource.relativeUri
     params = {}
+    query = {}
 
     # Apply parent properties
     if parent
@@ -47,12 +48,20 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
       for key, param of resource.uriParameters
         params[key] = param.example
 
+
     # In case of issue #8, resource does not define methods
     resource.methods ?= []
 
     # Iterate response method
     async.each resource.methods, (api, callback) ->
       method = api.method.toUpperCase()
+
+      # Setup query
+      if api.queryParameters
+        for qkey, qvalue of api.queryParameters
+          if (!!qvalue.required)
+            query[qkey] = qvalue.example
+
 
       # Iterate response status
       for status, res of api.responses
@@ -77,6 +86,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           catch
             console.warn "cannot parse JSON example request body for #{test.name}"
         test.request.params = params
+        test.request.query = query
 
         # Update test.response
         test.response.status = status
