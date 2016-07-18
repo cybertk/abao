@@ -18,6 +18,7 @@ is valid or not.
 
 - Verify that each endpoint defined in RAML exists in service
 - Verify that URL params for each endpoint defined in RAML are supported in service
+- Verify that the required query parameters defined in RAML are supported in service
 - Verify that HTTP request headers for each endpoint defined in RAML are supported in service
 - Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
 - Verify that HTTP response headers for each endpoint defined in RAML are supported in service
@@ -181,7 +182,7 @@ test 'GET /machines -> 200', (response, body, done) ->
 - `path` - API endpoint path, parsed from RAML.
 - `method` - HTTP method, parsed from RAML request method (e.g., `get`).
 - `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
-- `query` - object containing querystring values to be appended to the `path`,parsed from RAML `queryParameters` section [default: `{}`].
+- `query` - Object containing querystring values to be appended to the `path`,parsed from RAML `queryParameters` section [default: `{}`].
 - `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
 - `body` - Entity body for POST, PUT, and PATCH requests. Must be a JSON-serializable object. Parsed from RAML `example` [default: `{}`].
 
