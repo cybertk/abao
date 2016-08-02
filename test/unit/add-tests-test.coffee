@@ -34,7 +34,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
@@ -83,7 +83,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
@@ -131,7 +131,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
@@ -176,7 +176,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
@@ -221,7 +221,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
 
       after ->
         tests = []
@@ -262,7 +262,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
 
       after ->
         tests = []
@@ -306,7 +306,7 @@ describe '#addTests', ->
 
           sinon.stub console, 'warn'
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
 
       after ->
         tests = []
@@ -335,7 +335,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
@@ -381,7 +381,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
 
       after ->
         tests = []
@@ -402,7 +402,7 @@ describe '#addTests', ->
           callback.returns(done())
 
           addTests data, tests, hooks, callback, testFactory
-        , done
+        return
       after ->
         tests = []
 
