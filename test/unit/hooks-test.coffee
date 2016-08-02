@@ -321,7 +321,7 @@ describe 'Hooks', () ->
         hooks.runBeforeAll callback
 
       it 'should invoke callback', ->
-        assert.ok callback.calledWithExactly(undefined), callback.printf('%C')
+        assert.ok callback.calledWithExactly(null), callback.printf('%C')
 
       it 'should run hook', () ->
         assert.ok funcs[0].called
@@ -337,7 +337,7 @@ describe 'Hooks', () ->
         hooks.runAfterAll callback
 
       it 'should invoke callback', ->
-        assert.ok callback.calledWithExactly(undefined), callback.printf('%C')
+        assert.ok callback.calledWithExactly(null), callback.printf('%C')
 
       it 'should run hook', ->
         assert.ok funcs[2].called
