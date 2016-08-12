@@ -129,6 +129,7 @@ class Test
           #{JSON.stringify(json, null, 4)}
           Error
         """
+        )
 
       # Update @response
       @response.body = json
