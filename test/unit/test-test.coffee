@@ -253,6 +253,7 @@ describe 'Test', ->
           type: 'string'
         name:
           type: 'string'}
+    test.response.expanded_schema = test.response.schema
 
     describe 'when against valid response', ->
 
@@ -288,4 +289,3 @@ describe 'Test', ->
         bodyStub = 'Im invalid'
         fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
         assert.throw fn, chai.AssertionError
-

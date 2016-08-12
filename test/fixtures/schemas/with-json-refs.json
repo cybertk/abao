@@ -6,7 +6,7 @@
     {
       "type": "array",
       "items": {
-        "$ref": "http://example.api.com/jsonrefs/definitions#/definitions/machine"
+        "$ref": "test/fixtures/schemas/definitions.json#/definitions/machine"
       }
     }
   ],
