@@ -84,7 +84,7 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           try
             test.request.body = JSON.parse api.body[contentType]?.example
           catch
-            console.warn "cannot parse JSON example request body for #{test.name}"
+            throw new Error("cannot parse JSON example request body for #{test.name}")
         test.request.params = params
         test.request.query = query
 
