@@ -119,7 +119,7 @@ class Test
             #{err}
             """)
         schema = expanded_schema
-
+        )
       result = tv4.validateResult json, schema
       assert.lengthOf result.missing, 0, """
         Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
