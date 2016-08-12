@@ -111,11 +111,14 @@ class Test
 
       json = validateJson()
       $RefParser.dereference(schema, (err, expanded_schema) ->
-        console.error "Schema: #{JSON.stringify(schema)}"
         if err
-          throw new Error("Unable to expand schema: #{err}")
+          throw new Error("""
+            Unable to expand schema:
+            #{schema}
+            Error:
+            #{err}
+          """)
         schema = expanded_schema
-        console.error "Expanded Schema: #{JSON.stringify(expanded_schema)}")
 
       result = tv4.validateResult json, schema
       assert.lengthOf result.missing, 0, """
