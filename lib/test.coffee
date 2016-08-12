@@ -117,7 +117,7 @@ class Test
             #{schema}
             Error:
             #{err}
-          """)
+            """)
         schema = expanded_schema
 
       result = tv4.validateResult json, schema
