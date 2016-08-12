@@ -3,6 +3,7 @@ request = require 'request'
 _ = require 'underscore'
 async = require 'async'
 tv4 = require 'tv4'
+$RefParser = require 'json-schema-ref-parser'
 fs = require 'fs'
 glob = require 'glob'
 
@@ -109,6 +110,11 @@ class Test
       """
 
       json = validateJson()
+      $RefParser.dereference(schema, (err, expanded_schema) ->
+        if err
+          throw new Error("Unable to expand schema: #{err}")
+        schema = expanded_schema)
+      console.error "Schema: #{schema}"
       result = tv4.validateResult json, schema
       assert.lengthOf result.missing, 0, """
         Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
@@ -126,4 +132,3 @@ class Test
 
 
 module.exports = TestFactory
-
