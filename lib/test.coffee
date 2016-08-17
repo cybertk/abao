@@ -114,7 +114,7 @@ class Test
         if err
           throw new Error("""
             Unable to expand schema:
-            #{schema}
+            #{JSON.stringify(schema, null, 4)}
             Error:
             #{err}
             """)
