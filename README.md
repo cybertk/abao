@@ -150,18 +150,18 @@ hooks.skip('DELETE /machines/{machineId} -> 204');
 **Abao** also supports callbacks before and after all tests:
 
 ```coffee
-{beforeAll, afterAll} = require 'hooks'
+{beforeEach, afterEach} = require 'hooks'
 
-beforeAll (done) ->
+beforeEach (test, done) ->
   # do setup
   done()
 
-afterAll (done) ->
+afterEach (test, done) ->
   # do teardown
   done()
 ```
 
-If `beforeAll`, `afterAll`, `before` and `after` are called multiple times,
+If `beforeEach`, `afterEach`, `before` and `after` are called multiple times,
 the callbacks are executed serially in the order they were called.
 
 **Abao** provides hook to allow the content of the response to be checked
@@ -243,4 +243,3 @@ If you think of something that would make life easier, please submit an issue.
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
 [baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
-
