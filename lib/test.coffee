@@ -100,6 +100,9 @@ class Test
 
     # Body
     if @response.schema
+      assert.isNotNull body, """
+        Got null response body.  Schema:  #{JSON.stringify(@response.schema, null, 4)}
+      """
       schema = @response.schema
       validateJson = _.partial JSON.parse, body
       body = '[empty]' if body is ''
@@ -108,21 +111,10 @@ class Test
         #{body}
         Error
       """
-
       json = validateJson()
       $RefParser.dereference(schema)
       .then (expanded_schema) ->
-        result = tv4.validateResult json, expanded_schema
-        assert.lengthOf result.missing, 0, """
-          Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
-          #{JSON.stringify(schema, null, 4)}
-          Error
-        """
-        assert.ok result.valid, """
-          Got unexpected response body: #{result.error?.message}
-          #{JSON.stringify(json, null, 4)}
-          Error
-        """
+        return expanded_schema
       .catch (err) ->
         throw new Error("""
           Unable to expand schema:
@@ -130,7 +122,18 @@ class Test
           Error:
           #{err}
           """)
-
+      .then (expanded_schema) ->
+        result = tv4.validateResult json, expanded_schema
+        assert.lengthOf result.missing, 0, """
+          Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
+          #{JSON.stringify(expanded_schema, null, 4)}
+          Error
+        """
+        assert.ok result.valid, """
+          Got unexpected response body: #{result.error?.message}
+          #{JSON.stringify(json, null, 4)}
+          Error
+        """
       # Update @response
       @response.body = json
 
