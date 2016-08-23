@@ -50,6 +50,7 @@ class Test
       schema: null
       headers: null
       body: null
+      expanded_schema: null
 
     @contentTest ?= (response, body, done) ->
       done()
@@ -112,17 +113,7 @@ class Test
       json = validateJson()
       $RefParser.dereference(schema)
       .then (expanded_schema) ->
-        result = tv4.validateResult json, expanded_schema
-        assert.lengthOf result.missing, 0, """
-          Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
-          #{JSON.stringify(schema, null, 4)}
-          Error
-        """
-        assert.ok result.valid, """
-          Got unexpected response body: #{result.error?.message}
-          #{JSON.stringify(json, null, 4)}
-          Error
-        """
+        @response.expanded_schema = expanded_schema
       .catch (err) ->
         throw new Error("""
           Unable to expand schema:
@@ -130,6 +121,17 @@ class Test
           Error:
           #{err}
           """)
+      result = tv4.validateResult json, @response.expanded_schema
+      assert.lengthOf result.missing, 0, """
+        Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
+        #{JSON.stringify(schema, null, 4)}
+        Error
+      """
+      assert.ok result.valid, """
+        Got unexpected response body: #{result.error?.message}
+        #{JSON.stringify(json, null, 4)}
+        Error
+      """
 
       # Update @response
       @response.body = json
