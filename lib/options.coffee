@@ -13,6 +13,11 @@ options =
     description: 'Specify pattern to match schema files to be loaded for use as JSON refs'
     type: 'string'
 
+  'load-file-refs':
+    description: 'For schema\'s containing $ref\'s which target the local filesystem, ' +
+      'automatically expand those $ref\'s relative to the CWD of abao'
+    type: 'boolean'
+
   reporter:
     alias: 'r'
     description: 'Specify reporter to use'
@@ -65,4 +70,3 @@ options =
     type: 'boolean'
 
 module.exports = options
-

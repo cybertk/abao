@@ -15,7 +15,8 @@ String::contains = (it) ->
 
 
 class TestFactory
-  constructor: (schemaLocation) ->
+  constructor: (schemaLocation, @loadFileRefs) ->
+    @loadFileRefs ?= false
     if schemaLocation
 
       files = glob.sync schemaLocation
@@ -28,11 +29,12 @@ class TestFactory
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: (name, contentTest) ->
-    return new Test(name, contentTest)
+    loadFileRefs = @loadFileRefs
+    return new Test(name, contentTest, loadFileRefs)
 
 
 class Test
-  constructor: (@name, @contentTest) ->
+  constructor: (@name, @contentTest, @loadFileRefs) ->
     @name ?= ''
     @skip = false
 
@@ -93,15 +95,25 @@ class Test
     ], callback
 
   expandSchema: (callback) =>
-    if @response.schema
+    # If loadFileRefs is falsy, the user does not want
+    # to expand local file refs, so we disable ref expansion
+    # We always disable URL ref parsing, since tv4 already does that
+    if @response.schema && @loadFileRefs
       schema = @response.schema
-      $RefParser.dereference schema, callback
+      options = {
+        resolve: {
+          http: false
+        }
+      }
+      $RefParser.dereference schema, options, callback
     else
       callback null, null
 
   saveExpandedSchema: (expanded_schema, callback) =>
     if expanded_schema != null
       @response.expanded_schema = expanded_schema
+    else
+      @response.expanded_schema = @response.schema
     callback null
 
   assertResponse: (error, response, body) =>
