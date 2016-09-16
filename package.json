@@ -35,7 +35,7 @@
     "grunt-coffeecov": "^0.1.5",
     "grunt-coffeelint": "^0.0.16",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-mocha-test": "~0.12.7",
+    "grunt-mocha-test": "~0.13.0",
     "grunt-shell": "^1.2.1",
     "load-grunt-config": "^0.19.2",
     "mocha-phantom-coverage-reporter": "^0.1.0",
