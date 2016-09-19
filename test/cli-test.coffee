@@ -41,9 +41,7 @@ execCommand = (cmd, callback) ->
     if error
       exitStatus = error.code
 
-  exitEventName = if process.version.split('.')[1] is '6' then 'exit' else 'close'
-
-  cli.on exitEventName, (code) ->
+  cli.on 'close', (code) ->
     exitStatus = code if exitStatus == null and code != undefined
     callback()
 
