@@ -1,5 +1,4 @@
 Mocha = require 'mocha'
-Mustache = require 'mustache'
 async = require 'async'
 path = require 'path'
 _ = require 'underscore'
