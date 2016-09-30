@@ -40,7 +40,7 @@ class Abao
       # Parse tests from RAML
       (raml, callback) ->
         if !config.options.server
-          if 'baseUri' in raml
+          if raml.baseUri
             config.options.server = raml.baseUri
         addTests raml, tests, hooks, callback, factory
       ,
