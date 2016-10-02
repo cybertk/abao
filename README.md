@@ -91,7 +91,9 @@ GET /machines -> 200
 response code for each path.
 
 ```bash
-$ abao single-get.raml --generate-hooks > test_machines_hooks.js
+$ ABAO_HOME="/path/to/node_modules/abao"
+$ TEMPLATE="${ABAO_HOME}/templates/hookfile.js"
+$ abao single-get.raml --generate-hooks --template="${TEMPLATE}" > test_machines_hooks.js
 
 ```
 
@@ -221,6 +223,8 @@ Options:
   --invert, -i      Invert --grep matches                              [boolean]
   --timeout, -t     Set test-case timeout in milliseconds
                                                         [number] [default: 2000]
+  --template        Specify the template file to use for generating hooks
+                                                                        [string]                                                      
   --names, -n       List names of requests and exit                    [boolean]
   --reporters       Display available reporters and exit               [boolean]
   --help            Show usage information and exit                    [boolean]
