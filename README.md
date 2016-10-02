@@ -7,6 +7,7 @@
 [![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
 [![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
 [![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/388/badge)](https://bestpractices.coreinfrastructure.org/projects/388) 
 
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
