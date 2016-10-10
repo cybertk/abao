@@ -40,7 +40,7 @@
     "load-grunt-config": "^0.19.2",
     "mocha-phantom-coverage-reporter": "^0.1.0",
     "mute": "^1.0.0",
-    "nock": "^8.0.0",
+    "nock": "^8.1.0",
     "sinon": "^1.12.2",
     "sinon-chai": "^2.7.0",
     "time-grunt": "~1.4.0"
