@@ -2,6 +2,8 @@ async = require 'async'
 _ = require 'underscore'
 csonschema = require 'csonschema'
 
+selectSchemes = (names, schemes) ->
+  return _.pick(schemes, names)
 
 parseSchema = (source) ->
   if source.contains('$schema')
@@ -32,16 +34,31 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
 
   return callback() unless raml.resources
 
+  parent ?= {
+    path: "",
+    params: {}
+  }
+
+  top_securedBy = raml.securedBy ? parent.securedBy
+
+  if not parent.security_schemes?
+    parent.security_schemes = {}
+    for scheme_map in raml.securitySchemes ? []
+      for scheme_name, scheme of scheme_map
+        parent.security_schemes[scheme_name] ?= []
+        parent.security_schemes[scheme_name].push(scheme)
+
   # Iterate endpoint
   async.each raml.resources, (resource, callback) ->
     path = resource.relativeUri
     params = {}
     query = {}
 
+    resource_securedBy = resource.securedBy ? top_securedBy
+
     # Apply parent properties
-    if parent
-      path = parent.path + path
-      params = _.clone parent.params
+    path = parent.path + path
+    params = _.clone parent.params
 
     # Setup param
     if resource.uriParameters
@@ -55,6 +72,8 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
     # Iterate response method
     async.each resource.methods, (api, callback) ->
       method = api.method.toUpperCase()
+      headers = parseHeaders(api.headers)
+      method_securedBy = api.securedBy ? resource_securedBy
 
       # Setup query
       if api.queryParameters
@@ -62,20 +81,20 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
           if (!!qvalue.required)
             query[qkey] = qvalue.example
 
-
-      # Iterate response status
-      for status, res of api.responses
-
+      buildTest = (status, res, security) ->
         testName = "#{method} #{path} -> #{status}"
+        if security?
+          testName += " (#{security})"
+        if testName in hooks.skippedTests
+          return null
 
         # Append new test to tests
         test = testFactory.create(testName, hooks.contentTests[testName])
-        tests.push test
 
         # Update test.request
         test.request.path = path
         test.request.method = method
-        test.request.headers = parseHeaders(api.headers)
+        test.request.headers = headers
 
         # select compatible content-type in request body (to support vendor tree types, i.e. application/vnd.api+json)
         contentType = (type for type of api.body when type.match(/^application\/(.*\+)?json/i))?[0]
@@ -102,13 +121,32 @@ addTests = (raml, tests, hooks, parent, callback, testFactory) ->
             contentType = (type for type of res.body when type.match(/^application\/(.*\+)?json/i))?[0]
             if res.body[contentType]?.schema
               test.response.schema = parseSchema res.body[contentType].schema
+        return test
+
+      # Iterate response status
+      for status, res of api.responses
+        t = buildTest(status, res)
+        if t?
+          tests.push t
+
+      for scheme, lst of selectSchemes(method_securedBy, parent.security_schemes)
+        for l in lst
+          for status, res of l.describedBy?.responses ? {}
+            t = buildTest(status, res, scheme)
+            if t?
+              tests.push t
 
       callback()
     , (err) ->
       return callback(err) if err
 
       # Recursive
-      addTests resource, tests, hooks, {path, params}, callback, testFactory
+      new_parent = {
+        path, params,
+        securedBy: resource_securedBy,
+        security_schemes: parent.security_schemes
+      }
+      addTests resource, tests, hooks, new_parent, callback, testFactory
   , callback
 
 
