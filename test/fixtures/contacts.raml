@@ -1,0 +1,63 @@
+#%RAML 0.8
+
+title: Address Book API
+baseUri: http://example.api.com/{version}
+version: v1
+
+/contacts:
+  post:
+    body:
+      application/json:
+        schema: |
+          type: 'string'
+          name: 'string'
+        example: |
+              { "type": "Kulu", "name": "Mike" }
+    responses:
+      201:
+        body:
+          application/json:
+            schema: |
+              type: 'string'
+              name: 'string'
+            example: |
+              { "type": "Kulu", "name": "Mike" }
+  /contacts/{id}
+    delete:
+      responses:
+        204:
+    put:
+      body:
+        application/json:
+          schema: |
+            type: 'string'
+            name: 'string'
+          example: |
+                { "type": "Kulu", "name": "Mike" }
+      responses:
+        201:
+          body:
+            application/json:
+              schema: |
+                type: 'string'
+                name: 'string'
+              example: |
+                { "type": "Kulu", "name": "Mike" }
+    get:
+      responses:
+        200:
+          body:
+            application/json:
+              schema: |
+                [
+                  type: 'string'
+                  name: 'string'
+                  phone: 'string'
+                ]
+              example: |
+                {
+                  "type": "contact",
+                  "name": "Jenny",
+                  "phone": "867-5309"
+                }
+
