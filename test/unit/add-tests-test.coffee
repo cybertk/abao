@@ -387,7 +387,6 @@ describe '#addTests', ->
         tests = []
 
       it 'should append query parameters with example value', ->
-        console.log tests
         assert.equal tests[0].request.query['quux'], 'foo'
 
     describe 'when there is no required query parameter', ->
