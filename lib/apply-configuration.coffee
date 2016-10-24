@@ -33,6 +33,7 @@ applyConfiguration = (config) ->
       grep: ''
       invert: false
       'hooks-only': false
+      sorted: false
 
   # Normalize options and config
   for own key, value of config
