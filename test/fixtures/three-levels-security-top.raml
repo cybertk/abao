@@ -1,0 +1,53 @@
+#%RAML 0.8
+
+title: World Music API
+baseUri: http://example.api.com/{version}
+version: v1
+
+securitySchemes:
+  - oauth_2_0: !include ./oauth_2_0.yml
+  - another_oauth_2_0: !include ./oauth_2_0.yml
+  - third_oauth_2_0: !include ./oauth_2_0.yml
+
+securedBy: [oauth_2_0, another_oauth_2_0]
+
+/machines:
+  get:
+    responses:
+      200:
+        body:
+          application/json:
+            schema: |
+              [
+                type: 'string'
+                name: 'string'
+              ]
+  /{machine_id}:
+    securedBy: [oauth_2_0]
+    uriParameters:
+      machine_id:
+        description: |
+          The ID of the Machine
+        type: string
+        example: '1'
+    delete:
+      responses:
+        204:
+    /parts:
+      get:
+        responses:
+          200:
+            body:
+              application/json:
+                schema: |
+                  type: 'string'
+                  name: 'string'
+      put:
+        securedBy: [third_oauth_2_0]
+        responses:
+          200:
+            body:
+              application/json:
+                schema: |
+                  type: 'string'
+                  name: 'string'

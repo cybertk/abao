@@ -116,6 +116,35 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
+    describe 'when hooks skip one POST', ->
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+
+        hooks.skippedTests = ["POST /machines -> 201"]
+        ramlParser.loadFile("#{RAML_DIR}/1-get-1-post.raml")
+        .then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, hooks, callback, testFactory
+        , done
+        return
+      after ->
+        tests = []
+        hooks.skippedTests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should add 1 test', ->
+        assert.lengthOf tests, 1
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /machines -> 200'
+
     describe 'when RAML includes multiple referencing schemas', ->
 
       tests = []
@@ -246,6 +275,57 @@ describe '#addTests', ->
         test = tests[2]
         assert.deepEqual test.request.params,
           machine_id: '1'
+
+    describe 'when RAML has securedBy set at top level', ->
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+
+        ramlParser.loadFile(
+          "#{RAML_DIR}/three-levels-security-top.raml"
+        ).then (data) ->
+          callback = sinon.stub()
+          callback.returns(done())
+
+          addTests data, tests, hooks, callback, testFactory
+        , done
+        return
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should added 16 tests', ->
+        assert.lengthOf tests, 16
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /machines -> 200'
+        assert.equal tests[1].name, 'GET /machines -> 401 (oauth_2_0)'
+        assert.equal tests[2].name, 'GET /machines -> 403 (oauth_2_0)'
+        assert.equal tests[3].name, 'GET /machines -> 401 (another_oauth_2_0)'
+        assert.equal tests[4].name, 'GET /machines -> 403 (another_oauth_2_0)'
+        assert.equal tests[5].name, 'DELETE /machines/{machine_id} -> 204'
+        assert.equal tests[6].name,
+          'DELETE /machines/{machine_id} -> 401 (oauth_2_0)'
+        assert.equal tests[7].name,
+          'DELETE /machines/{machine_id} -> 403 (oauth_2_0)'
+        assert.equal tests[8].name, 'GET /machines/{machine_id}/parts -> 200'
+        assert.equal tests[9].name,
+          'GET /machines/{machine_id}/parts -> 401 (oauth_2_0)'
+        assert.equal tests[10].name,
+          'GET /machines/{machine_id}/parts -> 403 (oauth_2_0)'
+        assert.equal tests[11].name,
+          'GET /machines/{machine_id}/parts -> 401 (another_oauth_2_0)'
+        assert.equal tests[12].name,
+          'GET /machines/{machine_id}/parts -> 403 (another_oauth_2_0)'
+        assert.equal tests[13].name, 'PUT /machines/{machine_id}/parts -> 200'
+        assert.equal tests[14].name,
+          'PUT /machines/{machine_id}/parts -> 401 (third_oauth_2_0)'
+        assert.equal tests[15].name,
+          'PUT /machines/{machine_id}/parts -> 403 (third_oauth_2_0)'
 
     describe 'when RAML has resource not defined method', ->
 
@@ -408,3 +488,33 @@ describe '#addTests', ->
 
       it 'should not append query parameters', ->
         assert.deepEqual tests[0].request.query, {}
+
+    describe 'when RAML has multiple resources', ->
+
+      tests = []
+      testFactory = new TestFactory()
+      callback = ''
+
+      before (done) ->
+        ramlParser.loadFile("#{RAML_DIR}/multiple-resources.raml")
+        .then (data) ->
+          console.error("got data")
+          callback = sinon.stub()
+          callback.returns(done())
+
+          console.error("calling addTests")
+          addTests data, tests, hooks, callback, testFactory
+        , done
+        return
+      after ->
+        tests = []
+
+      it 'should run callback', ->
+        assert.ok callback.called
+
+      it 'should add 2 tests', ->
+        assert.lengthOf tests, 2
+
+      it 'should set test.name', ->
+        assert.equal tests[0].name, 'GET /songs/song1 -> 200'
+        assert.equal tests[1].name, 'GET /songs/song2 -> 200'
