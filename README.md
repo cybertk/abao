@@ -221,11 +221,15 @@ Options:
                                                                        [boolean]
   --grep, -g        Only run tests matching <pattern>                   [string]
   --invert, -i      Invert --grep matches                              [boolean]
+  --sorted          Sorts requests in a sensible way so that objects are not
+                    modified before they are created. Order: CONNECT, OPTIONS,
+                    POST, GET, HEAD, PUT, PATCH, DELETE, TRACE.        [boolean]
   --timeout, -t     Set test-case timeout in milliseconds
                                                         [number] [default: 2000]
   --template        Specify the template file to use for generating hooks
-                                                                        [string]                                                      
+                                                                        [string]
   --names, -n       List names of requests and exit                    [boolean]
+  --generate-hooks  Output hooks generated from template file and exit [boolean]
   --reporters       Display available reporters and exit               [boolean]
   --help            Show usage information and exit                    [boolean]
   --version         Show version number and exit                       [boolean]

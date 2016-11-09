@@ -18,8 +18,7 @@ class TestFactory
     if schemaLocation
 
       files = glob.sync schemaLocation
-      console.error 'Found JSON ref schemas: ' + files
-      console.error ''
+      console.log '\tJSON ref schemas: ' + files.join(', ')
 
       tv4.banUnknown = true
 

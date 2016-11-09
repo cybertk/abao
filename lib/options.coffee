@@ -40,6 +40,12 @@ options =
     description: 'Invert --grep matches'
     type: 'boolean'
 
+  sorted:
+    description: 'Sorts requests in a sensible way so that objects are not ' +
+                 'modified before they are created.\nOrder: ' +
+                 'CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH, DELETE, TRACE.'
+    type: 'boolean'
+
   timeout:
     alias: 't'
     description: 'Set test-case timeout in milliseconds'

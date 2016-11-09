@@ -47,7 +47,7 @@ execCommand = (cmd, callback) ->
 
 describe 'Command line interface', ->
 
-  describe 'When run with "one and done" options', (done) ->
+  describe 'when run with "one and done" options', (done) ->
 
     describe 'when RAML argument unnecessary', () ->
 
@@ -161,7 +161,7 @@ describe 'Command line interface', ->
           assert.include stderr, 'template -> generate-hooks'
 
 
-  describe 'When RAML file not found', (done) ->
+  describe 'when RAML file not found', (done) ->
     before (done) ->
       ramlFile = "#{RAML_DIR}/nonexistent_path.raml"
       cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
@@ -177,9 +177,9 @@ describe 'Command line interface', ->
       assert.include stderr, 'Error: ENOENT'
 
 
-  describe 'Arguments with existing RAML and responding server', () ->
+  describe 'arguments with existing RAML and responding server', () ->
     describe 'when invoked without "--server" option', () ->
-      describe 'when RAML file hasn\'t correct baseUri', () ->
+      describe 'when RAML file does not specify "baseUri"', () ->
         before (done) ->
           ramlFile = "#{RAML_DIR}/no-base-uri.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --reporter json"
@@ -192,7 +192,7 @@ describe 'Command line interface', ->
         it 'should print error message to stderr', ->
           assert.include stderr, 'no API endpoint specified'
 
-      describe 'when RAML file has correct baseUri', () ->
+      describe 'when RAML file does specify "baseUri"', () ->
 
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"

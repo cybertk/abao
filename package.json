@@ -1,6 +1,6 @@
 {
   "name": "abao",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "RAML testing tool",
   "bin": "bin/abao",
   "main": "lib/index.js",
@@ -60,6 +60,7 @@
     "source-map-support": "^0.4.0",
     "tv4": "^1.2.7",
     "underscore": "^1.8.2",
+    "lodash": "^4.16.4",
     "yargs": "~6.0.0"
   }
 }

@@ -165,7 +165,7 @@ describe 'Test', ->
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
 
-    describe 'Init a TestFactory', ->
+    describe 'construct a TestFactory', ->
 
       globStub = {}
       globStub.sync = sinon.spy((location) ->
@@ -213,7 +213,7 @@ describe 'Test', ->
 
   describe '#url', ->
 
-    describe 'when call with path does not contain param', ->
+    describe 'when called with path that does not contain param', ->
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines'
@@ -221,7 +221,7 @@ describe 'Test', ->
       it 'should return origin path', ->
         assert.equal test.url(), '/machines'
 
-    describe 'when call with path contains param', ->
+    describe 'when called with path that contains param', ->
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
