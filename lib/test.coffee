@@ -63,7 +63,7 @@ class Test
 
     options = _.pick @request, 'headers', 'method'
     options['url'] = @url()
-    options['body'] = JSON.stringify @request.body
+    options['body'] = JSON.stringify @request.body if options['method'] != 'HEAD'
     options['qs'] = @request.query
 
     async.waterfall [
