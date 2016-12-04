@@ -49,7 +49,7 @@
     "async": "^2.0.1",
     "chai": "~3.5.0",
     "coffee-errors": "^0.8.6",
-    "coffee-script": "~1.11.0",
+    "coffee-script": "~1.12.0",
     "csonschema": "^0.5.1",
     "glob": "^7.0.6",
     "mocha": "~3.2.0",
