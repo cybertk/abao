@@ -42,7 +42,7 @@
     "mute": "^1.0.0",
     "nock": "^9.0.0",
     "sinon": "^1.12.2",
-    "sinon-chai": "^2.7.0",
+    "sinon-chai": "^2.10.0",
     "time-grunt": "~1.4.0"
   },
   "dependencies": {
