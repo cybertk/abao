@@ -23,7 +23,7 @@ class Abao
     hooks = @hooks
 
     # Inject the JSON refs schemas
-    factory = new TestFactory(config.options.schemas)
+    factory = new TestFactory(config.options.schemas, config.options['load-file-refs'])
 
     async.waterfall [
       # Parse hooks
@@ -53,4 +53,3 @@ class Abao
 
 module.exports = Abao
 module.exports.options = options
-

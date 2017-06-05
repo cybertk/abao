@@ -58,7 +58,6 @@ describe 'Command line interface', ->
           execCommand "#{MOCHA_BIN} --reporters", ->
             reporters = stdout
             execCommand "#{ABAO_BIN} --reporters", done
-
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
@@ -434,10 +433,10 @@ describe 'Command line interface', ->
           assert.include stdout, '0 passing'
 
       describe 'when invoked with "--schema" option', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/with-json-refs.raml"
-          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
-
+          cmd = "#{ABAO_BIN} #{ramlFile} --schemas=#{SCHEMA_DIR}/*.json --server #{SERVER}"
           app = express()
 
           app.get '/machines', (req, res) ->
@@ -453,7 +452,6 @@ describe 'Command line interface', ->
               server.close()
 
           server.on 'close', done
-
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
@@ -481,3 +479,49 @@ describe 'Command line interface', ->
         it 'exit status should be 1', () ->
           assert.equal exitStatus, 1
 
+      describe 'when invoked with "--load-file-refs" option', () ->
+
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/with-file-refs.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --load-file-refs --server #{SERVER}"
+          app = express()
+
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              type: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
+
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
+
+          server.on 'close', done
+        it 'exit status should be 0', () ->
+          assert.equal exitStatus, 0
+
+      describe 'when invoked with "--load-file-refs" option and expecting error', () ->
+        before (done) ->
+          ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --load-file-refs"
+
+          app = express()
+
+          app.get '/machines', (req, res) ->
+            res.setHeader 'Content-Type', 'application/json'
+            machine =
+              typO: 'bulldozer'
+              name: 'willy'
+            response = [machine]
+            res.status(200).send response
+
+          server = app.listen PORT, () ->
+            execCommand cmd, () ->
+              server.close()
+
+          server.on 'close', done
+
+        it 'exit status should be 1', () ->
+          assert.equal exitStatus, 1

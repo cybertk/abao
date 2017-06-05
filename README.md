@@ -213,6 +213,9 @@ Options:
                     running tests                                       [string]
   --schemas, -s     Specify a pattern to match schema files to be loaded for use
                     as JSON refs                                        [string]
+  --load-file-refs  For schema's containing $ref's which target the local
+                    filesystem, automatically expand those $ref's relative to
+                    the CWD of abao                                    [boolean]
   --reporter, -r    Specify the reporter to use       [string] [default: "spec"]
   --header, -h      Add header to include in each request. The header must be in
                     KEY:VALUE format, e.g. "-h Accept:application/json".

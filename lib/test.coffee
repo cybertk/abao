@@ -3,6 +3,7 @@ request = require 'request'
 _ = require 'underscore'
 async = require 'async'
 tv4 = require 'tv4'
+$RefParser = require 'json-schema-ref-parser'
 fs = require 'fs'
 glob = require 'glob'
 
@@ -14,7 +15,8 @@ String::contains = (it) ->
 
 
 class TestFactory
-  constructor: (schemaLocation) ->
+  constructor: (schemaLocation, @loadFileRefs) ->
+    @loadFileRefs ?= false
     if schemaLocation
 
       files = glob.sync schemaLocation
@@ -26,11 +28,12 @@ class TestFactory
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: (name, contentTest) ->
-    return new Test(name, contentTest)
+    loadFileRefs = @loadFileRefs
+    return new Test(name, contentTest, loadFileRefs)
 
 
 class Test
-  constructor: (@name, @contentTest) ->
+  constructor: (@name, @contentTest, @loadFileRefs) ->
     @name ?= ''
     @skip = false
 
@@ -46,6 +49,7 @@ class Test
     @response =
       status: ''
       schema: null
+      expanded_schema: null
       headers: null
       body: null
 
@@ -60,6 +64,8 @@ class Test
     return path
 
   run: (callback) ->
+    expandSchema = @expandSchema
+    saveExpandedSchema = @saveExpandedSchema
     assertResponse = @assertResponse
     contentTest = @contentTest
 
@@ -73,6 +79,12 @@ class Test
 
     async.waterfall [
       (callback) ->
+        expandSchema callback
+      ,
+      (expanded_schema, callback) ->
+        saveExpandedSchema expanded_schema, callback
+      ,
+      (callback) ->
         request options, (error, response, body) ->
           callback null, error, response, body
       ,
@@ -80,6 +92,28 @@ class Test
         assertResponse(error, response, body)
         contentTest(response, body, callback)
     ], callback
+
+  expandSchema: (callback) =>
+    # If loadFileRefs is falsy, the user does not want
+    # to expand local file refs, so we disable ref expansion
+    # We always disable URL ref parsing, since tv4 already does that
+    if @response.schema && @loadFileRefs
+      schema = @response.schema
+      options = {
+        resolve: {
+          http: false
+        }
+      }
+      $RefParser.dereference schema, options, callback
+    else
+      callback null, null
+
+  saveExpandedSchema: (expanded_schema, callback) =>
+    if expanded_schema != null
+      @response.expanded_schema = expanded_schema
+    else
+      @response.expanded_schema = @response.schema
+    callback null
 
   assertResponse: (error, response, body) =>
     assert.isNull error
@@ -95,10 +129,12 @@ class Test
       Error
     """
     response.status = response.statusCode
-
-    # Body
     if @response.schema
-      schema = @response.schema
+      assert.isNotNull body, """
+        Got null response body.  Schema:  #{JSON.stringify(@response.schema, null, 4)}
+      """
+      # Use expanded schema here
+      schema = @response.expanded_schema
       validateJson = _.partial JSON.parse, body
       body = '[empty]' if body is ''
       assert.doesNotThrow validateJson, JSON.SyntaxError, """
@@ -106,7 +142,6 @@ class Test
         #{body}
         Error
       """
-
       json = validateJson()
       result = tv4.validateResult json, schema
       assert.lengthOf result.missing, 0, """
@@ -119,10 +154,6 @@ class Test
         #{JSON.stringify(json, null, 4)}
         Error
       """
-
-      # Update @response
       @response.body = json
 
-
 module.exports = TestFactory
-
