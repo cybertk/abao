@@ -243,8 +243,17 @@ $ npm test
 
 ## Contribution
 
-**Abao** is always looking for new ideas to make the codebase useful.
-If you think of something that would make life easier, please submit an issue.
+**Abao** is an open source project and your contribution is very much appreciated.
+
+1. Check for open issues or open a fresh issue to start a discussion around a feature idea or a bug.
+2. Fork the repository on Github and make your changes on the develop branch (or branch off of it). 
+3. Run npm run lint before committing to check for common problems and auto format all code.
+4. Add an example of the new feature to example.raml (if applicable)
+5. Send a pull request (with the develop branch as the target).
+
+If your pull request is merged feel free to ask for push access. We want to get more maintainers! If you do have push access, please still work on feature branches and create pull requests, which then get reviewed. You can also review other people's pull requests and be involved in that way.
+
+A big thank you goes out to everyone who helped with the project, the contributors and everyone who took the time to report issues and give feedback.
 
 [RAML]: http://raml.org/
 [Mocha]: http://mochajs.org/
