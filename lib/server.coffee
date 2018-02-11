@@ -14,5 +14,5 @@ app.get '/machines', (req, res) ->
   res.status(200).send response
 
 server = app.listen PORT, () ->
-  console.log('server started')
+  console.log 'server started'
 
