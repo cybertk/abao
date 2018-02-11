@@ -11,13 +11,13 @@ module.exports = (grunt) ->
     watch:
       all:
         files: [
-          "Gruntfile.coffee"
-          "lib/**/*.coffee"
-          "test/**/*.coffee"
+          'Gruntfile.coffee'
+          'lib/**/*.coffee'
+          'test/**/*.coffee'
         ]
         tasks: [
-          "coffeecov"
-          "mochaTest"
+          'coffeecov'
+          'mochaTest'
         ]
         options:
           nospawn: true
@@ -57,15 +57,16 @@ module.exports = (grunt) ->
   grunt.registerTask 'uploadCoverage', ->
     grunt.task.run 'shell:coveralls'
 
-  grunt.registerTask "default", [
-    "watch"
-    "mochaTest"
+  grunt.registerTask 'default', [
+    'watch'
+    'mochaTest'
   ]
 
-  grunt.registerTask "test", [
-    "coffeelint"
-    "coffeecov"
-    "mochaTest"
+  grunt.registerTask 'test', [
+    'coffeelint'
+    'coffeecov'
+    'mochaTest'
   ]
 
   return
+
