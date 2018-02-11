@@ -52,7 +52,7 @@ module.exports = (grunt) ->
 
     shell:
       coveralls:
-        command: 'cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js lib'
+        command: 'coverage/coverage.lcov > ./node_modules/coveralls/bin/coveralls.js lib'
 
   grunt.registerTask 'uploadCoverage', ->
     grunt.task.run 'shell:coveralls'
