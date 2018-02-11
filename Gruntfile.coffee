@@ -7,31 +7,37 @@ module.exports = (grunt) ->
 
   grunt.initConfig
 
-    # Watching changes files *.coffee,
     watch:
-      all:
-        files: [
-          'Gruntfile.coffee'
-          'lib/**/*.coffee'
-          'test/**/*.coffee'
-        ]
+      options:
+        spawn: false
+      lib:
+        files: 'lib/**/*.coffee'
         tasks: [
           'coffeecov'
           'mochaTest'
         ]
-        options:
-          nospawn: true
+      test:
+        files: 'test/**/*.coffee'
+        tasks: [
+          'coffeecov'
+          'mochaTest'
+        ]
+      gruntfile:
+        files: 'Gruntfile.coffee'
+        tasks: [
+          'coffeelint:gruntfile'
+        ]
 
     coffeelint:
       default:
         src: [
-          'Gruntfile.coffee'
           'lib/**/*.coffee'
           'test/**/*.coffee'
         ]
-      options: {
+      gruntfile:
+        src: 'Gruntfile.coffee'
+      options:
         configFile: 'coffeelint.json'
-      }
 
     coffeecov:
       compile:
@@ -45,7 +51,7 @@ module.exports = (grunt) ->
           require: 'coffee-script/register'
         src: [
           # Unit Test
-          'test/unit/*.coffee'
+          'test/unit/*-test.coffee'
           # Acceptance Test
           'test/cli-test.coffee'
         ]
