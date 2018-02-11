@@ -15,7 +15,7 @@ addHooks = proxyquire  '../../lib/add-hooks', {
   'path': pathStub
 }
 
-describe 'addHooks(hooks, pattern, callback)', () ->
+describe 'addHooks(hooks, pattern)', () ->
 
   transactions = {}
 
