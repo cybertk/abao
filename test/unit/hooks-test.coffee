@@ -391,3 +391,4 @@ describe 'Hooks', () ->
     it 'should get added to the set of hooks', () ->
       hooks.skip test_name
       assert.include(hooks.skippedTests, test_name)
+

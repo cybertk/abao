@@ -252,3 +252,4 @@ If you think of something that would make life easier, please submit an issue.
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
 [baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
+
