@@ -27,7 +27,7 @@ describe 'addHooks(hooks, pattern)', () ->
     after () ->
       globStub.sync.restore()
 
-    it 'should return immediately', ->
+    it 'should return immediately', () ->
       addHooks(hooksStub, '')
       assert.ok globStub.sync.notCalled
 

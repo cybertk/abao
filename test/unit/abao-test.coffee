@@ -24,18 +24,18 @@ should = chai.should()
 chai.use(sinonChai)
 
 
-describe 'Abao', ->
+describe 'Abao', () ->
 
-  describe '#constructor', ->
+  describe '#constructor', () ->
 
-    describe 'with valid config', ->
+    describe 'with valid config', () ->
 
-      it 'should create a new instance', ->
+      it 'should create a new instance', () ->
         abao = new Abao()
         abao.should.not.be.null
 
 
-  describe '#run', ->
+  describe '#run', () ->
 
     abao = ''
     callback = undefined
@@ -45,6 +45,6 @@ describe 'Abao', ->
       callback.returns(done())
       abao.run callback
 
-    it 'should invoke callback', ->
+    it 'should invoke callback', () ->
       callback.should.be.called
 

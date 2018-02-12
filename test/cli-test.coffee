@@ -45,7 +45,7 @@ execCommand = (cmd, callback) ->
     exitStatus = code if exitStatus == null and code != undefined
     callback()
 
-describe 'Command line interface', ->
+describe 'Command line interface', () ->
 
   describe 'when run with "one and done" options', (done) ->
 
@@ -55,14 +55,14 @@ describe 'Command line interface', ->
         reporters = ''
 
         before (done) ->
-          execCommand "#{MOCHA_BIN} --reporters", ->
+          execCommand "#{MOCHA_BIN} --reporters", () ->
             reporters = stdout
             execCommand "#{ABAO_BIN} --reporters", done
 
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should print same output as `mocha --reporters`', ->
+        it 'should print same output as `mocha --reporters`', () ->
           assert.equal stdout, reporters
 
 
@@ -72,10 +72,10 @@ describe 'Command line interface', ->
 
           execCommand cmd, done
 
-        it 'should exit with status 0', ->
+        it 'should exit with status 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should print version number to stdout', ->
+        it 'should print version number to stdout', () ->
           assert.equal stdout.trim(), pjson.version
 
 
@@ -85,15 +85,15 @@ describe 'Command line interface', ->
 
           execCommand cmd, done
 
-        it 'should exit with status 0', ->
+        it 'should exit with status 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should print usage to stdout', ->
+        it 'should print usage to stdout', () ->
           assert.equal stdout.split('\n')[0], 'Usage:'
 
     describe 'when RAML argument required', () ->
 
-      describe 'when invoked with "--names" option', ->
+      describe 'when invoked with "--names" option', () ->
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --names"
@@ -121,7 +121,7 @@ describe 'Command line interface', ->
           it 'exit status should be 0', () ->
             assert.equal exitStatus, 0
 
-          it 'should print skeleton hookfile', ->
+          it 'should print skeleton hookfile', () ->
             assert.include stdout, '// ABAO hooks file'
 
           it 'should not run tests', () ->
@@ -139,7 +139,7 @@ describe 'Command line interface', ->
           it 'exit status should be 0', () ->
             assert.equal exitStatus, 0
 
-          it 'should print skeleton hookfile', ->
+          it 'should print skeleton hookfile', () ->
             assert.include stdout, '// ABAO hooks file'
 
           it 'should not run tests', () ->
@@ -156,7 +156,7 @@ describe 'Command line interface', ->
         it 'exit status should be 1', () ->
           assert.equal exitStatus, 1
 
-        it 'should print error message to stderr', ->
+        it 'should print error message to stderr', () ->
           assert.include stderr, 'Implications failed:'
           assert.include stderr, 'template -> generate-hooks'
 
@@ -168,10 +168,10 @@ describe 'Command line interface', ->
 
       execCommand cmd, done
 
-    it 'should exit with status 1', ->
+    it 'should exit with status 1', () ->
       assert.equal exitStatus, 1
 
-    it 'should print error message to stderr', ->
+    it 'should print error message to stderr', () ->
       # See https://travis-ci.org/cybertk/abao/jobs/76656192#L479
       # iojs behaviour is different from nodejs
       assert.include stderr, 'Error: ENOENT'
@@ -186,10 +186,10 @@ describe 'Command line interface', ->
 
           execCommand cmd, done
 
-        it 'should exit with status 1', ->
+        it 'should exit with status 1', () ->
           assert.equal exitStatus, 1
 
-        it 'should print error message to stderr', ->
+        it 'should print error message to stderr', () ->
           assert.include stderr, 'no API endpoint specified'
 
       describe 'when RAML file does specify "baseUri"', () ->
@@ -217,11 +217,11 @@ describe 'Command line interface', ->
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should print count of tests run', ->
+        it 'should print count of tests run', () ->
           assert.equal 1, report.tests.length
           assert.equal 1, report.passes.length
 
-        it 'should print correct title for response', ->
+        it 'should print correct title for response', () ->
           assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
     describe 'when executing the command and the server is responding as specified in the RAML', () ->
@@ -248,11 +248,11 @@ describe 'Command line interface', ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests run', ->
+      it 'should print count of tests run', () ->
         assert.equal 1, report.tests.length
         assert.equal 1, report.passes.length
 
-      it 'should print correct title for response', ->
+      it 'should print correct title for response', () ->
         assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
     describe 'when executing the command and RAML includes other RAML files', () ->
@@ -279,12 +279,12 @@ describe 'Command line interface', ->
       it 'exit status should be 0', () ->
         assert.equal exitStatus, 0
 
-      it 'should print count of tests run', ->
+      it 'should print count of tests run', () ->
         assert.include stdout, '1 passing'
 
-    describe 'when called with arguments', ->
+    describe 'when called with arguments', () ->
 
-      describe 'when invoked with "--reporter" option', ->
+      describe 'when invoked with "--reporter" option', () ->
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
@@ -305,10 +305,10 @@ describe 'Command line interface', ->
 
           server.on 'close', done
 
-        it 'should print using the specified reporter', ->
+        it 'should print using the specified reporter', () ->
           assert.include stdout, '1 passing'
 
-      describe 'when invoked with "--header" option', ->
+      describe 'when invoked with "--header" option', () ->
 
         receivedRequest = {}
 
@@ -339,7 +339,7 @@ describe 'Command line interface', ->
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should print count of tests run', ->
+        it 'should print count of tests run', () ->
           assert.include stdout, '1 passing'
 
 
@@ -372,7 +372,7 @@ describe 'Command line interface', ->
           assert.equal receivedRequest.headers['header'], '123232323'
           assert.equal receivedRequest.query['key'], 'value'
 
-        it 'should print message to stdout and stderr', ->
+        it 'should print message to stdout and stderr', () ->
           assert.include stdout, 'before-hook-GET-machines'
           assert.include stderr, 'after-hook-GET-machines'
 
@@ -401,7 +401,7 @@ describe 'Command line interface', ->
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
-        it 'should not run test without hooks', ->
+        it 'should not run test without hooks', () ->
           assert.include stdout, '1 pending'
 
       describe 'when invoked with "--timeout" option', () ->
@@ -427,10 +427,10 @@ describe 'Command line interface', ->
         it 'exit status should be 1', () ->
           assert.equal exitStatus, 1
 
-        it 'should exit before timeout', ->
+        it 'should exit before timeout', () ->
           assert.ok cost < 200
 
-        it 'should not run test without hooks', ->
+        it 'should not run test without hooks', () ->
           assert.include stdout, '0 passing'
 
       describe 'when invoked with "--schema" option', () ->
