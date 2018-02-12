@@ -77,11 +77,13 @@ describe 'addHooks(hooks, pattern)', () ->
     describe 'when there is an error reading the hook files', () ->
 
       beforeEach () ->
-        sinon.stub pathStub, 'resolve', (path, rel) ->
-          throw new Error()
+        sinon.stub pathStub, 'resolve'
+          .callsFake (path, rel) ->
+            throw new Error()
         sinon.spy console, 'error'
-        sinon.stub globStub, 'sync', (pattern) ->
-          ['invalid.xml', 'unexist.md']
+        sinon.stub globStub, 'sync'
+          .callsFake (pattern) ->
+            ['invalid.xml', 'unexist.md']
         sinon.spy hooksStub, 'addHook'
 
       afterEach () ->

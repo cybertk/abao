@@ -72,31 +72,37 @@ describe 'Test Runner', () ->
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
-        sinon.stub mocha.Suite, 'create', (parent, title) ->
-          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
+        sinon.stub mocha.Suite, 'create'
+          .callsFake (parent, title) ->
+            suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
 
-          # Stub suite
-          originSuiteBeforeAll = suiteStub.beforeAll
-          originSuiteAfterAll = suiteStub.afterAll
-          sinon.stub suiteStub, 'beforeAll', (title, fn) ->
-            beforeHook = fn
-            originSuiteBeforeAll.call(suiteStub, title, fn)
-          sinon.stub suiteStub, 'afterAll', (title, fn) ->
-            afterHook = fn
-            originSuiteAfterAll.call(suiteStub, title, fn)
+            # Stub suite
+            originSuiteBeforeAll = suiteStub.beforeAll
+            originSuiteAfterAll = suiteStub.afterAll
+            sinon.stub suiteStub, 'beforeAll'
+              .callsFake (title, fn) ->
+                beforeHook = fn
+                originSuiteBeforeAll.call(suiteStub, title, fn)
+            sinon.stub suiteStub, 'afterAll'
+              .callsFake (title, fn) ->
+                afterHook = fn
+                originSuiteAfterAll.call(suiteStub, title, fn)
 
-          suiteStub
+            suiteStub
 
-        sinon.stub mochaStub, 'run', (callback) ->
-          callback(0)
+        sinon.stub mochaStub, 'run'
+          .callsFake (callback) ->
+            callback(0)
 
         sinon.spy mochaStub.suite, 'beforeAll'
         sinon.spy mochaStub.suite, 'afterAll'
 
-        sinon.stub hooksStub, 'runBefore', (test, callback) ->
-          callback()
-        sinon.stub hooksStub, 'runAfter', (test, callback) ->
-          callback()
+        sinon.stub hooksStub, 'runBefore'
+          .callsFake (test, callback) ->
+            callback()
+        sinon.stub hooksStub, 'runAfter'
+          .callsFake (test, callback) ->
+            callback()
 
         runner.run [test], hooksStub, runCallback
 
@@ -169,8 +175,9 @@ describe 'Test Runner', () ->
           server: "#{ABAO_IO_SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub test, 'run', (callback) ->
-          callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         # Mute stdout/stderr
         mute (unmute) ->
@@ -197,8 +204,12 @@ describe 'Test Runner', () ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
@@ -236,8 +247,12 @@ describe 'Test Runner', () ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
         hooksStub.skippedTests = [test.name]
         runner.run [test], hooksStub, done
 
@@ -272,8 +287,12 @@ describe 'Test Runner', () ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
@@ -357,8 +376,9 @@ describe 'Test Runner', () ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub test, 'run', (callback) ->
-          callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         # Mute stdout/stderr
         mute (unmute) ->
@@ -393,7 +413,9 @@ describe 'Test Runner', () ->
           names: true
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
         sinon.spy console, 'log'
 
         # Mute stdout/stderr
@@ -434,9 +456,10 @@ describe 'Test Runner', () ->
           header: header
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) ->
-          receivedTest = _.clone(test)
-          callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            receivedTest = _.clone(test)
+            callback()
 
         runner.run [test], hooksStub, done
 
@@ -471,18 +494,20 @@ describe 'Test Runner', () ->
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
-        sinon.stub mocha.Suite, 'create', (parent, title) ->
-          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
+        sinon.stub mocha.Suite, 'create'
+          .callsFake (parent, title) ->
+            suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
 
-          # Stub suite
-          sinon.spy suiteStub, 'addTest'
-          sinon.spy suiteStub, 'beforeAll'
-          sinon.spy suiteStub, 'afterAll'
+            # Stub suite
+            sinon.spy suiteStub, 'addTest'
+            sinon.spy suiteStub, 'beforeAll'
+            sinon.spy suiteStub, 'afterAll'
 
-          suiteStub
+            suiteStub
 
-        sinon.stub mochaStub, 'run', (callback) ->
-          callback()
+        sinon.stub mochaStub, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
