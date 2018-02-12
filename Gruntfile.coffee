@@ -11,7 +11,7 @@ module.exports = (grunt) ->
       options:
         spawn: false
       lib:
-        files: 'lib/**/*.coffee'
+        files: 'lib/*.coffee'
         tasks: [
           'coffeecov'
           'mochaTest'
@@ -31,7 +31,7 @@ module.exports = (grunt) ->
     coffeelint:
       default:
         src: [
-          'lib/**/*.coffee'
+          'lib/*.coffee'
           'test/**/*.coffee'
         ]
       gruntfile:
@@ -58,7 +58,7 @@ module.exports = (grunt) ->
 
     shell:
       coveralls:
-        command: 'coverage/coverage.lcov > ./node_modules/coveralls/bin/coveralls.js lib'
+        command: './node_modules/coveralls/bin/coveralls.js lib < coverage/coverage.lcov'
 
   grunt.registerTask 'uploadCoverage', ->
     grunt.task.run 'shell:coveralls'
