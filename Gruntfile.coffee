@@ -27,7 +27,7 @@ module.exports = (grunt) ->
           'mochaTest'
         ]
       gruntfile:
-        files: <%= gruntfile %>
+        files: '<%= gruntfile %>'
         tasks: [
           'coffeelint:gruntfile'
         ]
@@ -39,7 +39,7 @@ module.exports = (grunt) ->
           'test/**/*.coffee'
         ]
       gruntfile:
-        src: <%= gruntfile %>
+        src: '<%= gruntfile %>'
       options:
         configFile: 'coffeelint.json'
 
@@ -63,13 +63,6 @@ module.exports = (grunt) ->
     coveralls:
       upload:
           src: 'coverage/coverage.lcov'
-
-#    shell:
-#      coveralls:
-#        command: './node_modules/coveralls/bin/coveralls.js lib < coverage/coverage.lcov'
-#
-#  grunt.registerTask 'uploadCoverage', ->
-#    grunt.task.run 'shell:coveralls'
 
   grunt.registerTask 'uploadCoverage', ->
     grunt.task.run 'coveralls:upload'
