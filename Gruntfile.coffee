@@ -62,7 +62,7 @@ module.exports = (grunt) ->
 
     coveralls:
       upload:
-          src: 'coverage/coverage.lcov'
+        src: 'coverage/coverage.lcov'
 
   grunt.registerTask 'uploadCoverage', ->
     grunt.task.run 'coveralls:upload'
