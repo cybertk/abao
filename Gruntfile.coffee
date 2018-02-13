@@ -6,6 +6,10 @@ module.exports = (grunt) ->
   require('load-grunt-config') grunt
 
   grunt.initConfig
+    # Load in the module information
+    pkg: grunt.file.readJSON 'package.json'
+
+    gruntfile: 'Gruntfile.coffee'
 
     watch:
       options:
@@ -23,7 +27,7 @@ module.exports = (grunt) ->
           'mochaTest'
         ]
       gruntfile:
-        files: 'Gruntfile.coffee'
+        files: <%= gruntfile %>
         tasks: [
           'coffeelint:gruntfile'
         ]
@@ -35,7 +39,7 @@ module.exports = (grunt) ->
           'test/**/*.coffee'
         ]
       gruntfile:
-        src: 'Gruntfile.coffee'
+        src: <%= gruntfile %>
       options:
         configFile: 'coffeelint.json'
 
@@ -56,12 +60,19 @@ module.exports = (grunt) ->
           'test/cli-test.coffee'
         ]
 
-    shell:
-      coveralls:
-        command: './node_modules/coveralls/bin/coveralls.js lib < coverage/coverage.lcov'
+    coveralls:
+      upload:
+          src: 'coverage/coverage.lcov'
+
+#    shell:
+#      coveralls:
+#        command: './node_modules/coveralls/bin/coveralls.js lib < coverage/coverage.lcov'
+#
+#  grunt.registerTask 'uploadCoverage', ->
+#    grunt.task.run 'shell:coveralls'
 
   grunt.registerTask 'uploadCoverage', ->
-    grunt.task.run 'shell:coveralls'
+    grunt.task.run 'coveralls:upload'
 
   grunt.registerTask 'default', [
     'watch'
