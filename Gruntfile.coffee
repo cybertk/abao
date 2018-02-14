@@ -12,10 +12,13 @@ module.exports = (grunt) ->
 
     gruntfile: 'Gruntfile.coffee'
 
-    clean: [
-      'coverage',
-      'lib/*.js'
-    ]
+    clean:
+      cover: [
+        'coverage'
+      ],
+      instrumented: [
+        'lib/*.js'
+      ]
 
     watch:
       options:
@@ -60,10 +63,8 @@ module.exports = (grunt) ->
           reporter: 'mocha-phantom-coverage-reporter'
           require: 'coffee-script/register'
         src: [
-          # Unit Test
           'test/unit/*-test.coffee'
-          # Acceptance Test
-          'test/cli-test.coffee'
+          'test/e2e/cli-test.coffee'
         ]
 
     coveralls:
