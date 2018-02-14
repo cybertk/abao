@@ -47,7 +47,42 @@ execCommand = (cmd, callback) ->
 
 describe 'Command line interface', () ->
 
-  describe 'when run with "one and done" options', (done) ->
+  describe 'when run without any arguments', (done) ->
+
+    before (done) ->
+      cmd = "#{ABAO_BIN}"
+
+      execCommand cmd, done
+
+    it 'should exit with status 1', () ->
+      assert.equal exitStatus, 1
+
+    it 'should print usage to stderr', () ->
+      assert.equal stderr.split('\n')[0], 'Usage:'
+
+    it 'should print error message to stderr', () ->
+      assert.include stderr, 'must specify path to RAML file'
+
+
+  describe 'when run with multiple positional arguments', (done) ->
+
+    before (done) ->
+      ramlFile = "#{RAML_DIR}/single-get.raml"
+      cmd = "#{ABAO_BIN} #{ramlFile} #{ramlFile}"
+
+      execCommand cmd, done
+
+    it 'should exit with status 1', () ->
+      assert.equal exitStatus, 1
+
+    it 'should print usage to stderr', () ->
+      assert.equal stderr.split('\n')[0], 'Usage:'
+
+    it 'should print error message to stderr', () ->
+      assert.include stderr, 'accepts single positional command-line argument'
+
+
+  describe 'when run with one-and-done options', (done) ->
 
     describe 'when RAML argument unnecessary', () ->
 
