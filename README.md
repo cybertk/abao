@@ -2,8 +2,8 @@
 > RAML testing tool
 
 [![Gitter](https://badges.gitter.im/cybertk/abao.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Stories in Ready](https://badge.waffle.io/cybertk/abao.svg?label=ready&title=Ready)](http://waffle.io/cybertk/abao)
-[![Build Status](http://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
+[![Stories in Ready](https://badge.waffle.io/cybertk/abao.svg?label=ready&title=Ready)](https://waffle.io/cybertk/abao)
+[![Build Status](https://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
 [![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
 [![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
 [![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
@@ -246,8 +246,8 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
-[RAML]: http://raml.org/
-[Mocha]: http://mochajs.org/
+[RAML]: https://raml.org/
+[Mocha]: https://mochajs.org/
 [JSONSchema]: http://json-schema.org/
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
