@@ -5,11 +5,17 @@ module.exports = (grunt) ->
   # Dynamically load npm tasks
   require('load-grunt-config') grunt
 
+  # Initialize configuration object
   grunt.initConfig
     # Load in the module information
     pkg: grunt.file.readJSON 'package.json'
 
     gruntfile: 'Gruntfile.coffee'
+
+    clean: [
+      'coverage',
+      'lib/*.js'
+    ]
 
     watch:
       options:
@@ -17,13 +23,13 @@ module.exports = (grunt) ->
       lib:
         files: 'lib/*.coffee'
         tasks: [
-          'coffeecov'
+          'instrument'
           'mochaTest'
         ]
       test:
         files: 'test/**/*.coffee'
         tasks: [
-          'coffeecov'
+          'instrument'
           'mochaTest'
         ]
       gruntfile:
@@ -44,7 +50,7 @@ module.exports = (grunt) ->
         configFile: 'coffeelint.json'
 
     coffeecov:
-      compile:
+      transpile:
         src: 'lib'
         dest: 'lib'
 
@@ -64,19 +70,27 @@ module.exports = (grunt) ->
       upload:
         src: 'coverage/coverage.lcov'
 
-  grunt.registerTask 'uploadCoverage', ->
-    grunt.task.run 'coveralls:upload'
+  # Register alias tasks
+  grunt.registerTask 'cover', [
+    'clean',
+    'instrument',
+    'mochaTest'
+  ]
 
   grunt.registerTask 'default', [
     'watch'
     'mochaTest'
   ]
 
+  grunt.registerTask 'instrument', [ 'coffeecov' ]
+  grunt.registerTask 'lint', [ 'coffeelint' ]
+
   grunt.registerTask 'test', [
-    'coffeelint'
-    'coffeecov'
-    'mochaTest'
+    'lint'
+    'cover'
   ]
+
+  grunt.registerTask 'uploadCoverage', [ 'coveralls:upload' ]
 
   return
 
