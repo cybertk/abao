@@ -91,7 +91,5 @@ module.exports = (grunt) ->
     'cover'
   ]
 
-  grunt.registerTask 'uploadCoverage', [ 'coveralls:upload' ]
-
   return
 
