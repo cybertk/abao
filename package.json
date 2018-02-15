@@ -43,7 +43,7 @@
     "source-map-support": "^0.4.0",
     "tv4": "^1.2.7",
     "underscore": "^1.8.2",
-    "yargs": "~6.6.0"
+    "yargs": "~7.1.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.14",
