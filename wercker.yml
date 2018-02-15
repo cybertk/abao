@@ -2,7 +2,7 @@
 ### wercker.yml
 ###
 
-box: node:4.8.7
+box: node:latest
 
 # Build definition
 build:
