@@ -3,7 +3,7 @@
 ###
 
 box:
-  id: nodesource/trusty
+  id: node:latest
 
 # Build definition
 build:
