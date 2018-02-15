@@ -2,7 +2,7 @@
 ### wercker.yml
 ###
 
-box: nodesource/trusty:4
+box: nodesource/trusty:argon
 
 # Build definition
 build:
