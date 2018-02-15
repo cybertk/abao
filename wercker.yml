@@ -2,7 +2,8 @@
 ### wercker.yml
 ###
 
-box: nodesource/trusty:4.4.6
+box:
+  id: nodesource/trusty
 
 # Build definition
 build:
