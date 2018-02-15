@@ -5,6 +5,9 @@ yargs = require 'yargs'
 Abao = require '../lib/abao'
 pkg = require '../package'
 
+EXIT_SUCCESS = 0
+EXIT_FAILURE = 1
+
 showReporters = () ->
   # Copied from node_modules/mocha/_mocha
   console.log()
@@ -34,8 +37,9 @@ argv = yargs
   .check((argv) ->
     if argv.reporters == true
       showReporters()
-      process.exit 0
+      process.exit EXIT_SUCCESS
 
+    # Ensure single positional argument present
     if argv._.length < 1
       throw new Error binary + ': must specify path to RAML file'
     else if argv._.length > 1
@@ -57,11 +61,14 @@ abao = new Abao configuration
 
 abao.run (error, nfailures) ->
   if error
+    process.exitCode = EXIT_FAILURE
     if error.message
       console.error error.message
     if error.stack
       console.error error.stack
-    process.exit 1
 
-  process.exit (if nfailures > 0 then 1 else 0)
+  if nfailures > 0
+    process.exitCode = EXIT_FAILURE
+
+  process.exit()
 
