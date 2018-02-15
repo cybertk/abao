@@ -2,7 +2,7 @@
 ### wercker.yml
 ###
 
-box: node:argon
+box: node:4.8.7
 
 # Build definition
 build:
