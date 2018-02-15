@@ -2,7 +2,7 @@
 ### wercker.yml
 ###
 
-box: node
+box: node:6.9.1
 
 # Build definition
 build:
