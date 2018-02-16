@@ -2,7 +2,7 @@
 ### wercker.yml
 ###
 
-box: nodesource/node
+box: node
 
 # Build definition
 build:
