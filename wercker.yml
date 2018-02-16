@@ -8,14 +8,12 @@ box: wercker/nodejs
 build:
   # The steps that will be executed on build
   steps:
+    # Replace ancient version of Node (v0.10.38) that comes with container
+    - bigtruedata/node-install:
+        version: 8.9.4
     # A custom script step
     - script:
         code: export NODE_ENV='testing'
-    # A step that executes `npm install` command
-    - npm-install
-    # A step that executes `npm test` command
-    - npm-test
-
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
     - script:
@@ -23,3 +21,8 @@ build:
         code: |
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
+    # A step that executes `npm install` command
+    - npm-install
+    # A step that executes `npm test` command
+    - npm-test
+
