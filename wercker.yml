@@ -13,9 +13,15 @@ build:
         code: |
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
+    - script:
+        name: echo user
+        code: |
+          echo "USER: $USER"
     # Replace ancient version of Node (v0.10.38) that comes with container
-    - bigtruedata/node-install@1.1.0:
-        version: 8.9.4
+#    - bigtruedata/node-install@1.1.0:
+#        version: 8.9.4
+    - install-packages:
+        packages: node
     # A custom script step
     - script:
         code: export NODE_ENV='testing'
