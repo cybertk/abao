@@ -8,8 +8,13 @@ box: wercker/nodejs
 build:
   # The steps that will be executed on build
   steps:
+    - script:
+        name: echo nodejs information
+        code: |
+          echo "node version $(node -v) running"
+          echo "npm version $(npm -v) running"
     # Replace ancient version of Node (v0.10.38) that comes with container
-    - bigtruedata/node-install:
+    - bigtruedata/node-install@1.1.0:
         version: 8.9.4
     # A custom script step
     - script:
