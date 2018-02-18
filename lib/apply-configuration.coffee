@@ -12,17 +12,18 @@ applyConfiguration = (config) ->
     else if value instanceof Array
       value
     else value
+    return value
 
   coerceToDict = (value) ->
     array = coerceToArray value
-    @dict = {}
+    dict = {}
 
     if array.length > 0
       for item in array
-        splitItem = item.split(':')
-        @dict[splitItem[0]] = splitItem[1]
+        [key, value] = item.split(':')
+        dict[key] = value
 
-    return @dict
+    return dict
 
   configuration =
     ramlPath: null
