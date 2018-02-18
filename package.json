@@ -5,6 +5,7 @@
   "bin": "bin/abao",
   "main": "lib/index.js",
   "scripts": {
+    "commit": "git-cz",
     "test": "grunt test"
   },
   "repository": {
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "coveralls": "^2.11.14",
+    "cz-conventional-changelog": "^2.1.0",
     "express": "^4.12.0",
     "grunt": "~0.4.5",
     "grunt-cli": "~1.2.0",
@@ -66,5 +68,10 @@
   },
   "engines": {
     "node": ">= 4.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
