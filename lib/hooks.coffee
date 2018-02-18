@@ -1,3 +1,7 @@
+###*
+# @file Hooks class
+###
+
 async = require 'async'
 _ = require 'underscore'
 

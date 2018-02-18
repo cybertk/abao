@@ -1,3 +1,7 @@
+###*
+# @file Command line options
+###
+
 options =
   server:
     description: 'Specify API endpoint to use. The RAML-specified baseUri value will be used if not provided'

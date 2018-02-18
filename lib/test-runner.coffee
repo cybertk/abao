@@ -1,3 +1,7 @@
+###*
+# @file TestRunner class
+###
+
 Mocha = require 'mocha'
 async = require 'async'
 path = require 'path'

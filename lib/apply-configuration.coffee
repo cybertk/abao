@@ -1,3 +1,7 @@
+###*
+# @file Stores command line arguments in configuration object
+###
+
 applyConfiguration = (config) ->
 
   coerceToArray = (value) ->

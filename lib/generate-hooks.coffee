@@ -1,3 +1,7 @@
+###*
+# @file Generates hooks stub file
+###
+
 fs = require 'fs'
 Mustache = require 'mustache'
 

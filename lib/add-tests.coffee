@@ -1,3 +1,7 @@
+###*
+# @file Add tests
+###
+
 async = require 'async'
 _ = require 'lodash'
 csonschema = require 'csonschema'

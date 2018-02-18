@@ -1,3 +1,7 @@
+###*
+# @file Command line interface
+###
+
 require 'coffee-script/register'
 
 path = require 'path'

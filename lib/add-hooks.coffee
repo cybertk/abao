@@ -1,3 +1,7 @@
+###*
+# @file Load user hooks
+###
+
 require 'coffee-script/register'
 proxyquire = require('proxyquire').noCallThru()
 glob = require 'glob'

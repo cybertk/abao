@@ -1,3 +1,7 @@
+###*
+# @file Abao class
+###
+
 sms = require("source-map-support").install({handleUncaughtExceptions: false})
 ramlParser = require 'raml-parser'
 async = require 'async'
