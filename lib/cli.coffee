@@ -31,12 +31,19 @@ showReporters = () ->
   console.log()
   return
 
+mochaOptionNames = [
+  'grep',
+  'invert'
+  'reporter',
+  'timeout'
+]
 binary = path.basename pkg.bin
 
 argv = yargs
   .usage('Usage:\n  ' + binary + ' </path/to/raml> [OPTIONS]' +
     '\n\nExample:\n  ' + binary + ' api.raml --server http://api.example.com')
   .options(Abao.options)
+  .group(mochaOptionNames, 'Options passed to Mocha:')
   .implies('template', 'generate-hooks')
   .check((argv) ->
     if argv.reporters == true
@@ -48,7 +55,6 @@ argv = yargs
       throw new Error binary + ': must specify path to RAML file'
     else if argv._.length > 1
       throw new Error binary + ': accepts single positional command-line argument'
-
     return true
   )
   .wrap(80)
