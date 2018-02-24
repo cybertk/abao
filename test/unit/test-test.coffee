@@ -102,7 +102,7 @@ describe 'Test', () ->
         assert.isTrue contentTestCalled
 
 
-    describe 'of test contains params', () ->
+    describe 'of test that contains params', () ->
 
       test = ''
       machine = ''
@@ -252,11 +252,12 @@ describe 'Test', () ->
         type:
           type: 'string'
         name:
-          type: 'string'}
+          type: 'string'
+    }
 
-    describe 'when against valid response', () ->
+    describe 'when given valid response', () ->
 
-      it 'should should pass all asserts', () ->
+      it 'should pass all asserts', () ->
 
         errorStub = null
         responseStub =
@@ -267,25 +268,26 @@ describe 'Test', () ->
         # assert.doesNotThrow
         test.assertResponse(errorStub, responseStub, bodyStub)
 
-    describe 'when response body is null', () ->
+    describe 'when given invalid response', () ->
+      describe 'when response body is null', () ->
 
-      it 'should throw AssertionError', () ->
+        it 'should throw AssertionError', () ->
 
-        errorStub = null
-        responseStub =
-          statusCode : 201
-        bodyStub = null
-        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
-        assert.throw fn, chai.AssertionError
+          errorStub = null
+          responseStub =
+            statusCode : 201
+          bodyStub = null
+          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          assert.throw fn, chai.AssertionError
 
-    describe 'when response body is invalid json', () ->
+      describe 'when response body is invalid JSON', () ->
 
-      it 'should throw AssertionError', () ->
+        it 'should throw AssertionError', () ->
 
-        errorStub = null
-        responseStub =
-          statusCode : 201
-        bodyStub = 'Im invalid'
-        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
-        assert.throw fn, chai.AssertionError
+          errorStub = null
+          responseStub =
+            statusCode : 201
+          bodyStub = 'Im invalid'
+          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          assert.throw fn, chai.AssertionError
 
