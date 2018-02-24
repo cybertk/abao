@@ -49,7 +49,6 @@ options =
     type: 'boolean'
 
   schemas:
-    alias: 's'
     description: 'Specify pattern to match schema files to be loaded for use as JSON refs'
     type: 'string'
 
