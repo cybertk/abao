@@ -5,6 +5,7 @@
 require 'coffee-script/register'
 
 path = require 'path'
+_ = require 'lodash'
 yargs = require 'yargs'
 Abao = require '../lib/abao'
 pkg = require '../package'
@@ -55,6 +56,7 @@ argv = yargs
       throw new Error binary + ': must specify path to RAML file'
     else if argv._.length > 1
       throw new Error binary + ': accepts single positional command-line argument'
+
     return true
   )
   .wrap(80)
@@ -63,9 +65,16 @@ argv = yargs
   .epilog('Website:\n  ' + pkg.homepage)
   .argv
 
+aliases = Object.keys(Abao.options).map (key) -> Abao.options[key].alias
+            .filter (val) -> val != undefined
+
 configuration =
   'ramlPath': argv._[0],
-  'options':  argv
+  'options':  _.omit argv, ['_', '$0', aliases...]
+
+mochaOptions = _.pick configuration.options, mochaOptionNames
+configuration.options = _.omit configuration.options, mochaOptionNames
+configuration.options.mocha = mochaOptions
 
 abao = new Abao configuration
 
