@@ -365,7 +365,7 @@ describe 'Hooks', () ->
         hooks.test(test_name, () ->)
       f()
       assert.throw f,
-        "Cannot have more than one test with the name: #{test_name}"
+        "cannot have more than one test with the name: #{test_name}"
 
   describe 'when check skipped', () ->
 
