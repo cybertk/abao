@@ -39,7 +39,7 @@ options =
     type: 'boolean'
 
   reporter:
-    alias: 'r'
+    alias: 'R'
     description: 'Specify reporter to use'
     type: 'string'
     default: 'spec'
