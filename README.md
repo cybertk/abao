@@ -206,31 +206,32 @@ Usage:
 Example:
   abao api.raml --server http://api.example.com
 
+Options passed to Mocha:
+  --grep, -g      Only run tests matching <pattern>                     [string]
+  --invert, -i    Invert --grep matches                                [boolean]
+  --reporter, -R  Specify reporter to use             [string] [default: "spec"]
+  --timeout, -t   Set test case timeout in milliseconds [number] [default: 2000]
+
 Options:
-  --server          Specify the API endpoint to use. The RAML-specified baseUri
-                    value will be used if not provided                  [string]
-  --hookfiles, -f   Specify a pattern to match files with before/after hooks for
+  --generate-hooks  Output hooks generated from template file and exit [boolean]
+  --header, -h      Add header to include in each request. Header must be in
+                    KEY:VALUE format (e.g., "-h Accept:application/json").
+                    Reuse option to add multiple headers                [string]
+  --hookfiles, -f   Specify pattern to match files with before/after hooks for
                     running tests                                       [string]
-  --schemas, -s     Specify a pattern to match schema files to be loaded for use
-                    as JSON refs                                        [string]
-  --reporter, -r    Specify the reporter to use       [string] [default: "spec"]
-  --header, -h      Add header to include in each request. The header must be in
-                    KEY:VALUE format, e.g. "-h Accept:application/json".
-                    Reuse to add multiple headers                       [string]
   --hooks-only, -H  Run test only if defined either before or after hooks
                                                                        [boolean]
-  --grep, -g        Only run tests matching <pattern>                   [string]
-  --invert, -i      Invert --grep matches                              [boolean]
-  --sorted          Sorts requests in a sensible way so that objects are not
-                    modified before they are created. Order: CONNECT, OPTIONS,
-                    POST, GET, HEAD, PUT, PATCH, DELETE, TRACE.        [boolean]
-  --timeout, -t     Set test-case timeout in milliseconds
-                                                        [number] [default: 2000]
-  --template        Specify the template file to use for generating hooks
-                                                                        [string]
   --names, -n       List names of requests and exit                    [boolean]
-  --generate-hooks  Output hooks generated from template file and exit [boolean]
   --reporters       Display available reporters and exit               [boolean]
+  --schemas         Specify pattern to match schema files to be loaded for use
+                    as JSON refs                                        [string]
+  --server          Specify API endpoint to use. The RAML-specified baseUri
+                    value will be used if not provided                  [string]
+  --sorted          Sorts requests in a sensible way so that objects are not
+                    modified before they are created.
+                    Order: CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH,
+                    DELETE, TRACE.                                     [boolean]
+  --template        Specify template file to use for generating hooks   [string]
   --help            Show usage information and exit                    [boolean]
   --version         Show version number and exit                       [boolean]
 ```
