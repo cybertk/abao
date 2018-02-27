@@ -2,38 +2,24 @@
 ### wercker.yml
 ###
 
-box: wercker/nodejs
+box: node:latest
 
-# Build definition
+## Build definition
 build:
-  # The steps that will be executed on build
   steps:
-    - script:
-        name: echo nodejs information
-        code: |
-          echo "node version $(node -v) running"
-          echo "npm version $(npm -v) running"
-    - script:
-        name: echo user
-        code: |
-          echo "USER: $USER"
-    # Replace ancient version of Node (v0.10.38) that comes with container
-#    - bigtruedata/node-install@1.1.0:
-#        version: 8.9.4
-    - install-packages:
-        packages: node
-    # A custom script step
-    - script:
-        code: export NODE_ENV='testing'
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
     - script:
-        name: echo nodejs information
+        name: NodeJS information
         code: |
           echo "node version $(node -v) running"
           echo "npm version $(npm -v) running"
+          echo "USER: $USER"
     # A step that executes `npm install` command
     - npm-install
+    # A custom script step
+    - script:
+        code: export NODE_ENV='testing'
     # A step that executes `npm test` command
     - npm-test
 
