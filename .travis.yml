@@ -26,5 +26,6 @@ deploy:
     tags: true
     repo: cybertk/abao
 after_success:
-  - grunt coveralls:upload
+#  - grunt coveralls:upload
+  - './node_modules/.bin/coveralls < ./coverage/lcov.info'
 
