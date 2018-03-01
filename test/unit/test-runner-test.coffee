@@ -1,10 +1,11 @@
 chai = require 'chai'
 sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
-_ = require 'underscore'
+_ = require 'lodash'
 mocha = require 'mocha'
 mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
+pkg = require '../../package'
 
 TestFactory = require '../../lib/test'
 
@@ -450,6 +451,7 @@ describe 'Test Runner', () ->
 
         header =
           key: 'value'
+          'X-AbaoVersion': pkg.version
 
         options =
           server: "#{SERVER}"
@@ -458,7 +460,7 @@ describe 'Test Runner', () ->
         runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run'
           .callsFake (callback) ->
-            receivedTest = _.clone(test)
+            receivedTest = _.cloneDeep(test)
             callback()
 
         runner.run [test], hooksStub, done
