@@ -28,7 +28,7 @@ deploy:
 after_success:
 #  - grunt coveralls:upload
   - BUILD_DIR=$HOME/build/cybertk/abao
-  - find $HOME -name "lcov.info" -print
+  - find $BUILD_DIR -name "lcov.info" -print -ls
   - COVERAGE_DIR=$BUILD_DIR/coverage
   - './node_modules/.bin/coveralls < $COVERAGE_DIR/lcov.info'
 
