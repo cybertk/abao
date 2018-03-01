@@ -27,5 +27,7 @@ deploy:
     repo: cybertk/abao
 after_success:
 #  - grunt coveralls:upload
-  - './node_modules/.bin/coveralls < ./coverage/lcov.info'
+  - BUILD_DIR=$HOME/travis/build/cybertk/abao
+  - COVERAGE_DIR=$BUILD_DIR/coverage
+  - './node_modules/.bin/coveralls < $COVERAGE_DIR/lcov.info'
 
