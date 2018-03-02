@@ -30,5 +30,5 @@ after_success:
   - BUILD_DIR=$HOME/build/cybertk/abao
 #  - find $BUILD_DIR -path ./node_modules -prune -o -print
   - COVERAGE_DIR=$BUILD_DIR/coverage
-  - './node_modules/.bin/coveralls < $COVERAGE_DIR/coverage.lcov'
+  - './node_modules/.bin/coveralls < $COVERAGE_DIR/coverage.lcov; echo "exit=$?"
 
