@@ -1,4 +1,6 @@
 ## Abao
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/cybertk/abao.svg)](https://greenkeeper.io/)
 > RAML testing tool
 
 [![Gitter](https://badges.gitter.im/cybertk/abao.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
