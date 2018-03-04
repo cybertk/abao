@@ -41,7 +41,7 @@
     "mocha-phantom-coverage-reporter": "^0.1.0",
     "mute": "^2.0.6",
     "nock": "^9.0.0",
-    "sinon": "^4.4.2",
+    "sinon": "2.4.1",
     "sinon-chai": "^2.7.0",
     "time-grunt": "~1.4.0"
   },
@@ -61,6 +61,6 @@
     "tv4": "^1.2.7",
     "underscore": "^1.8.2",
     "lodash": "^4.16.4",
-    "yargs": "~11.0.0"
+    "yargs": "~7.1.0"
   }
 }
