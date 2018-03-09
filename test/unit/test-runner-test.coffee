@@ -53,7 +53,7 @@ describe 'Test Runner', () ->
         options =
           server: "#{ABAO_IO_SERVER}"
 
-        runner = new TestRunner options , ''
+        runner = new TestRunner options, ''
 
         runCallback = sinon.stub()
         runCallback(done)
@@ -155,6 +155,7 @@ describe 'Test Runner', () ->
         # it 'should call after hook', () ->
         #   assert.ok hooksStub.runAfter.calledWith(test)
 
+
     describe 'Interact with #test', () ->
 
       test = ''
@@ -192,9 +193,10 @@ describe 'Test Runner', () ->
       it 'should call #test.run', () ->
         assert.ok test.run.calledOnce
 
-    describe 'when test has no response code', () ->
-      before (done) ->
 
+    describe 'when test has no response code', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -230,9 +232,10 @@ describe 'Test Runner', () ->
         assert.equal tests.length, 1
         assert.ok tests[0].pending
 
-    describe 'when test skipped in hooks', () ->
-      before (done) ->
 
+    describe 'when test skipped in hooks', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -274,9 +277,10 @@ describe 'Test Runner', () ->
         assert.equal tests.length, 1
         assert.ok tests[0].pending
 
-    describe 'when test has no response schema', () ->
-      before (done) ->
 
+    describe 'when test has no response schema', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -313,12 +317,12 @@ describe 'Test Runner', () ->
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
 
+
     describe 'when test throws AssertionError', () ->
 
       afterAllHook = ''
 
       before (done) ->
-
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -351,13 +355,13 @@ describe 'Test Runner', () ->
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
 
+
     describe 'when beforeAllHooks throws UncaughtError', () ->
 
       beforeAllHook = ''
       afterAllHook = ''
 
       before (done) ->
-
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -394,11 +398,12 @@ describe 'Test Runner', () ->
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
 
+
   describe '#run with options', () ->
 
     describe 'list all tests with `names`', () ->
-      before (done) ->
 
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -434,6 +439,7 @@ describe 'Test Runner', () ->
 
       it 'should print tests', () ->
         assert.ok console.log.calledWith('GET /machines -> 200')
+
 
     describe 'add additional headers with `headers`', () ->
 
@@ -474,6 +480,7 @@ describe 'Test Runner', () ->
       it 'should add headers into test', () ->
         assert.deepEqual receivedTest.request.headers, header
 
+
     describe 'run test with hooks only indicated by `hooks-only`', () ->
 
       testFactory = new TestFactory()
@@ -487,7 +494,6 @@ describe 'Test Runner', () ->
       suiteStub = ''
 
       before (done) ->
-
         options =
           server: "#{SERVER}"
           'hooks-only': true
@@ -523,7 +529,7 @@ describe 'Test Runner', () ->
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should add a pending test', () ->
+      it 'should add a pending test'
         # TODO(quanlong): Implement this test
         # console.log suiteStub.addTest.printf('%n-%c-%C')
         # assert.ok suiteStub.addTest.calledWithExactly('GET /machines -> 200')
