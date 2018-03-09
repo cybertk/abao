@@ -5,12 +5,11 @@ _ = require 'lodash'
 mocha = require 'mocha'
 mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
+
 pkg = require '../../package'
-
 TestFactory = require '../../lib/test'
-
 hooksStub = require '../../lib/hooks'
-suiteStub = ''
+suiteStub = undefined
 
 TestRunner = proxyquire '../../lib/test-runner', {
   'mocha': mocha,
@@ -24,9 +23,9 @@ assert = chai.assert
 should = chai.should()
 chai.use(sinonChai)
 
-runner = null
-
 describe 'Test Runner', () ->
+
+  runner = undefined
 
   describe '#run', () ->
 
@@ -443,8 +442,8 @@ describe 'Test Runner', () ->
 
     describe 'add additional headers with `headers`', () ->
 
-      receivedTest = ''
-      header = ''
+      receivedTest = undefined
+      headers = undefined
 
       before (done) ->
         testFactory = new TestFactory()
@@ -455,13 +454,13 @@ describe 'Test Runner', () ->
         test.response.status = 200
         test.response.schema = {}
 
-        header =
+        headers =
           key: 'value'
-          'X-AbaoVersion': pkg.version
+          'X-Abao-Version': pkg.version
 
         options =
           server: "#{SERVER}"
-          header: header
+          header: headers
 
         runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run'
@@ -478,7 +477,7 @@ describe 'Test Runner', () ->
         assert.ok runner.mocha.run.called
 
       it 'should add headers into test', () ->
-        assert.deepEqual receivedTest.request.headers, header
+        assert.deepEqual receivedTest.request.headers, headers
 
 
     describe 'run test with hooks only indicated by `hooks-only`', () ->
