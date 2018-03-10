@@ -4,6 +4,8 @@
 // REST API automated testing tool based on RAML
 //
 
+'use strict';
+
 require('coffee-script/register');
 
 var path = require('path');
