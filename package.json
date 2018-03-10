@@ -7,6 +7,11 @@
   "scripts": {
     "test": "grunt test"
   },
+  "config": {
+    "yargs": {
+      "camel-case-expansion": false
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cybertk/abao.git"
@@ -24,7 +29,7 @@
   "author": "Quanlong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cybertk/abao/issues"
+    "url": "https://github.com/cybertk/abao/issues/"
   },
   "homepage": "https://github.com/cybertk/abao/",
   "dependencies": {
