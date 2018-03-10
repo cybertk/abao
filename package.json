@@ -8,6 +8,14 @@
     "commit": "git-cz",
     "test": "grunt test"
   },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
+    "yargs": {
+      "camel-case-expansion": false
+    }
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/cybertk/abao.git"
@@ -25,9 +33,9 @@
   "author": "Quanlong",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cybertk/abao/issues"
+    "url": "https://github.com/cybertk/abao/issues/"
   },
-  "homepage": "https://github.com/cybertk/abao",
+  "homepage": "https://github.com/cybertk/abao/",
   "dependencies": {
     "async": "^2.0.1",
     "chai": "~3.5.0",
@@ -68,10 +76,5 @@
   },
   "engines": {
     "node": ">= 4.0.0"
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }
