@@ -100,28 +100,29 @@ $ abao single-get.raml --generate-hooks --template="${TEMPLATE}" > test_machines
 Then edit the *JavaScript* hookfile `test_machines_hooks.js` created in the
 previous step to add request parameters and response validation logic.
 
-```js
-var hooks = require('hooks'),
-    assert = require('chai').assert;
+```javascript
+var
+  hooks = require('hooks'),
+  assert = require('chai').assert;
 
 hooks.before('GET /machines -> 200', function (test, done) {
-    test.request.query = {
-      color: 'red'
-    };
-    done();
+  test.request.query = {
+    color: 'red'
+  };
+  done();
 });
 
 hooks.after('GET /machines -> 200', function (test, done) {
-    machine = test.response.body[0];
-    console.log(machine.name);
-    done();
+  machine = test.response.body[0];
+  console.log(machine.name);
+  done();
 });
 ```
 
 Alternately, write the same hookfile in *CoffeeScript* named
 `test_machines_hooks.coffee`:
 
-```coffee
+```coffeescript
 {before, after} = require 'hooks'
 {assert} = require 'chai'
 
@@ -142,25 +143,35 @@ Run validation with *JavaScript* hookfile (from above):
 $ abao single-get.raml --hookfiles=test_machines_hooks.js
 ```
 
-Also you can specify what test **Abao** should skip:
+You can also specify what tests **Abao** should skip:
 
-```js
-var hooks = require('hooks');
+```javascript
+var
+  hooks = require('hooks');
 
 hooks.skip('DELETE /machines/{machineId} -> 204');
 ```
 
-**Abao** also supports callbacks before and after all tests:
+**Abao** supports callbacks for intro and outro (coda) of all tests,
+as well as before/after each test:
 
-```coffee
-{beforeEach, afterEach} = require 'hooks'
+```coffeescript
+{beforeAll, beforeEach, afterEach, afterAll} = require 'hooks'
 
-beforeEach (test, done) ->
-  # do setup
+beforeAll (done) ->
+  # runs one-time setup before all tests (intro)
   done()
 
-afterEach (test, done) ->
-  # do teardown
+beforeEach (done) ->
+  # runs generic setup before any test-specific 'before()`
+  done()
+
+afterEach (done) ->
+  # runs generic teardown after any test-specific 'after()'
+  done()
+
+afterAll (done) ->
+  # do one-time teardown after all tests (coda)
   done()
 ```
 
@@ -170,14 +181,14 @@ the callbacks are executed serially in the order they were called.
 **Abao** provides hook to allow the content of the response to be checked
 within the test:
 
-```coffee
+```coffeescript
 {test} = require 'hooks'
 {assert} = require 'chai'
 
 test 'GET /machines -> 200', (response, body, done) ->
-    assert.deepEqual(JSON.parse(body), ["machine1", "machine2"])
-    assert.equal(headers['content-type'], 'application/json; charset=utf-8')
-    return done()
+  assert.deepEqual JSON.parse(body), ['machine1', 'machine2']
+  assert.equal headers['content-type'], 'application/json; charset=utf-8'
+  return done()
 ```
 
 ### test.request
