@@ -168,6 +168,14 @@ describe 'Hooks', () ->
 
       hooks.beforeHooks = {}
 
+    it 'should return true if test name matches regular expression hook', ->
+      hooks.beforeHooks =
+        'GET /.* -> [200|404]': (test, done) ->
+          done()
+
+      assert.ok hooks.hasName 'GET /users -> 200'
+      hooks.beforeHooks = {}
+
     it 'should return true if in after hooks', ->
       hooks.afterHooks =
         foo: (test, done) ->
