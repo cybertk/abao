@@ -3,11 +3,11 @@ Automated testing tool based on RAML-0.8
 # Abao
 
 [![Build Status][Travis-Abao-badge]][Travis-Abao]
-[![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
-[![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
-[![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
-[![Gitter](https://badges.gitter.im/cybertk/abao.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/388/badge)](https://bestpractices.coreinfrastructure.org/projects/388) 
+[![Dependency Status][David-AbaoDep-badge]][David-AbaoDep]
+[![devDependency Status][David-AbaoDevDep-badge]][David-AbaoDevDep]
+[![Coverage Status][Coveralls-Abao-badge]][Coveralls-Abao]
+[![Gitter][Gitter-Abao-badge]][Gitter-Abao]
+[![CII Best Practices][BestPractices-Abao-badge]][BestPractices-Abao]
 
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
@@ -16,7 +16,7 @@ easily plug your API documentation into a Continuous Integration (CI) system
 the time. **Abao** uses [Mocha][] for judging if a particular API response
 is valid or not.
 
-[![NPM](https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true)](https://npmjs.org/package/abao)
+[![NPM][NPM-Abao-badge]][NPM-Abao]
 
 ## Features
 
@@ -293,4 +293,7 @@ If you think of something that would make life easier, please submit an issue.
 [Gitter-Abao-badge]: https://badges.gitter.im/cybertk/abao.svg
 [BestPractices-Abao]: https://bestpractices.coreinfrastructure.org/projects/388
 [BestPractices-Abao-badge]: https://bestpractices.coreinfrastructure.org/projects/388/badge
+[NPM-Abao]: https://npmjs.org/package/abao/
+[NPM-Abao-badge]: https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true
+
 
