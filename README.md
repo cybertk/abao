@@ -273,6 +273,8 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
+[//]: # (Cross reference section)
+
 [RAML]: https://raml.org/
 [Mocha]: https://mochajs.org/
 [JSONSchema]: http://json-schema.org/
@@ -286,7 +288,7 @@ If you think of something that would make life easier, please submit an issue.
 [David-AbaoDep]: https://david-dm.org/cybertk/abao/
 [David-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
 [David-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
-[David-AbaoDDevep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
+[David-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
 [Coveralls-Abao]: https://coveralls.io/r/cybertk/abao/
 [Coveralls-Abao-badge]: https://img.shields.io/coveralls/cybertk/abao.svg
 [Gitter-Abao]: https://gitter.im/cybertk/abao/
