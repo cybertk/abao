@@ -2,7 +2,7 @@ Automated testing tool based on RAML-0.8
 
 # Abao
 
-[![Build Status](https://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
+[![Build Status][Travis-Abao-badge]][Travis-Abao]
 [![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
 [![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
 [![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
@@ -280,4 +280,17 @@ If you think of something that would make life easier, please submit an issue.
 [Jenkins]: https://jenkins-ci.org/
 [RAML-0.8]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md
 [baseUri]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md#base-uri-and-baseuriparameters
+
+[Travis-Abao]: https://travis-ci.org/cybertk/abao/
+[Travis-Abao-badge]: https://img.shields.io/travis/cybertk/abao.svg?style=flat
+[David-AbaoDep]: https://david-dm.org/cybertk/abao/
+[David-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
+[David-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
+[David-AbaoDDevep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
+[Coveralls-Abao]: https://coveralls.io/r/cybertk/abao/
+[Coveralls-Abao-badge]: https://img.shields.io/coveralls/cybertk/abao.svg
+[Gitter-Abao]: https://gitter.im/cybertk/abao/
+[Gitter-Abao-badge]: https://badges.gitter.im/cybertk/abao.svg
+[BestPractices-Abao]: https://bestpractices.coreinfrastructure.org/projects/388
+[BestPractices-Abao-badge]: https://bestpractices.coreinfrastructure.org/projects/388/badge
 
