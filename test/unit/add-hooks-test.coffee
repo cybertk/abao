@@ -15,7 +15,7 @@ addHooks = proxyquire  '../../lib/add-hooks', {
   'path': pathStub
 }
 
-describe 'addHooks(hooks, pattern, callback)', () ->
+describe 'addHooks(hooks, pattern)', () ->
 
   transactions = {}
 
@@ -27,7 +27,7 @@ describe 'addHooks(hooks, pattern, callback)', () ->
     after () ->
       globStub.sync.restore()
 
-    it 'should return immediately', ->
+    it 'should return immediately', () ->
       addHooks(hooksStub, '')
       assert.ok globStub.sync.notCalled
 
@@ -77,11 +77,13 @@ describe 'addHooks(hooks, pattern, callback)', () ->
     describe 'when there is an error reading the hook files', () ->
 
       beforeEach () ->
-        sinon.stub pathStub, 'resolve', (path, rel) ->
-          throw new Error()
+        sinon.stub pathStub, 'resolve'
+          .callsFake (path, rel) ->
+            throw new Error()
         sinon.spy console, 'error'
-        sinon.stub globStub, 'sync', (pattern) ->
-          ['invalid.xml', 'unexist.md']
+        sinon.stub globStub, 'sync'
+          .callsFake (pattern) ->
+            ['invalid.xml', 'unexist.md']
         sinon.spy hooksStub, 'addHook'
 
       afterEach () ->

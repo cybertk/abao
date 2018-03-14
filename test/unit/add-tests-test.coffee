@@ -16,11 +16,11 @@ FIXTURE_DIR = "#{__dirname}/../fixtures"
 RAML_DIR = "#{FIXTURE_DIR}"
 
 
-describe '#addTests', ->
+describe '#addTests', () ->
 
-  describe '#run', ->
+  describe '#run', () ->
 
-    describe 'when endpoint specifies a single method', ->
+    describe 'when endpoint specifies a single method', () ->
 
       tests = []
       testFactory = new TestFactory()
@@ -35,19 +35,19 @@ describe '#addTests', ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
 
-      it 'should set test.name', ->
+      it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /machines -> 200'
 
-      it 'should setup test.request', ->
+      it 'should setup test.request', () ->
         req = tests[0].request
 
         assert.equal req.path, '/machines'
@@ -58,7 +58,7 @@ describe '#addTests', ->
         req.body.should.be.empty
         assert.equal req.method, 'GET'
 
-      it 'should setup test.response', ->
+      it 'should setup test.response', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
@@ -68,8 +68,8 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when endpoint has multiple methods', ->
-      describe 'when processed in order specified in RAML', ->
+    describe 'when endpoint has multiple methods', () ->
+      describe 'when processed in order specified in RAML', () ->
 
         tests = []
         testFactory = new TestFactory()
@@ -85,22 +85,22 @@ describe '#addTests', ->
 
             addTests raml, tests, hooks, callback, testFactory, false
           return
-        after ->
+        after () ->
           tests = []
 
-        it 'should run callback', ->
+        it 'should run callback', () ->
           assert.ok callback.called
 
-        it 'should add 2 tests', ->
+        it 'should add 2 tests', () ->
           assert.lengthOf tests, 2
 
-        it 'should process GET request before POST request', ->
+        it 'should process GET request before POST request', () ->
           req = tests[0].request
           assert.equal req.method, 'GET'
           req = tests[1].request
           assert.equal req.method, 'POST'
 
-        it 'should setup test.request of POST', ->
+        it 'should setup test.request of POST', () ->
           req = tests[1].request
 
           assert.equal req.path, '/machines'
@@ -113,7 +113,7 @@ describe '#addTests', ->
             name: 'Mike'
           assert.equal req.method, 'POST'
 
-        it 'should setup test.response of POST', ->
+        it 'should setup test.response of POST', () ->
           res = tests[1].response
 
           assert.equal res.status, 201
@@ -123,7 +123,7 @@ describe '#addTests', ->
           assert.isNull res.headers
           assert.isNull res.body
 
-      describe 'when processed in order specified by "--sorted" option', ->
+      describe 'when processed in order specified by "--sorted" option', () ->
 
         tests = []
         testFactory = new TestFactory()
@@ -139,22 +139,22 @@ describe '#addTests', ->
 
             addTests raml, tests, hooks, null, callback, testFactory, true
           return
-        after ->
+        after () ->
           tests = []
 
-        it 'should run callback', ->
+        it 'should run callback', () ->
           assert.ok callback.called
 
-        it 'should add 2 tests', ->
+        it 'should add 2 tests', () ->
           assert.lengthOf tests, 2
 
-        it 'should process GET request after POST request', ->
+        it 'should process GET request after POST request', () ->
           req = tests[0].request
           assert.equal req.method, 'POST'
           req = tests[1].request
           assert.equal req.method, 'GET'
 
-        it 'should setup test.request of POST', ->
+        it 'should setup test.request of POST', () ->
           req = tests[0].request
 
           assert.equal req.path, '/machines'
@@ -167,7 +167,7 @@ describe '#addTests', ->
             name: 'Mike'
           assert.equal req.method, 'POST'
 
-        it 'should setup test.response of POST', ->
+        it 'should setup test.response of POST', () ->
           res = tests[0].response
 
           assert.equal res.status, 201
@@ -177,7 +177,7 @@ describe '#addTests', ->
           assert.isNull res.headers
           assert.isNull res.body
 
-    describe 'when RAML includes multiple referencing schemas', ->
+    describe 'when RAML includes multiple referencing schemas', () ->
 
       tests = []
       testFactory = new TestFactory
@@ -193,19 +193,19 @@ describe '#addTests', ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
 
-      it 'should set test.name', ->
+      it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /machines -> 200'
 
-      it 'should setup test.request', ->
+      it 'should setup test.request', () ->
         req = tests[0].request
 
         assert.equal req.path, '/machines'
@@ -214,7 +214,7 @@ describe '#addTests', ->
         req.body.should.be.empty
         assert.equal req.method, 'GET'
 
-      it 'should setup test.response', ->
+      it 'should setup test.response', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
@@ -222,7 +222,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when RAML has inline and included schemas', ->
+    describe 'when RAML has inline and included schemas', () ->
 
       tests = []
       testFactory = new TestFactory
@@ -238,19 +238,19 @@ describe '#addTests', ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
 
-      it 'should set test.name', ->
+      it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /machines -> 200'
 
-      it 'should setup test.request', ->
+      it 'should setup test.request', () ->
         req = tests[0].request
 
         assert.equal req.path, '/machines'
@@ -259,7 +259,7 @@ describe '#addTests', ->
         req.body.should.be.empty
         assert.equal req.method, 'GET'
 
-      it 'should setup test.response', ->
+      it 'should setup test.response', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
@@ -267,7 +267,7 @@ describe '#addTests', ->
         assert.isNull res.headers
         assert.isNull res.body
 
-    describe 'when RAML contains three-levels endpoints', ->
+    describe 'when RAML contains three-levels endpoints', () ->
 
       tests = []
       testFactory = new TestFactory()
@@ -284,31 +284,31 @@ describe '#addTests', ->
           addTests raml, tests, hooks, callback, testFactory, false
         return
 
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 3 tests', ->
+      it 'should add 3 tests', () ->
         assert.lengthOf tests, 3
 
-      it 'should set test.name', ->
+      it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /machines -> 200'
         assert.equal tests[1].name, 'DELETE /machines/{machine_id} -> 204'
         assert.equal tests[2].name, 'GET /machines/{machine_id}/parts -> 200'
 
-      it 'should set request.param of test 1', ->
+      it 'should set request.param of test 1', () ->
         test = tests[1]
         assert.deepEqual test.request.params,
           machine_id: '1'
 
-      it 'should set request.param of test 2', ->
+      it 'should set request.param of test 2', () ->
         test = tests[2]
         assert.deepEqual test.request.params,
           machine_id: '1'
 
-    describe 'when RAML has resource not defined method', ->
+    describe 'when RAML has resource not defined method', () ->
 
       tests = []
       testFactory = new TestFactory()
@@ -325,19 +325,19 @@ describe '#addTests', ->
           addTests raml, tests, hooks, callback, testFactory, false
         return
 
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
 
-      it 'should set test.name', ->
+      it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /root/machines -> 200'
 
-    describe 'when RAML has invalid request body example', ->
+    describe 'when RAML has invalid request body example', () ->
 
       tests = []
       testFactory = new TestFactory()
@@ -369,21 +369,21 @@ describe '#addTests', ->
           addTests raml, tests, hooks, callback, testFactory, false
         return
 
-      after ->
+      after () ->
         tests = []
         console.warn.restore()
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should give a warning', ->
+      it 'should give a warning', () ->
         assert.ok console.warn.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
-    describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', ->
+    describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', () ->
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -397,16 +397,16 @@ describe '#addTests', ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
-      after ->
+      after () ->
         tests = []
 
-      it 'should run callback', ->
+      it 'should run callback', () ->
         assert.ok callback.called
 
-      it 'should add 1 test', ->
+      it 'should add 1 test', () ->
         assert.lengthOf tests, 1
 
-      it 'should setup test.request of PATCH', ->
+      it 'should setup test.request of PATCH', () ->
         req = tests[0].request
 
         assert.equal req.path, '/{songId}'
@@ -420,7 +420,7 @@ describe '#addTests', ->
           artist: 'Mike'
         assert.equal req.method, 'PATCH'
 
-      it 'should setup test.response of PATCH', ->
+      it 'should setup test.response of PATCH', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
@@ -429,7 +429,7 @@ describe '#addTests', ->
         assert.equal schema.properties.artist.type, 'string'
 
 
-    describe 'when there is required query parameter with example value', ->
+    describe 'when there is required query parameter with example value', () ->
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -444,13 +444,13 @@ describe '#addTests', ->
           addTests raml, tests, hooks, callback, testFactory, false
         return
 
-      after ->
+      after () ->
         tests = []
 
-      it 'should append query parameters with example value', ->
+      it 'should append query parameters with example value', () ->
         assert.equal tests[0].request.query['quux'], 'foo'
 
-    describe 'when there is no required query parameter', ->
+    describe 'when there is no required query parameter', () ->
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -463,8 +463,8 @@ describe '#addTests', ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
-      after ->
+      after () ->
         tests = []
 
-      it 'should not append query parameters', ->
+      it 'should not append query parameters', () ->
         assert.deepEqual tests[0].request.query, {}

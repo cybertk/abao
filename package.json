@@ -1,13 +1,17 @@
 {
   "name": "abao",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "RAML testing tool",
   "bin": "bin/abao",
   "main": "lib/index.js",
   "scripts": {
+    "commit": "git-cz",
     "test": "grunt test"
   },
   "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    },
     "yargs": {
       "camel-case-expansion": false
     }
@@ -27,6 +31,9 @@
     "automated"
   ],
   "author": "Quanlong",
+  "contributors": [
+    "P. Roebuck (https://github.com/plroebuck/)"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/cybertk/abao/issues/"
@@ -39,6 +46,7 @@
     "coffee-script": "~1.12.1",
     "csonschema": "^0.5.1",
     "glob": "^7.0.6",
+    "lodash": "^4.16.4",
     "mocha": "~3.4.2",
     "mustache": "~2.3.0",
     "proxyquire": "^1.3.1",
@@ -47,25 +55,27 @@
     "source-map-support": "^0.4.0",
     "tv4": "^1.2.7",
     "underscore": "^1.8.2",
-    "lodash": "^4.16.4",
     "yargs": "~7.1.0"
   },
   "devDependencies": {
     "coveralls": "^2.11.14",
+    "cz-conventional-changelog": "^2.1.0",
     "express": "^4.12.0",
-    "grunt": "0.4.0",
+    "grunt": "^0.4.5",
     "grunt-cli": "~1.2.0",
-    "grunt-coffeecov": "^0.1.5",
+    "grunt-coffeecov": "git+https://github.com/plroebuck/grunt-coffeecov.git",
     "grunt-coffeelint": "^0.0.16",
+    "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
+    "grunt-coveralls": "^1.0.1",
     "grunt-mocha-test": "~0.13.2",
     "grunt-shell": "^2.0.0",
     "load-grunt-config": "^0.19.2",
     "mocha-phantom-coverage-reporter": "^0.1.0",
     "mute": "^1.0.0",
-    "nock": "^9.0.0",
-    "sinon": "2.4.1",
-    "sinon-chai": "^2.7.0",
+    "nock": "~9.1.6",
+    "sinon": "~4.1.6",
+    "sinon-chai": "^2.14.0",
     "time-grunt": "~1.4.0"
   },
   "engines": {

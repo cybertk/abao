@@ -1,3 +1,7 @@
+###*
+# @file Add tests
+###
+
 async = require 'async'
 _ = require 'lodash'
 csonschema = require 'csonschema'
@@ -13,12 +17,10 @@ parseSchema = (source) ->
     # @response.schema = csonschema.parse @response.schema
 
 parseHeaders = (raml) ->
-  return {} unless raml
-
   headers = {}
-  for key, v of raml
-    headers[key] = v.example
-
+  if raml
+    for key, v of raml
+      headers[key] = v.example
   headers
 
 addTests = (raml, tests, hooks, parent, callback, testFactory, sortFirst) ->

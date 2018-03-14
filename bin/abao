@@ -1,78 +1,17 @@
 #!/usr/bin/env node
 //
 // abao
-// RAML-based API automated testing tool
+// REST API automated testing tool based on RAML
 //
+
+'use strict';
 
 require('coffee-script/register');
 
 var path = require('path');
-var yargs = require('yargs');
-var Abao = require('../lib/abao');
+var fs   = require('fs');
 
-var argv = yargs
-    .usage("Usage:\n  abao </path/to/raml> [OPTIONS]" +
-    "\n\nExample:\n  " + "abao api.raml --server http://api.example.com")
-    .options(Abao.options)
-    .implies('template', 'generate-hooks')
-    .check(function (argv) {
-      if (argv.reporters === true) {
-        showReporters();
-        process.exit(0);
-      }
+var libpath = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
 
-      if (argv._.length < 1) {
-        throw new Error('abao: Must specify path to RAML file');
-      }
-      else if (argv._.length > 1) {
-        throw new Error('abao: Accepts single positional command-line argument');
-      }
-
-      return true;
-    })
-    .wrap(80)
-    .help('help', 'Show usage information and exit')
-    .version().describe('version', 'Show version number and exit')
-    .epilog("Website:\n  " + 'https://github.com/cybertk/abao')
-    .argv;
-
-function showReporters() {
-  // Copied from node_modules/mocha/_mocha
-  console.log();
-  console.log('    dot - dot matrix');
-  console.log('    doc - html documentation');
-  console.log('    spec - hierarchical spec list');
-  console.log('    json - single json object');
-  console.log('    progress - progress bar');
-  console.log('    list - spec-style listing');
-  console.log('    tap - test-anything-protocol');
-  console.log('    landing - unicode landing strip');
-  console.log('    xunit - xunit reporter');
-  console.log('    min - minimal reporter (great with --watch)');
-  console.log('    json-stream - newline delimited json events');
-  console.log('    markdown - markdown documentation (github flavour)');
-  console.log('    nyan - nyan cat!');
-  console.log();
-}
-
-configuration = {
-  'ramlPath': argv._[0],
-  'options': argv
-};
-
-abao = new Abao(configuration);
-
-abao.run(function (error, nfailures) {
-  if (error) {
-    if (error.message) {
-      console.error(error.message);
-    }
-    if (error.stack) {
-      console.error(error.stack);
-    }
-    process.exit(1);
-  }
-
-  process.exit(nfailures > 0 ? 1 : 0);
-});
+require(libpath + '/cli');
 

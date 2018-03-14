@@ -5,36 +5,55 @@ module.exports = (grunt) ->
   # Dynamically load npm tasks
   require('load-grunt-config') grunt
 
+  # Initialize configuration object
   grunt.initConfig
+    # Load in the module information
+    pkg: grunt.file.readJSON 'package.json'
 
-    # Watching changes files *.coffee,
+    gruntfile: 'Gruntfile.coffee'
+
+    clean:
+      cover: [
+        'coverage'
+      ],
+      instrumented: [
+        'lib/*.js'
+      ]
+
     watch:
-      all:
-        files: [
-          "Gruntfile.coffee"
-          "lib/**/*.coffee"
-          "test/**/*.coffee"
-        ]
+      options:
+        spawn: false
+      lib:
+        files: 'lib/*.coffee'
         tasks: [
-          "coffeecov"
-          "mochaTest"
+          'instrument'
+          'mochaTest'
         ]
-        options:
-          nospawn: true
+      test:
+        files: 'test/**/*.coffee'
+        tasks: [
+          'instrument'
+          'mochaTest'
+        ]
+      gruntfile:
+        files: '<%= gruntfile %>'
+        tasks: [
+          'coffeelint:gruntfile'
+        ]
 
     coffeelint:
       default:
         src: [
-          'Gruntfile.coffee'
-          'lib/**/*.coffee'
+          'lib/*.coffee'
           'test/**/*.coffee'
         ]
-      options: {
+      gruntfile:
+        src: '<%= gruntfile %>'
+      options:
         configFile: 'coffeelint.json'
-      }
 
     coffeecov:
-      compile:
+      transpile:
         src: 'lib'
         dest: 'lib'
 
@@ -44,28 +63,33 @@ module.exports = (grunt) ->
           reporter: 'mocha-phantom-coverage-reporter'
           require: 'coffee-script/register'
         src: [
-          # Unit Test
-          'test/unit/*.coffee'
-          # Acceptance Test
-          'test/cli-test.coffee'
+          'test/unit/*-test.coffee'
+          'test/e2e/cli-test.coffee'
         ]
 
-    shell:
-      coveralls:
-        command: 'cat coverage/coverage.lcov | ./node_modules/coveralls/bin/coveralls.js lib'
+    coveralls:
+      upload:
+        src: 'coverage/coverage.lcov'
 
-  grunt.registerTask 'uploadCoverage', ->
-    grunt.task.run 'shell:coveralls'
-
-  grunt.registerTask "default", [
-    "watch"
-    "mochaTest"
+  # Register alias tasks
+  grunt.registerTask 'cover', [
+    'clean',
+    'instrument',
+    'mochaTest'
   ]
 
-  grunt.registerTask "test", [
-    "coffeelint"
-    "coffeecov"
-    "mochaTest"
+  grunt.registerTask 'default', [
+    'watch'
+    'mochaTest'
+  ]
+
+  grunt.registerTask 'instrument', [ 'coffeecov' ]
+  grunt.registerTask 'lint', [ 'coffeelint' ]
+
+  grunt.registerTask 'test', [
+    'lint'
+    'cover'
   ]
 
   return
+

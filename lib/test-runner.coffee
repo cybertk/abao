@@ -1,6 +1,11 @@
+###*
+# @file TestRunner class
+###
+
 Mocha = require 'mocha'
 async = require 'async'
 path = require 'path'
+# TODO(proebuck): Replace underscore module with Lodash; ensure compatibility
 _ = require 'underscore'
 generateHooks = require './generate-hooks'
 
@@ -9,8 +14,9 @@ class TestRunner
   constructor: (options, ramlFile) ->
     @server = options.server
     delete options.server
+    @mocha = new Mocha options.mocha
+    delete options.mocha
     @options = options
-    @mocha = new Mocha options
     @ramlFile = ramlFile
 
   addTestToMocha: (test, hooks) =>
@@ -106,7 +112,7 @@ class TestRunner
         , {hooks}
 
         mocha.run (failures) ->
-          callback(null, failures)
+          return callback(null, failures)
     ], done
 
 

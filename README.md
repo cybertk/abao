@@ -2,8 +2,8 @@
 > RAML testing tool
 
 [![Gitter](https://badges.gitter.im/cybertk/abao.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Stories in Ready](https://badge.waffle.io/cybertk/abao.svg?label=ready&title=Ready)](http://waffle.io/cybertk/abao)
-[![Build Status](http://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
+[![Stories in Ready](https://badge.waffle.io/cybertk/abao.svg?label=ready&title=Ready)](https://waffle.io/cybertk/abao)
+[![Build Status](https://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
 [![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
 [![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
 [![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
@@ -100,28 +100,29 @@ $ abao single-get.raml --generate-hooks --template="${TEMPLATE}" > test_machines
 Then edit the *JavaScript* hookfile `test_machines_hooks.js` created in the
 previous step to add request parameters and response validation logic.
 
-```js
-var hooks = require('hooks'),
-    assert = require('chai').assert;
+```javascript
+var
+  hooks = require('hooks'),
+  assert = require('chai').assert;
 
 hooks.before('GET /machines -> 200', function (test, done) {
-    test.request.query = {
-      color: 'red'
-    };
-    done();
+  test.request.query = {
+    color: 'red'
+  };
+  done();
 });
 
 hooks.after('GET /machines -> 200', function (test, done) {
-    machine = test.response.body[0];
-    console.log(machine.name);
-    done();
+  machine = test.response.body[0];
+  console.log(machine.name);
+  done();
 });
 ```
 
 Alternately, write the same hookfile in *CoffeeScript* named
 `test_machines_hooks.coffee`:
 
-```coffee
+```coffeescript
 {before, after} = require 'hooks'
 {assert} = require 'chai'
 
@@ -142,25 +143,35 @@ Run validation with *JavaScript* hookfile (from above):
 $ abao single-get.raml --hookfiles=test_machines_hooks.js
 ```
 
-Also you can specify what test **Abao** should skip:
+You can also specify what tests **Abao** should skip:
 
-```js
-var hooks = require('hooks');
+```javascript
+var
+  hooks = require('hooks');
 
 hooks.skip('DELETE /machines/{machineId} -> 204');
 ```
 
-**Abao** also supports callbacks before and after all tests:
+**Abao** supports callbacks for intro and outro (coda) of all tests,
+as well as before/after each test:
 
-```coffee
-{beforeEach, afterEach} = require 'hooks'
+```coffeescript
+{beforeAll, beforeEach, afterEach, afterAll} = require 'hooks'
 
-beforeEach (test, done) ->
-  # do setup
+beforeAll (done) ->
+  # runs one-time setup before all tests (intro)
   done()
 
-afterEach (test, done) ->
-  # do teardown
+beforeEach (done) ->
+  # runs generic setup before any test-specific 'before()`
+  done()
+
+afterEach (done) ->
+  # runs generic teardown after any test-specific 'after()'
+  done()
+
+afterAll (done) ->
+  # do one-time teardown after all tests (coda)
   done()
 ```
 
@@ -170,14 +181,14 @@ the callbacks are executed serially in the order they were called.
 **Abao** provides hook to allow the content of the response to be checked
 within the test:
 
-```coffee
+```coffeescript
 {test} = require 'hooks'
 {assert} = require 'chai'
 
 test 'GET /machines -> 200', (response, body, done) ->
-    assert.deepEqual(JSON.parse(body), ["machine1", "machine2"])
-    assert.equal(headers['content-type'], 'application/json; charset=utf-8')
-    return done()
+  assert.deepEqual JSON.parse(body), ['machine1', 'machine2']
+  assert.equal headers['content-type'], 'application/json; charset=utf-8'
+  return done()
 ```
 
 ### test.request
@@ -206,31 +217,32 @@ Usage:
 Example:
   abao api.raml --server http://api.example.com
 
+Options passed to Mocha:
+  --grep, -g      Only run tests matching <pattern>                     [string]
+  --invert, -i    Invert --grep matches                                [boolean]
+  --reporter, -R  Specify reporter to use             [string] [default: "spec"]
+  --timeout, -t   Set test case timeout in milliseconds [number] [default: 2000]
+
 Options:
-  --server          Specify the API endpoint to use. The RAML-specified baseUri
-                    value will be used if not provided                  [string]
-  --hookfiles, -f   Specify a pattern to match files with before/after hooks for
+  --generate-hooks  Output hooks generated from template file and exit [boolean]
+  --header, -h      Add header to include in each request. Header must be in
+                    KEY:VALUE format (e.g., "-h Accept:application/json").
+                    Reuse option to add multiple headers                [string]
+  --hookfiles, -f   Specify pattern to match files with before/after hooks for
                     running tests                                       [string]
-  --schemas, -s     Specify a pattern to match schema files to be loaded for use
-                    as JSON refs                                        [string]
-  --reporter, -r    Specify the reporter to use       [string] [default: "spec"]
-  --header, -h      Add header to include in each request. The header must be in
-                    KEY:VALUE format, e.g. "-h Accept:application/json".
-                    Reuse to add multiple headers                       [string]
   --hooks-only, -H  Run test only if defined either before or after hooks
                                                                        [boolean]
-  --grep, -g        Only run tests matching <pattern>                   [string]
-  --invert, -i      Invert --grep matches                              [boolean]
-  --sorted          Sorts requests in a sensible way so that objects are not
-                    modified before they are created. Order: CONNECT, OPTIONS,
-                    POST, GET, HEAD, PUT, PATCH, DELETE, TRACE.        [boolean]
-  --timeout, -t     Set test-case timeout in milliseconds
-                                                        [number] [default: 2000]
-  --template        Specify the template file to use for generating hooks
-                                                                        [string]
   --names, -n       List names of requests and exit                    [boolean]
-  --generate-hooks  Output hooks generated from template file and exit [boolean]
   --reporters       Display available reporters and exit               [boolean]
+  --schemas         Specify pattern to match schema files to be loaded for use
+                    as JSON refs                                        [string]
+  --server          Specify API endpoint to use. The RAML-specified baseUri
+                    value will be used if not provided                  [string]
+  --sorted          Sorts requests in a sensible way so that objects are not
+                    modified before they are created.
+                    Order: CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH,
+                    DELETE, TRACE.                                     [boolean]
+  --template        Specify template file to use for generating hooks   [string]
   --help            Show usage information and exit                    [boolean]
   --version         Show version number and exit                       [boolean]
 ```
@@ -246,9 +258,10 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
-[RAML]: http://raml.org/
-[Mocha]: http://mochajs.org/
+[RAML]: https://raml.org/
+[Mocha]: https://mochajs.org/
 [JSONSchema]: http://json-schema.org/
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
 [baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
+

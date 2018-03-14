@@ -1,4 +1,10 @@
+###
+### .travis.yml
+###
+
 sudo: false
+os: linux
+dist: trusty
 language: node_js
 node_js:
   - 'node'
@@ -19,4 +25,12 @@ deploy:
     tags: true
     repo: cybertk/abao
 after_success:
-  - grunt uploadCoverage
+#  - grunt coveralls:upload
+  - BUILD_DIR="$HOME/build"
+  - GITHUB_REPO="cybertk/abao"
+  - PROJ_BUILD_DIR="$BUILD_DIR/$GITHUB_REPO"
+  - PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
+  - COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
+  - COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
+  - $COVERALLS_BIN lib < $COVERAGE_FILE; echo "exit=$?"
+

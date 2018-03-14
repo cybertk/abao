@@ -159,7 +159,7 @@ describe 'Hooks', () ->
 
   describe 'when check has name', () ->
 
-    it 'should return true if in before hooks', ->
+    it 'should return true if in before hooks', () ->
       hooks.beforeHooks =
         foo: (test, done) ->
           done()
@@ -168,7 +168,7 @@ describe 'Hooks', () ->
 
       hooks.beforeHooks = {}
 
-    it 'should return true if in after hooks', ->
+    it 'should return true if in after hooks', () ->
       hooks.afterHooks =
         foo: (test, done) ->
           done()
@@ -177,7 +177,7 @@ describe 'Hooks', () ->
 
       hooks.afterHooks = {}
 
-    it 'should return true if in both before and after hooks', ->
+    it 'should return true if in both before and after hooks', () ->
       hooks.beforeHooks =
         foo: (test, done) ->
           done()
@@ -190,7 +190,7 @@ describe 'Hooks', () ->
       hooks.beforeHooks = {}
       hooks.afterHooks = {}
 
-    it 'should return false if in neither before nor after hooks', ->
+    it 'should return false if in neither before nor after hooks', () ->
       assert.notOk hooks.hasName 'foo'
 
 
@@ -243,20 +243,20 @@ describe 'Hooks', () ->
         beforeEach (done) ->
           hooks.runBefore test, done
 
-        it 'should run hook', ->
+        it 'should run hook', () ->
           assert.ok beforeHook.called
 
-        it 'should pass #test to hook', ->
+        it 'should pass #test to hook', () ->
           assert.ok beforeHook.calledWith(test)
 
       describe 'on after hook', () ->
         beforeEach (done) ->
           hooks.runAfter test, done
 
-        it 'should run hook', ->
+        it 'should run hook', () ->
           assert.ok afterHook.called
 
-        it 'should pass #test to hook', ->
+        it 'should pass #test to hook', () ->
           assert.ok afterHook.calledWith(test)
 
     describe 'with corresponding POST test', () ->
@@ -283,14 +283,14 @@ describe 'Hooks', () ->
         beforeEach (done) ->
           hooks.runBefore test, done
 
-        it 'should not run hook', ->
+        it 'should not run hook', () ->
           assert.ok beforeHook.notCalled
 
       describe 'on after hook', () ->
         beforeEach (done) ->
           hooks.runAfter test, done
 
-        it 'should not run hook', ->
+        it 'should not run hook', () ->
           assert.ok afterHook.notCalled
 
   describe 'when running beforeAll/afterAll', () ->
@@ -320,7 +320,7 @@ describe 'Hooks', () ->
 
         hooks.runBeforeAll callback
 
-      it 'should invoke callback', ->
+      it 'should invoke callback', () ->
         assert.ok callback.calledWithExactly(null), callback.printf('%C')
 
       it 'should run hook', () ->
@@ -336,10 +336,10 @@ describe 'Hooks', () ->
 
         hooks.runAfterAll callback
 
-      it 'should invoke callback', ->
+      it 'should invoke callback', () ->
         assert.ok callback.calledWithExactly(null), callback.printf('%C')
 
-      it 'should run hook', ->
+      it 'should run hook', () ->
         assert.ok funcs[2].called
         assert.ok funcs[3].called
 
@@ -365,7 +365,7 @@ describe 'Hooks', () ->
         hooks.test(test_name, () ->)
       f()
       assert.throw f,
-        "Cannot have more than one test with the name: #{test_name}"
+        "cannot have more than one test with the name: #{test_name}"
 
   describe 'when check skipped', () ->
 
@@ -375,10 +375,10 @@ describe 'Hooks', () ->
     afterEach () ->
       hooks.skippedTests = []
 
-    it 'should return true if in skippedTests', ->
+    it 'should return true if in skippedTests', () ->
       assert.ok hooks.skipped 'foo'
 
-    it 'should return false if not in skippedTests', ->
+    it 'should return false if not in skippedTests', () ->
       assert.notOk hooks.skipped 'buz'
 
   describe 'when successfully skip test', () ->
@@ -391,3 +391,4 @@ describe 'Hooks', () ->
     it 'should get added to the set of hooks', () ->
       hooks.skip test_name
       assert.include(hooks.skippedTests, test_name)
+

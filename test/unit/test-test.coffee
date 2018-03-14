@@ -19,11 +19,11 @@ TestFactory = proxyquire '../../lib/test', {
 ABAO_IO_SERVER = 'http://abao.io'
 
 
-describe 'Test', ->
+describe 'Test', () ->
 
-  describe '#run', ->
+  describe '#run', () ->
 
-    describe 'of simple test', ->
+    describe 'of simple test', () ->
 
       testFact = ''
       test = ''
@@ -63,10 +63,10 @@ describe 'Test', ->
         requestStub.callsArgWith(1, null, {statusCode: 201}, JSON.stringify(machine))
         test.run done
 
-      after ->
+      after () ->
         requestStub.restore()
 
-      it 'should call #request', ->
+      it 'should call #request', () ->
         requestStub.should.be.calledWith
           url: "#{ABAO_IO_SERVER}/machines"
           method: 'POST'
@@ -77,10 +77,10 @@ describe 'Test', ->
           body: JSON.stringify
             body: 'value'
 
-      it 'should not modify @name', ->
+      it 'should not modify @name', () ->
         assert.equal test.name, 'POST /machines -> 201'
 
-      it 'should not modify @request', ->
+      it 'should not modify @request', () ->
         request = test.request
         assert.equal request.server, "#{ABAO_IO_SERVER}"
         assert.equal request.path, '/machines'
@@ -89,7 +89,7 @@ describe 'Test', ->
         assert.deepEqual request.query, {q: 'value'}
         assert.deepEqual request.headers, {key: 'value'}
 
-      it 'should update @response', ->
+      it 'should update @response', () ->
         response = test.response
         # Unchanged properties
         assert.equal response.status, 201
@@ -98,11 +98,11 @@ describe 'Test', ->
         # assert.equal response.headers, 201
         assert.deepEqual response.body, machine
 
-      it 'should call contentTest', ->
+      it 'should call contentTest', () ->
         assert.isTrue contentTestCalled
 
 
-    describe 'of test contains params', ->
+    describe 'of test that contains params', () ->
 
       test = ''
       machine = ''
@@ -133,10 +133,10 @@ describe 'Test', ->
         requestStub.callsArgWith(1, null, {statusCode: 200}, JSON.stringify(machine))
         test.run done
 
-      after ->
+      after () ->
         requestStub.restore()
 
-      it 'should call #request', ->
+      it 'should call #request', () ->
         requestStub.should.be.calledWith
           url: "#{ABAO_IO_SERVER}/machines/1"
           method: 'PUT'
@@ -147,10 +147,10 @@ describe 'Test', ->
           body: JSON.stringify
             body: 'value'
 
-      it 'should not modify @name', ->
+      it 'should not modify @name', () ->
         assert.equal test.name, 'PUT /machines/{machine_id} -> 200'
 
-      it 'should not modify @request', ->
+      it 'should not modify @request', () ->
         request = test.request
         assert.equal request.server, "#{ABAO_IO_SERVER}"
         assert.equal request.path, '/machines/{machine_id}'
@@ -159,13 +159,13 @@ describe 'Test', ->
         assert.deepEqual request.query, {q: 'value'}
         assert.deepEqual request.headers, {key: 'value'}
 
-      it 'should update @response', ->
+      it 'should update @response', () ->
         response = test.response
         # Unchanged properties
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
 
-    describe 'construct a TestFactory', ->
+    describe 'construct a TestFactory', () ->
 
       globStub = {}
       globStub.sync = sinon.spy((location) ->
@@ -187,14 +187,14 @@ describe 'Test', ->
         'tv4': tv4Stub
       }
 
-      it 'test TestFactory without parameter', ->
+      it 'test TestFactory without parameter', () ->
         new TestTestFactory('')
         assert.isFalse globStub.sync.called
         assert.isFalse fsStub.readFileSync.called
         assert.isFalse tv4Stub.banUnknown
         assert.isFalse tv4Stub.addSchema.called
 
-      it 'test TestFactory with name 1', ->
+      it 'test TestFactory with name 1', () ->
         new TestTestFactory('thisisaword')
         assert.isTrue globStub.sync.calledWith('thisisaword')
         assert.isTrue fsStub.readFileSync.calledOnce
@@ -202,7 +202,7 @@ describe 'Test', ->
         assert.isTrue tv4Stub.banUnknown
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
-      it 'test TestFactory with name 2', ->
+      it 'test TestFactory with name 2', () ->
         new TestTestFactory('thisIsAnotherWord')
         assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
         assert.isTrue fsStub.readFileSync.calledTwice
@@ -211,17 +211,17 @@ describe 'Test', ->
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
 
-  describe '#url', ->
+  describe '#url', () ->
 
-    describe 'when called with path that does not contain param', ->
+    describe 'when called with path that does not contain param', () ->
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines'
 
-      it 'should return origin path', ->
+      it 'should return origin path', () ->
         assert.equal test.url(), '/machines'
 
-    describe 'when called with path that contains param', ->
+    describe 'when called with path that contains param', () ->
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
@@ -229,14 +229,14 @@ describe 'Test', ->
         machine_id: 'tianmao'
         part_id: 2
 
-      it 'should replace all params', ->
+      it 'should replace all params', () ->
         assert.equal test.url(), '/machines/tianmao/parts/2'
 
-      it 'should not touch origin request.path', ->
+      it 'should not touch origin request.path', () ->
         assert.equal test.request.path, '/machines/{machine_id}/parts/{part_id}'
 
 
-  describe '#assertResponse', ->
+  describe '#assertResponse', () ->
 
     errorStub = ''
     responseStub = ''
@@ -252,11 +252,12 @@ describe 'Test', ->
         type:
           type: 'string'
         name:
-          type: 'string'}
+          type: 'string'
+    }
 
-    describe 'when against valid response', ->
+    describe 'when given valid response', () ->
 
-      it 'should should pass all asserts', ->
+      it 'should pass all asserts', () ->
 
         errorStub = null
         responseStub =
@@ -267,25 +268,26 @@ describe 'Test', ->
         # assert.doesNotThrow
         test.assertResponse(errorStub, responseStub, bodyStub)
 
-    describe 'when response body is null', ->
+    describe 'when given invalid response', () ->
+      describe 'when response body is null', () ->
 
-      it 'should throw AssertionError', ->
+        it 'should throw AssertionError', () ->
 
-        errorStub = null
-        responseStub =
-          statusCode : 201
-        bodyStub = null
-        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
-        assert.throw fn, chai.AssertionError
+          errorStub = null
+          responseStub =
+            statusCode : 201
+          bodyStub = null
+          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          assert.throw fn, chai.AssertionError
 
-    describe 'when response body is invalid json', ->
+      describe 'when response body is invalid JSON', () ->
 
-      it 'should throw AssertionError', ->
+        it 'should throw AssertionError', () ->
 
-        errorStub = null
-        responseStub =
-          statusCode : 201
-        bodyStub = 'Im invalid'
-        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
-        assert.throw fn, chai.AssertionError
+          errorStub = null
+          responseStub =
+            statusCode : 201
+          bodyStub = 'Im invalid'
+          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          assert.throw fn, chai.AssertionError
 

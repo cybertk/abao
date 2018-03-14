@@ -1,15 +1,15 @@
 chai = require 'chai'
 sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
-_ = require 'underscore'
+_ = require 'lodash'
 mocha = require 'mocha'
 mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
 
+pkg = require '../../package'
 TestFactory = require '../../lib/test'
-
 hooksStub = require '../../lib/hooks'
-suiteStub = ''
+suiteStub = undefined
 
 TestRunner = proxyquire '../../lib/test-runner', {
   'mocha': mocha,
@@ -23,13 +23,13 @@ assert = chai.assert
 should = chai.should()
 chai.use(sinonChai)
 
-runner = null
+describe 'Test Runner', () ->
 
-describe 'Test Runner', ->
+  runner = undefined
 
-  describe '#run', ->
+  describe '#run', () ->
 
-    describe 'when test is valid', ->
+    describe 'when test is valid', () ->
 
       runner = ''
       beforeAllHook = ''
@@ -52,7 +52,7 @@ describe 'Test Runner', ->
         options =
           server: "#{ABAO_IO_SERVER}"
 
-        runner = new TestRunner options , ''
+        runner = new TestRunner options, ''
 
         runCallback = sinon.stub()
         runCallback(done)
@@ -72,35 +72,41 @@ describe 'Test Runner', ->
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
-        sinon.stub mocha.Suite, 'create', (parent, title) ->
-          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
+        sinon.stub mocha.Suite, 'create'
+          .callsFake (parent, title) ->
+            suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
 
-          # Stub suite
-          originSuiteBeforeAll = suiteStub.beforeAll
-          originSuiteAfterAll = suiteStub.afterAll
-          sinon.stub suiteStub, 'beforeAll', (title, fn) ->
-            beforeHook = fn
-            originSuiteBeforeAll.call(suiteStub, title, fn)
-          sinon.stub suiteStub, 'afterAll', (title, fn) ->
-            afterHook = fn
-            originSuiteAfterAll.call(suiteStub, title, fn)
+            # Stub suite
+            originSuiteBeforeAll = suiteStub.beforeAll
+            originSuiteAfterAll = suiteStub.afterAll
+            sinon.stub suiteStub, 'beforeAll'
+              .callsFake (title, fn) ->
+                beforeHook = fn
+                originSuiteBeforeAll.call(suiteStub, title, fn)
+            sinon.stub suiteStub, 'afterAll'
+              .callsFake (title, fn) ->
+                afterHook = fn
+                originSuiteAfterAll.call(suiteStub, title, fn)
 
-          suiteStub
+            suiteStub
 
-        sinon.stub mochaStub, 'run', (callback) ->
-          callback(0)
+        sinon.stub mochaStub, 'run'
+          .callsFake (callback) ->
+            callback(0)
 
         sinon.spy mochaStub.suite, 'beforeAll'
         sinon.spy mochaStub.suite, 'afterAll'
 
-        sinon.stub hooksStub, 'runBefore', (test, callback) ->
-          callback()
-        sinon.stub hooksStub, 'runAfter', (test, callback) ->
-          callback()
+        sinon.stub hooksStub, 'runBefore'
+          .callsFake (test, callback) ->
+            callback()
+        sinon.stub hooksStub, 'runAfter'
+          .callsFake (test, callback) ->
+            callback()
 
         runner.run [test], hooksStub, runCallback
 
-      after ->
+      after () ->
         hooksStub.beforeAllHooks = [beforeAllHook]
         hooksStub.afterAllHooks = [afterAllHook]
 
@@ -113,42 +119,43 @@ describe 'Test Runner', ->
 
         runCallback = ''
 
-      it 'should generate beforeAll hooks', ->
+      it 'should generate beforeAll hooks', () ->
         mochaStub = runner.mocha
         assert.ok mochaStub.suite.beforeAll.called
         assert.ok mochaStub.suite.afterAll.called
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.calledOnce
 
-      it 'should invoke callback with failures', ->
+      it 'should invoke callback with failures', () ->
         runCallback.should.be.calledWith null, 0
 
-      it 'should generate mocha suite', ->
+      it 'should generate mocha suite', () ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generate mocha test', ->
+      it 'should generate mocha test', () ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
 
-      it 'should generate hook of suite', ->
+      it 'should generate hook of suite', () ->
         assert.ok suiteStub.beforeAll.called
         assert.ok suiteStub.afterAll.called
 
-      # describe 'when executed hooks', ->
+      # describe 'when executed hooks', () ->
       #   before (done) ->
       #
-      #   it 'should execute hooks', ->
-      #   # it 'should generate before hook', ->
+      #   it 'should execute hooks', () ->
+      #   # it 'should generate before hook', () ->
       #     assert.ok hooksStub.runBefore.calledWith(test)
         #
-        # it 'should call after hook', ->
+        # it 'should call after hook', () ->
         #   assert.ok hooksStub.runAfter.calledWith(test)
 
-    describe 'Interact with #test', ->
+
+    describe 'Interact with #test', () ->
 
       test = ''
       runner = ''
@@ -169,24 +176,26 @@ describe 'Test Runner', ->
           server: "#{ABAO_IO_SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub test, 'run', (callback) ->
-          callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         # Mute stdout/stderr
         mute (unmute) ->
-          runner.run [test], hooksStub, ->
+          runner.run [test], hooksStub, () ->
             unmute()
             done()
 
-      after ->
+      after () ->
         test.run.restore()
 
-      it 'should call #test.run', ->
+      it 'should call #test.run', () ->
         assert.ok test.run.calledOnce
 
-    describe 'when test has no response code', ->
-      before (done) ->
 
+    describe 'when test has no response code', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -197,30 +206,35 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
-      after ->
+      after () ->
         runner.mocha.run.restore()
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should generate mocha suite', ->
+      it 'should generate mocha suite', () ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generate pending mocha test', ->
+      it 'should generate pending mocha test', () ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.ok tests[0].pending
 
-    describe 'when test skipped in hooks', ->
-      before (done) ->
 
+    describe 'when test skipped in hooks', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -236,31 +250,36 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
         hooksStub.skippedTests = [test.name]
         runner.run [test], hooksStub, done
 
-      after ->
+      after () ->
         hooksStub.skippedTests = []
         runner.mocha.run.restore()
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should generate mocha suite', ->
+      it 'should generate mocha suite', () ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should generate pending mocha test', ->
+      it 'should generate pending mocha test', () ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.ok tests[0].pending
 
-    describe 'when test has no response schema', ->
-      before (done) ->
 
+    describe 'when test has no response schema', () ->
+
+      before (done) ->
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -272,33 +291,37 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
-        sinon.stub test, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
-      after ->
+      after () ->
         runner.mocha.run.restore()
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should generate mocha suite', ->
+      it 'should generate mocha suite', () ->
         suites = runner.mocha.suite.suites
         assert.equal suites.length, 1
         assert.equal suites[0].title, 'GET /machines -> 200'
 
-      it 'should not generate pending mocha test', ->
+      it 'should not generate pending mocha test', () ->
         tests = runner.mocha.suite.suites[0].tests
         assert.equal tests.length, 1
         assert.notOk tests[0].pending
 
-    describe 'when test throws AssertionError', ->
+
+    describe 'when test throws AssertionError', () ->
 
       afterAllHook = ''
 
       before (done) ->
-
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -321,23 +344,23 @@ describe 'Test Runner', ->
 
         # Mute stdout/stderr
         mute (unmute) ->
-          runner.run [test], hooksStub, ->
+          runner.run [test], hooksStub, () ->
             unmute()
             done()
 
-      after ->
+      after () ->
         afterAllHook = ''
 
-      it 'should call afterAll hook', ->
+      it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
 
-    describe 'when beforeAllHooks throws UncaughtError', ->
+
+    describe 'when beforeAllHooks throws UncaughtError', () ->
 
       beforeAllHook = ''
       afterAllHook = ''
 
       before (done) ->
-
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -357,27 +380,29 @@ describe 'Test Runner', ->
           server: "#{SERVER}"
 
         runner = new TestRunner options, ''
-        sinon.stub test, 'run', (callback) ->
-          callback()
+        sinon.stub test, 'run'
+          .callsFake (callback) ->
+            callback()
 
         # Mute stdout/stderr
         mute (unmute) ->
-          runner.run [test], hooksStub, ->
+          runner.run [test], hooksStub, () ->
             unmute()
             done()
 
-      after ->
+      after () ->
         beforeAllHook = ''
         afterAllHook = ''
 
-      it 'should call afterAll hook', ->
+      it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
 
-  describe '#run with options', ->
 
-    describe 'list all tests with `names`', ->
+  describe '#run with options', () ->
+
+    describe 'list all tests with `names`', () ->
+
       before (done) ->
-
         testFactory = new TestFactory()
         test = testFactory.create()
         test.name = 'GET /machines -> 200'
@@ -393,29 +418,32 @@ describe 'Test Runner', ->
           names: true
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) -> callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            callback()
         sinon.spy console, 'log'
 
         # Mute stdout/stderr
         mute (unmute) ->
-          runner.run [test], hooksStub, ->
+          runner.run [test], hooksStub, () ->
             unmute()
             done()
 
-      after ->
+      after () ->
         runner.mocha.run.restore()
         console.log.restore()
 
-      it 'should not run mocha', ->
+      it 'should not run mocha', () ->
         assert.notOk runner.mocha.run.called
 
-      it 'should print tests', ->
+      it 'should print tests', () ->
         assert.ok console.log.calledWith('GET /machines -> 200')
 
-    describe 'add additional headers with `headers`', ->
 
-      receivedTest = ''
-      header = ''
+    describe 'add additional headers with `headers`', () ->
+
+      receivedTest = undefined
+      headers = undefined
 
       before (done) ->
         testFactory = new TestFactory()
@@ -426,30 +454,33 @@ describe 'Test Runner', ->
         test.response.status = 200
         test.response.schema = {}
 
-        header =
+        headers =
           key: 'value'
+          'X-Abao-Version': pkg.version
 
         options =
           server: "#{SERVER}"
-          header: header
+          header: headers
 
         runner = new TestRunner options, ''
-        sinon.stub runner.mocha, 'run', (callback) ->
-          receivedTest = _.clone(test)
-          callback()
+        sinon.stub runner.mocha, 'run'
+          .callsFake (callback) ->
+            receivedTest = _.cloneDeep(test)
+            callback()
 
         runner.run [test], hooksStub, done
 
-      after ->
+      after () ->
         runner.mocha.run.restore()
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should add headers into test', ->
-        assert.deepEqual receivedTest.request.headers, header
+      it 'should add headers into test', () ->
+        assert.deepEqual receivedTest.request.headers, headers
 
-    describe 'run test with hooks only indicated by `hooks-only`', ->
+
+    describe 'run test with hooks only indicated by `hooks-only`', () ->
 
       testFactory = new TestFactory()
       test = testFactory.create()
@@ -462,7 +493,6 @@ describe 'Test Runner', ->
       suiteStub = ''
 
       before (done) ->
-
         options =
           server: "#{SERVER}"
           'hooks-only': true
@@ -471,32 +501,34 @@ describe 'Test Runner', ->
 
         mochaStub = runner.mocha
         originSuiteCreate = mocha.Suite.create
-        sinon.stub mocha.Suite, 'create', (parent, title) ->
-          suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
+        sinon.stub mocha.Suite, 'create'
+          .callsFake (parent, title) ->
+            suiteStub = originSuiteCreate.call(mocha.Suite, parent, title)
 
-          # Stub suite
-          sinon.spy suiteStub, 'addTest'
-          sinon.spy suiteStub, 'beforeAll'
-          sinon.spy suiteStub, 'afterAll'
+            # Stub suite
+            sinon.spy suiteStub, 'addTest'
+            sinon.spy suiteStub, 'beforeAll'
+            sinon.spy suiteStub, 'afterAll'
 
-          suiteStub
+            suiteStub
 
-        sinon.stub mochaStub, 'run', (callback) ->
-          callback()
+        sinon.stub mochaStub, 'run'
+          .callsFake (callback) ->
+            callback()
 
         runner.run [test], hooksStub, done
 
-      after ->
+      after () ->
         runner.mocha.run.restore()
         mocha.Suite.create.restore()
         suiteStub.addTest.restore()
         suiteStub.beforeAll.restore()
         suiteStub.afterAll.restore()
 
-      it 'should run mocha', ->
+      it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
 
-      it 'should add a pending test', ->
+      it 'should add a pending test'
         # TODO(quanlong): Implement this test
         # console.log suiteStub.addTest.printf('%n-%c-%C')
         # assert.ok suiteStub.addTest.calledWithExactly('GET /machines -> 200')
