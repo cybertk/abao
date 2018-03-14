@@ -279,5 +279,5 @@ If you think of something that would make life easier, please submit an issue.
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
 [RAML-0.8]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md
-[baseUri]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-0.8.md#base-uri-and-baseuriparameters
+[baseUri]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md#base-uri-and-baseuriparameters
 
