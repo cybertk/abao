@@ -51,7 +51,7 @@
     "csonschema": "^0.5.1",
     "glob": "^7.0.6",
     "lodash": "^4.16.4",
-    "mocha": "~3.5.0",
+    "mocha": "~3.5.3",
     "mustache": "~2.3.0",
     "proxyquire": "^2.0.0",
     "raml-parser": "^0.8.18",
@@ -83,6 +83,7 @@
     "time-grunt": "~1.4.0"
   },
   "engines": {
-    "node": ">= 4.0.0"
+    "node": ">= 4.0.0",
+    "npm": ">= 2.15.11"
   }
 }
