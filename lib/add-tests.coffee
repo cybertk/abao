@@ -16,12 +16,19 @@ parseSchema = (source) ->
     csonschema.parse source
     # @response.schema = csonschema.parse @response.schema
 
+
 parseHeaders = (raml) ->
   headers = {}
   if raml
     for key, v of raml
       headers[key] = v.example
   headers
+
+
+getCompatibleMediaTypes = (bodyObj) ->
+  vendorRE = /^application\/(.*\+)?json/i
+  return (type for type of bodyObj when type.match(vendorRE))
+
 
 addTests = (raml, tests, hooks, parent, callback, testFactory, sortFirst) ->
 
@@ -120,10 +127,11 @@ addTests = (raml, tests, hooks, parent, callback, testFactory, sortFirst) ->
         # Update test.request
         test.request.path = path
         test.request.method = method
-        test.request.headers = parseHeaders(api.headers)
+        test.request.headers = parseHeaders api.headers
 
-        # select compatible content-type in request body (to support vendor tree types, i.e. application/vnd.api+json)
-        contentType = (type for type of api.body when type.match(/^application\/(.*\+)?json/i))?[0]
+        # Select compatible content-type in request body to support
+        # vendor tree types (e.g., 'application/vnd.api+json')
+        contentType = getCompatibleMediaTypes(api.body)?[0]
         if contentType
           test.request.headers['Content-Type'] = contentType
           try
@@ -138,13 +146,12 @@ addTests = (raml, tests, hooks, parent, callback, testFactory, sortFirst) ->
         test.response.schema = null
 
         if res?.body
-          # expect content-type of response body to be identical to request body
+          # Expect content-type of response body to be identical to request body
           if contentType && res.body[contentType]?.schema
             test.response.schema = parseSchema res.body[contentType].schema
-          # otherwise filter in responses section for compatible content-types
-          # (vendor tree, i.e. application/vnd.api+json)
+          # Otherwise, filter in responses section for compatible content-types
           else
-            contentType = (type for type of res.body when type.match(/^application\/(.*\+)?json/i))?[0]
+            contentType = getCompatibleMediaTypes(res.body)?[0]
             if res.body[contentType]?.schema
               test.response.schema = parseSchema res.body[contentType].schema
 
