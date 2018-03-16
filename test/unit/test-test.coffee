@@ -206,7 +206,7 @@ describe 'Test', () ->
 
       it 'test TestFactory with name 1', () ->
         new TestTestFactory('thisisaword')
-        assert.isTrue globStub.sync.calledWith('thisisaword')
+        assert.isTrue globStub.sync.calledWith 'thisisaword'
         assert.isTrue fsStub.readFileSync.calledOnce
         assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
         assert.isTrue tv4Stub.banUnknown
@@ -214,7 +214,7 @@ describe 'Test', () ->
 
       it 'test TestFactory with name 2', () ->
         new TestTestFactory('thisIsAnotherWord')
-        assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
+        assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
         assert.isTrue fsStub.readFileSync.calledTwice
         assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
         assert.isTrue tv4Stub.banUnknown
