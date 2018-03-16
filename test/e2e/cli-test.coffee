@@ -45,6 +45,7 @@ execCommand = (cmd, callback) ->
     exitStatus = code if exitStatus == null and code != undefined
     callback()
 
+
 describe 'Command line interface', () ->
 
   describe 'when run without any arguments', (done) ->
@@ -87,6 +88,7 @@ describe 'Command line interface', () ->
     describe 'when RAML argument unnecessary', () ->
 
       describe 'when invoked with "--reporters" option', () ->
+
         reporters = ''
 
         before (done) ->
@@ -102,6 +104,7 @@ describe 'Command line interface', () ->
 
 
       describe 'when invoked with "--version" option', () ->
+
         before (done) ->
           cmd = "#{ABAO_BIN} --version"
 
@@ -115,6 +118,7 @@ describe 'Command line interface', () ->
 
 
       describe 'when invoked with "--help" option', () ->
+
         before (done) ->
           cmd = "#{ABAO_BIN} --help"
 
@@ -126,9 +130,11 @@ describe 'Command line interface', () ->
         it 'should print usage to stdout', () ->
           assert.equal stdout.split('\n')[0], 'Usage:'
 
+
     describe 'when RAML argument required', () ->
 
       describe 'when invoked with "--names" option', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --names"
@@ -146,7 +152,9 @@ describe 'Command line interface', () ->
 
 
       describe 'when invoked with "--generate-hooks" option', () ->
+
         describe 'by itself', () ->
+
           before (done) ->
             ramlFile = "#{RAML_DIR}/single-get.raml"
             cmd = "#{ABAO_BIN} #{ramlFile} --generate-hooks"
@@ -164,6 +172,7 @@ describe 'Command line interface', () ->
 
 
         describe 'with "--template" option', () ->
+
           before (done) ->
             templateFile = "#{TEMPLATE_DIR}/hookfile.js"
             ramlFile = "#{RAML_DIR}/single-get.raml"
@@ -180,7 +189,9 @@ describe 'Command line interface', () ->
           it 'should not run tests', () ->
             assert.notInclude stdout, '0 passing'
 
+
       describe 'when invoked with "--template" but without "--generate-hooks" option', () ->
+
         before (done) ->
           templateFile = "#{TEMPLATE_DIR}/hookfile.js"
           ramlFile = "#{RAML_DIR}/single-get.raml"
@@ -197,6 +208,7 @@ describe 'Command line interface', () ->
 
 
   describe 'when RAML file not found', (done) ->
+
     before (done) ->
       ramlFile = "#{RAML_DIR}/nonexistent_path.raml"
       cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
@@ -213,8 +225,11 @@ describe 'Command line interface', () ->
 
 
   describe 'arguments with existing RAML and responding server', () ->
+
     describe 'when invoked without "--server" option', () ->
+
       describe 'when RAML file does not specify "baseUri"', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/no-base-uri.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --reporter json"
@@ -226,6 +241,7 @@ describe 'Command line interface', () ->
 
         it 'should print error message to stderr', () ->
           assert.include stderr, 'no API endpoint specified'
+
 
       describe 'when RAML file does specify "baseUri"', () ->
 
@@ -259,7 +275,9 @@ describe 'Command line interface', () ->
         it 'should print correct title for response', () ->
           assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
+
     describe 'when executing the command and the server is responding as specified in the RAML', () ->
+
       before (done) ->
         ramlFile = "#{RAML_DIR}/single-get.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter json"
@@ -290,7 +308,9 @@ describe 'Command line interface', () ->
       it 'should print correct title for response', () ->
         assert.equal report.tests[0].fullTitle, 'GET /machines -> 200 Validate response code and body'
 
+
     describe 'when executing the command and RAML includes other RAML files', () ->
+
       before (done) ->
         ramlFile = "#{RAML_DIR}/include_other_raml.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
@@ -317,9 +337,11 @@ describe 'Command line interface', () ->
       it 'should print count of tests run', () ->
         assert.include stdout, '1 passing'
 
+
     describe 'when called with arguments', () ->
 
       describe 'when invoked with "--reporter" option', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
@@ -342,6 +364,7 @@ describe 'Command line interface', () ->
 
         it 'should print using the specified reporter', () ->
           assert.include stdout, '1 passing'
+
 
       describe 'when invoked with "--header" option', () ->
 
@@ -413,6 +436,7 @@ describe 'Command line interface', () ->
 
 
       describe 'when invoked with "--hooks-only" option', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hooks-only"
@@ -439,7 +463,9 @@ describe 'Command line interface', () ->
         it 'should not run test without hooks', () ->
           assert.include stdout, '1 pending'
 
+
       describe 'when invoked with "--timeout" option', () ->
+
         cost = ''
 
         before (done) ->
@@ -468,7 +494,9 @@ describe 'Command line interface', () ->
         it 'should not run test without hooks', () ->
           assert.include stdout, '0 passing'
 
+
       describe 'when invoked with "--schema" option', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/with-json-refs.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
@@ -492,7 +520,9 @@ describe 'Command line interface', () ->
         it 'exit status should be 0', () ->
           assert.equal exitStatus, 0
 
+
       describe 'when invoked with "--schema" option and expecting error', () ->
+
         before (done) ->
           ramlFile = "#{RAML_DIR}/with-json-refs.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{SCHEMA_DIR}/*.json"
