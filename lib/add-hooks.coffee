@@ -3,9 +3,9 @@
 ###
 
 require 'coffee-script/register'
-proxyquire = require('proxyquire').noCallThru()
 glob = require 'glob'
 path = require 'path'
+proxyquire = require('proxyquire').noCallThru()
 
 
 addHooks = (hooks, pattern) ->

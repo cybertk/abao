@@ -3,8 +3,8 @@
 ###
 
 async = require 'async'
-_ = require 'lodash'
 csonschema = require 'csonschema'
+_ = require 'lodash'
 
 
 parseSchema = (source) ->

@@ -3,16 +3,16 @@
 ###
 
 require('source-map-support').install({handleUncaughtExceptions: false})
-ramlParser = require 'raml-parser'
 async = require 'async'
+ramlParser = require 'raml-parser'
 
-options = require './options'
 addTests = require './add-tests'
-TestFactory = require './test'
 addHooks = require './add-hooks'
-Runner = require './test-runner'
 applyConfiguration = require './apply-configuration'
 hooks = require './hooks'
+options = require './options'
+Runner = require './test-runner'
+TestFactory = require './test'
 
 
 class Abao

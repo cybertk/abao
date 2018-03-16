@@ -2,13 +2,13 @@
 # @file TestFactory/Test classes
 ###
 
-chai = require 'chai'
-request = require 'request'
-_ = require 'underscore'
 async = require 'async'
-tv4 = require 'tv4'
+chai = require 'chai'
 fs = require 'fs'
 glob = require 'glob'
+request = require 'request'
+tv4 = require 'tv4'
+_ = require 'underscore'
 
 assert = chai.assert
 

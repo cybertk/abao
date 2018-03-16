@@ -7,6 +7,7 @@ require 'coffee-script/register'
 path = require 'path'
 _ = require 'lodash'
 yargs = require 'yargs'
+
 Abao = require '../lib/abao'
 pkg = require '../package'
 

@@ -2,11 +2,12 @@
 # @file TestRunner class
 ###
 
-Mocha = require 'mocha'
 async = require 'async'
+Mocha = require 'mocha'
 path = require 'path'
 # TODO(proebuck): Replace underscore module with Lodash; ensure compatibility
 _ = require 'underscore'
+
 generateHooks = require './generate-hooks'
 
 
