@@ -33,6 +33,7 @@ class TestFactory
     return new Test(name, contentTest)
 
 
+
 class Test
   constructor: (@name, @contentTest) ->
     @name ?= ''

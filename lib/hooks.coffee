@@ -80,5 +80,6 @@ class Hooks
     @skippedTests.indexOf(name) != -1
 
 
+
 module.exports = new Hooks()
 
