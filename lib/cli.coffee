@@ -38,11 +38,11 @@ mochaOptionNames = [
   'reporter',
   'timeout'
 ]
-binary = path.basename pkg.bin
+prog = path.basename pkg.bin
 
 argv = yargs
-  .usage('Usage:\n  ' + binary + ' </path/to/raml> [OPTIONS]' +
-    '\n\nExample:\n  ' + binary + ' api.raml --server http://api.example.com')
+  .usage("Usage:\n  #{prog} </path/to/raml> [OPTIONS]" +
+    "\n\nExample:\n  #{prog} api.raml --server http://api.example.com")
   .options(Abao.options)
   .group(mochaOptionNames, 'Options passed to Mocha:')
   .implies('template', 'generate-hooks')
@@ -53,24 +53,24 @@ argv = yargs
 
     # Ensure single positional argument present
     if argv._.length < 1
-      throw new Error binary + ': must specify path to RAML file'
+      throw new Error "#{prog}: must specify path to RAML file"
     else if argv._.length > 1
-      throw new Error binary + ': accepts single positional command-line argument'
+      throw new Error "#{prog}: accepts single positional command-line argument"
 
     return true
   )
   .wrap(80)
   .help('help', 'Show usage information and exit')
   .version().describe('version', 'Show version number and exit')
-  .epilog('Website:\n  ' + pkg.homepage)
+  .epilog("Website:\n  #{pkg.homepage}")
   .argv
 
 aliases = Object.keys(Abao.options).map (key) -> Abao.options[key].alias
             .filter (val) -> val != undefined
 
 configuration =
-  'ramlPath': argv._[0],
-  'options':  _.omit argv, ['_', '$0', aliases...]
+  ramlPath: argv._[0],
+  options: _.omit argv, ['_', '$0', aliases...]
 
 mochaOptions = _.pick configuration.options, mochaOptionNames
 configuration.options = _.omit configuration.options, mochaOptionNames
