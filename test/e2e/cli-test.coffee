@@ -450,11 +450,11 @@ describe 'Command line interface', () ->
 
           t0 = ''
           app.get '/machines', (req, res) ->
-            t0 = new Date
+            t0 = new Date()
 
           server = app.listen PORT, () ->
             execCommand cmd, () ->
-              cost = new Date - t0
+              cost = new Date() - t0
               server.close()
 
           server.on 'close', done

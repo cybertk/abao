@@ -48,7 +48,12 @@ describe 'Test', () ->
         test.request.body =
           body: 'value'
         test.response.status = 201
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = [
+          type: 'object'
+          properties:
+            type: 'string'
+            name: 'string'
+        ]
 
         machine =
           type: 'foo'
@@ -124,7 +129,12 @@ describe 'Test', () ->
         test.request.body =
           body: 'value'
         test.response.status = 200
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = [
+          type: 'object'
+          properties:
+            type: 'string'
+            name: 'string'
+        ]
 
         machine =
           type: 'foo'
@@ -198,7 +208,7 @@ describe 'Test', () ->
         new TestTestFactory('thisisaword')
         assert.isTrue globStub.sync.calledWith('thisisaword')
         assert.isTrue fsStub.readFileSync.calledOnce
-        assert.isTrue fsStub.readFileSync.calledWith('thisisaword','utf8')
+        assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
         assert.isTrue tv4Stub.banUnknown
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
@@ -206,7 +216,7 @@ describe 'Test', () ->
         new TestTestFactory('thisIsAnotherWord')
         assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
         assert.isTrue fsStub.readFileSync.calledTwice
-        assert.isTrue fsStub.readFileSync.calledWith('thisIsAnotherWord','utf8')
+        assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
         assert.isTrue tv4Stub.banUnknown
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
@@ -261,7 +271,7 @@ describe 'Test', () ->
 
         errorStub = null
         responseStub =
-          statusCode : 201
+          statusCode: 201
         bodyStub = JSON.stringify
           type: 'foo'
           name: 'bar'
@@ -275,7 +285,7 @@ describe 'Test', () ->
 
           errorStub = null
           responseStub =
-            statusCode : 201
+            statusCode: 201
           bodyStub = null
           fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
           assert.throw fn, chai.AssertionError
@@ -286,7 +296,7 @@ describe 'Test', () ->
 
           errorStub = null
           responseStub =
-            statusCode : 201
+            statusCode: 201
           bodyStub = 'Im invalid'
           fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
           assert.throw fn, chai.AssertionError

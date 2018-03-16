@@ -35,7 +35,7 @@ describe 'addHooks(hooks, pattern)', () ->
 
     pattern = './test/**/*_hooks.*'
 
-    it 'should return files', (done)->
+    it 'should return files', (done) ->
       mute (unmute) ->
         sinon.spy globStub, 'sync'
         addHooks(hooksStub, pattern)

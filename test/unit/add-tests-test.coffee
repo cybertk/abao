@@ -180,7 +180,7 @@ describe '#addTests', () ->
     describe 'when RAML includes multiple referencing schemas', () ->
 
       tests = []
-      testFactory = new TestFactory
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -218,14 +218,14 @@ describe '#addTests', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        assert.equal res.schema?.properties?.chick?.type, "string"
+        assert.equal res.schema?.properties?.chick?.type, 'string'
         assert.isNull res.headers
         assert.isNull res.body
 
     describe 'when RAML has inline and included schemas', () ->
 
       tests = []
-      testFactory = new TestFactory
+      testFactory = new TestFactory()
       callback = ''
 
       before (done) ->
@@ -263,7 +263,7 @@ describe '#addTests', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        assert.equal res.schema?.properties?.type["$ref"], "type2"
+        assert.equal res.schema?.properties?.type['$ref'], 'type2'
         assert.isNull res.headers
         assert.isNull res.body
 
