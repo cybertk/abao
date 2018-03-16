@@ -1,13 +1,13 @@
-## Abao
-> RAML testing tool
+Automated testing tool based on RAML-0.8
 
-[![Gitter](https://badges.gitter.im/cybertk/abao.svg)](https://gitter.im/cybertk/abao?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
-[![Stories in Ready](https://badge.waffle.io/cybertk/abao.svg?label=ready&title=Ready)](https://waffle.io/cybertk/abao)
-[![Build Status](https://img.shields.io/travis/cybertk/abao.svg?style=flat)](https://travis-ci.org/cybertk/abao)
-[![Dependency Status](https://david-dm.org/cybertk/abao.svg)](https://david-dm.org/cybertk/abao)
-[![devDependency Status](https://david-dm.org/cybertk/abao/dev-status.svg)](https://david-dm.org/cybertk/abao#info=devDependencies)
-[![Coverage Status](https://img.shields.io/coveralls/cybertk/abao.svg)](https://coveralls.io/r/cybertk/abao)
-[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/388/badge)](https://bestpractices.coreinfrastructure.org/projects/388) 
+# Abao
+
+[![Build Status][Travis-Abao-badge]][Travis-Abao]
+[![Dependency Status][David-AbaoDep-badge]][David-AbaoDep]
+[![devDependency Status][David-AbaoDevDep-badge]][David-AbaoDevDep]
+[![Coverage Status][Coveralls-Abao-badge]][Coveralls-Abao]
+[![Gitter][Gitter-Abao-badge]][Gitter-Abao]
+[![CII Best Practices][BestPractices-Abao-badge]][BestPractices-Abao]
 
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
@@ -15,6 +15,8 @@ easily plug your API documentation into a Continuous Integration (CI) system
 (e.g., [Travis][], [Jenkins][]) and have API documentation up-to-date, all
 the time. **Abao** uses [Mocha][] for judging if a particular API response
 is valid or not.
+
+[![NPM][NPM-Abao-badge]][NPM-Abao]
 
 ## Features
 
@@ -26,12 +28,23 @@ is valid or not.
 - Verify that HTTP response headers for each endpoint defined in RAML are supported in service
 - Verify that HTTP response body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
 
+## RAML Support
+
+This version of the software **only** supports the [RAML-0.8][] specification.
+
 ## Installation
 
-Install stable version
+Install stable version of full package globally.
 
 ```bash
 $ npm install -g abao
+```
+
+A trimmed down version (without developer dependencies) can be installed for
+production usage.
+
+```bash
+$ npm install --only=prod -g abao
 ```
 
 Install latest development version in GitHub branch
@@ -40,7 +53,9 @@ Install latest development version in GitHub branch
 $ npm install -g github:cybertk/abao
 ```
 
-Un*x users will likely need to run these commands using `sudo`.
+If you get an `EACCES` error, see
+[this](https://docs.npmjs.com/getting-started/fixing-npm-permissions)
+NPM documentation.
 
 ## Get Started Testing Your API
 
@@ -258,10 +273,29 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
+[//]: # (Cross reference section)
+
 [RAML]: https://raml.org/
 [Mocha]: https://mochajs.org/
 [JSONSchema]: http://json-schema.org/
 [Travis]: https://travis-ci.org/
 [Jenkins]: https://jenkins-ci.org/
-[baseUri]: https://github.com/raml-org/raml-spec/blob/master/raml-0.8.md#base-uri-and-baseuriparameters
+[RAML-0.8]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md
+[baseUri]: https://github.com/raml-org/raml-spec/blob/master/versions/raml-08/raml-08.md#base-uri-and-baseuriparameters
+
+[Travis-Abao]: https://travis-ci.org/cybertk/abao/
+[Travis-Abao-badge]: https://img.shields.io/travis/cybertk/abao.svg?style=flat
+[David-AbaoDep]: https://david-dm.org/cybertk/abao/
+[David-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
+[David-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
+[David-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
+[Coveralls-Abao]: https://coveralls.io/r/cybertk/abao/
+[Coveralls-Abao-badge]: https://img.shields.io/coveralls/cybertk/abao.svg
+[Gitter-Abao]: https://gitter.im/cybertk/abao/
+[Gitter-Abao-badge]: https://badges.gitter.im/cybertk/abao.svg
+[BestPractices-Abao]: https://bestpractices.coreinfrastructure.org/projects/388
+[BestPractices-Abao-badge]: https://bestpractices.coreinfrastructure.org/projects/388/badge
+[NPM-Abao]: https://npmjs.org/package/abao/
+[NPM-Abao-badge]: https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true
+
 

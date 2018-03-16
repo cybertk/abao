@@ -3,7 +3,7 @@
 ###
 
 async = require 'async'
-_ = require 'underscore'
+_ = require 'lodash'
 
 
 class Hooks
@@ -18,10 +18,10 @@ class Hooks
     @skippedTests = []
 
   before: (name, hook) =>
-    @addHook(@beforeHooks, name, hook)
+    @addHook @beforeHooks, name, hook
 
   after: (name, hook) =>
-    @addHook(@afterHooks, name, hook)
+    @addHook @afterHooks, name, hook
 
   beforeAll: (hook) =>
     @beforeAllHooks.push hook
@@ -30,10 +30,10 @@ class Hooks
     @afterAllHooks.push hook
 
   beforeEach: (hook) =>
-    @beforeEachHooks.push(hook)
+    @beforeEachHooks.push hook
 
   afterEach: (hook) =>
-    @afterEachHooks.push(hook)
+    @afterEachHooks.push hook
 
   addHook: (hooks, name, hook) ->
     if hooks[name]
