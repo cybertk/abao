@@ -2,7 +2,7 @@
 # @file Abao class
 ###
 
-sms = require("source-map-support").install({handleUncaughtExceptions: false})
+require('source-map-support').install({handleUncaughtExceptions: false})
 ramlParser = require 'raml-parser'
 async = require 'async'
 
@@ -53,6 +53,7 @@ class Abao
         runner = new Runner config.options, config.ramlPath
         runner.run tests, hooks, callback
     ], done
+
 
 
 module.exports = Abao
