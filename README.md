@@ -208,12 +208,13 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 ### test.request
 
-* `server` - Server address, provided from command line.
+* `server` - Server address, provided by command line option or parsed from
+  RAML `baseUri`.
 * `path` - API endpoint path, parsed from RAML.
 * `method` - HTTP method, parsed from RAML request method (e.g., `get`).
 * `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
-* `query` - Object containing querystring values to be appended to the `path`,
-  parsed from RAML `queryParameters` section [default: `{}`].
+* `query` - Object containing querystring values to be appended to the `path`.
+  Parsed from RAML `queryParameters` section [default: `{}`].
 * `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
 * `body` - Entity body for POST, PUT, and PATCH requests. Must be a
   JSON-serializable object. Parsed from RAML `example` [default: `{}`].
