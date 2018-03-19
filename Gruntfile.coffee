@@ -55,7 +55,7 @@ module.exports = (grunt) ->
 
     markdownlint:
       options:
-       config: require './.markdownlint.json'
+        config: require './.markdownlint.json'
       default:
         src: [
           '<%= readme %>'
