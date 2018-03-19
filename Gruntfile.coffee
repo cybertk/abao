@@ -10,6 +10,7 @@ module.exports = (grunt) ->
     # Load in the module information
     pkg: grunt.file.readJSON 'package.json'
 
+    readme: 'README.md'
     gruntfile: 'Gruntfile.coffee'
 
     clean:
@@ -42,6 +43,8 @@ module.exports = (grunt) ->
         ]
 
     coffeelint:
+      options:
+        configFile: 'coffeelint.json'
       default:
         src: [
           'lib/*.coffee'
@@ -49,8 +52,14 @@ module.exports = (grunt) ->
         ]
       gruntfile:
         src: '<%= gruntfile %>'
+
+    markdownlint:
       options:
-        configFile: 'coffeelint.json'
+       config: require './.markdownlint.json'
+      default:
+        src: [
+          '<%= readme %>'
+        ]
 
     coffeecov:
       transpile:
@@ -84,7 +93,10 @@ module.exports = (grunt) ->
   ]
 
   grunt.registerTask 'instrument', [ 'coffeecov' ]
-  grunt.registerTask 'lint', [ 'coffeelint' ]
+  grunt.registerTask 'lint', [
+    'coffeelint',
+    'markdownlint'
+  ]
 
   grunt.registerTask 'test', [
     'lint'
