@@ -1,6 +1,6 @@
-Automated testing tool based on RAML-0.8
-
 # Abao
+
+RAML-based automated testing tool
 
 [![Build Status][Travis-Abao-badge]][Travis-Abao]
 [![Dependency Status][David-AbaoDep-badge]][David-AbaoDep]
@@ -20,13 +20,13 @@ is valid or not.
 
 ## Features
 
-- Verify that each endpoint defined in RAML exists in service
-- Verify that URL params for each endpoint defined in RAML are supported in service
-- Verify that the required query parameters defined in RAML are supported in service
-- Verify that HTTP request headers for each endpoint defined in RAML are supported in service
-- Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
-- Verify that HTTP response headers for each endpoint defined in RAML are supported in service
-- Verify that HTTP response body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
+* Verify that each endpoint defined in RAML exists in service
+* Verify that URL params for each endpoint defined in RAML are supported in service
+* Verify that the required query parameters defined in RAML are supported in service
+* Verify that HTTP request headers for each endpoint defined in RAML are supported in service
+* Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
+* Verify that HTTP response headers for each endpoint defined in RAML are supported in service
+* Verify that HTTP response body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
 
 ## RAML Support
 
@@ -208,24 +208,26 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 ### test.request
 
-- `server` - Server address, provided from command line.
-- `path` - API endpoint path, parsed from RAML.
-- `method` - HTTP method, parsed from RAML request method (e.g., `get`).
-- `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
-- `query` - Object containing querystring values to be appended to the `path`,parsed from RAML `queryParameters` section [default: `{}`].
-- `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
-- `body` - Entity body for POST, PUT, and PATCH requests. Must be a JSON-serializable object. Parsed from RAML `example` [default: `{}`].
+* `server` - Server address, provided from command line.
+* `path` - API endpoint path, parsed from RAML.
+* `method` - HTTP method, parsed from RAML request method (e.g., `get`).
+* `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
+* `query` - Object containing querystring values to be appended to the `path`,
+  parsed from RAML `queryParameters` section [default: `{}`].
+* `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
+* `body` - Entity body for POST, PUT, and PATCH requests. Must be a
+  JSON-serializable object. Parsed from RAML `example` [default: `{}`].
 
 ### test.response
 
-- `status` - Expected HTTP response code, parsed from RAML response status.
-- `schema` - Expected schema of HTTP response body, parsed from RAML response `schema`.
-- `headers` - Object containing HTTP response headers from server [default: `{}`].
-- `body` - HTTP response body (JSON-format) from server [default: `null`].
+* `status` - Expected HTTP response code, parsed from RAML response status.
+* `schema` - Expected schema of HTTP response body, parsed from RAML response `schema`.
+* `headers` - Object containing HTTP response headers from server [default: `{}`].
+* `body` - HTTP response body (JSON-format) from server [default: `null`].
 
 ## Command Line Options
 
-```
+```console
 Usage:
   abao </path/to/raml> [OPTIONS]
 
@@ -297,5 +299,4 @@ If you think of something that would make life easier, please submit an issue.
 [BestPractices-Abao-badge]: https://bestpractices.coreinfrastructure.org/projects/388/badge
 [NPM-Abao]: https://npmjs.org/package/abao/
 [NPM-Abao-badge]: https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true
-
 
