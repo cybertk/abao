@@ -3,8 +3,8 @@
 RAML-based automated testing tool
 
 [![Build Status][Travis-Abao-badge]][Travis-Abao]
-[![Dependency Status][David-AbaoDep-badge]][David-AbaoDep]
-[![devDependency Status][David-AbaoDevDep-badge]][David-AbaoDevDep]
+[![Dependency Status][DavidDM-AbaoDep-badge]][DavidDM-AbaoDep]
+[![devDependency Status][DavidDM-AbaoDevDep-badge]][DavidDM-AbaoDevDep]
 [![Coverage Status][Coveralls-Abao-badge]][Coveralls-Abao]
 [![Gitter][Gitter-Abao-badge]][Gitter-Abao]
 [![CII Best Practices][BestPractices-Abao-badge]][BestPractices-Abao]
@@ -288,10 +288,10 @@ If you think of something that would make life easier, please submit an issue.
 
 [Travis-Abao]: https://travis-ci.org/cybertk/abao/
 [Travis-Abao-badge]: https://img.shields.io/travis/cybertk/abao.svg?style=flat
-[David-AbaoDep]: https://david-dm.org/cybertk/abao/
-[David-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
-[David-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
-[David-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
+[DavidDM-AbaoDep]: https://david-dm.org/cybertk/abao/
+[DavidDM-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
+[DavidDM-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
+[DavidDM-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
 [Coveralls-Abao]: https://coveralls.io/r/cybertk/abao/
 [Coveralls-Abao-badge]: https://img.shields.io/coveralls/cybertk/abao.svg
 [Gitter-Abao]: https://gitter.im/cybertk/abao/
