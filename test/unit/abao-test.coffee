@@ -25,6 +25,7 @@ chai.use(sinonChai)
 
 
 describe 'Abao', () ->
+  'use strict'
 
   describe '#constructor', () ->
 

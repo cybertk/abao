@@ -16,6 +16,7 @@ addHooks = proxyquire  '../../lib/add-hooks', {
 }
 
 describe 'addHooks(hooks, pattern)', () ->
+  'use strict'
 
   transactions = {}
 

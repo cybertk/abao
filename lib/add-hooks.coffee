@@ -9,7 +9,7 @@ proxyquire = require('proxyquire').noCallThru()
 
 
 addHooks = (hooks, pattern) ->
-
+  'use strict'
   if pattern
     files = glob.sync pattern
 

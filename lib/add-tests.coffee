@@ -8,6 +8,7 @@ _ = require 'lodash'
 
 
 parseSchema = (source) ->
+  'use strict'
   if source.contains('$schema')
     #jsonschema
     # @response.schema = JSON.parse @response.schema
@@ -18,6 +19,7 @@ parseSchema = (source) ->
 
 
 parseHeaders = (raml) ->
+  'use strict'
   headers = {}
   if raml
     for key, v of raml
@@ -26,11 +28,13 @@ parseHeaders = (raml) ->
 
 
 getCompatibleMediaTypes = (bodyObj) ->
+  'use strict'
   vendorRE = /^application\/(.*\+)?json/i
   return (type for type of bodyObj when type.match(vendorRE))
 
 
 addTests = (raml, tests, hooks, parent, callback, testFactory, sortFirst) ->
+  'use strict'
 
   # Handle 4th optional param
   if _.isFunction(parent)

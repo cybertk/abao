@@ -24,6 +24,7 @@ should = chai.should()
 chai.use(sinonChai)
 
 describe 'Test Runner', () ->
+  'use strict'
 
   runner = undefined
 

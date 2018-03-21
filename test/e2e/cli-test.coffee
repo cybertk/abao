@@ -53,6 +53,7 @@ debugExecCommand = false
 
 
 execCommand = (cmd, callback) ->
+  'use strict'
   stderr = ''
   stdout = ''
   report = ''
@@ -80,6 +81,7 @@ execCommand = (cmd, callback) ->
 
 
 describe 'Command line interface', () ->
+  'use strict'
 
   describe 'when run without any arguments', (done) ->
 

@@ -15,6 +15,7 @@ EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
 showReporters = () ->
+  'use strict'
   # Copied from node_modules/mocha/_mocha
   console.log()
   console.log '    dot - dot matrix'
@@ -48,6 +49,7 @@ argv = yargs
   .group(mochaOptionNames, 'Options passed to Mocha:')
   .implies('template', 'generate-hooks')
   .check((argv) ->
+    'use strict'
     if argv.reporters == true
       showReporters()
       process.exit EXIT_SUCCESS
@@ -80,6 +82,7 @@ configuration.options.mocha = mochaOptions
 abao = new Abao configuration
 
 abao.run (error, nfailures) ->
+  'use strict'
   if error
     process.exitCode = EXIT_FAILURE
     if error.message

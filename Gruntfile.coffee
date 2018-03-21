@@ -1,5 +1,6 @@
 module.exports = (grunt) ->
 
+  'use strict'
   require('time-grunt') grunt
 
   # Dynamically load npm tasks

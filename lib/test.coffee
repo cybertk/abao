@@ -14,11 +14,13 @@ assert = chai.assert
 
 
 String::contains = (it) ->
+  'use strict'
   @indexOf(it) != -1
 
 
 class TestFactory
   constructor: (schemaLocation) ->
+    'use strict'
     if schemaLocation
 
       files = glob.sync schemaLocation
@@ -30,12 +32,14 @@ class TestFactory
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: (name, contentTest) ->
+    'use strict'
     return new Test(name, contentTest)
 
 
 
 class Test
   constructor: (@name, @contentTest) ->
+    'use strict'
     @name ?= ''
     @skip = false
 
@@ -58,6 +62,7 @@ class Test
       done()
 
   url: () ->
+    'use strict'
     path = @request.server + @request.path
 
     for key, value of @request.params
@@ -65,6 +70,7 @@ class Test
     return path
 
   run: (callback) ->
+    'use strict'
     assertResponse = @assertResponse
     contentTest = @contentTest
 
@@ -87,6 +93,7 @@ class Test
     ], callback
 
   assertResponse: (error, response, body) =>
+    'use strict'
     assert.isNull error
     assert.isNotNull response, 'Response'
 

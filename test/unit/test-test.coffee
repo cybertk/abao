@@ -10,6 +10,7 @@ chai.use(sinonChai)
 
 requestStub = sinon.stub()
 requestStub.restore = () ->
+  'use strict'
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
 TestFactory = proxyquire '../../lib/test', {
@@ -20,6 +21,7 @@ ABAO_IO_SERVER = 'http://abao.io'
 
 
 describe 'Test', () ->
+  'use strict'
 
   describe '#run', () ->
 

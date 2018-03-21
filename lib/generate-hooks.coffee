@@ -6,6 +6,7 @@ fs = require 'fs'
 Mustache = require 'mustache'
 
 generateHooks = (names, ramlFile, templateFile, callback) ->
+  'use strict'
   if !names
     callback new Error 'no names found for which to generate hooks'
 

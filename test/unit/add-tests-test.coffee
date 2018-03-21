@@ -17,6 +17,7 @@ RAML_DIR = "#{FIXTURE_DIR}"
 
 
 describe '#addTests', () ->
+  'use strict'
 
   describe '#run', () ->
 

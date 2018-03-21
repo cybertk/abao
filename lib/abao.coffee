@@ -17,11 +17,13 @@ TestFactory = require './test'
 
 class Abao
   constructor: (config) ->
+    'use strict'
     @configuration = applyConfiguration(config)
     @tests = []
     @hooks = hooks
 
   run: (done) ->
+    'use strict'
     config = @configuration
     tests = @tests
     hooks = @hooks

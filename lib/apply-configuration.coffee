@@ -3,6 +3,7 @@
 ###
 
 applyConfiguration = (config) ->
+  'use strict'
 
   coerceToArray = (value) ->
     if typeof value is 'string'

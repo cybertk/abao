@@ -9,6 +9,7 @@ hooks = require '../../lib/hooks'
 ABAO_IO_SERVER = 'http://abao.io'
 
 describe 'Hooks', () ->
+  'use strict'
 
   describe 'when adding before hook', () ->
 

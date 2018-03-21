@@ -13,6 +13,7 @@ generateHooks = require './generate-hooks'
 
 class TestRunner
   constructor: (options, ramlFile) ->
+    'use strict'
     @server = options.server
     delete options.server
     @mocha = new Mocha options.mocha
@@ -21,6 +22,7 @@ class TestRunner
     @ramlFile = ramlFile
 
   addTestToMocha: (test, hooks) =>
+    'use strict'
     mocha = @mocha
     options = @options
 
@@ -63,6 +65,7 @@ class TestRunner
     , {test}
 
   run: (tests, hooks, done) ->
+    'use strict'
     server = @server
     options = @options
     addTestToMocha = @addTestToMocha
