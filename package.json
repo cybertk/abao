@@ -62,6 +62,7 @@
     "yargs": "^11.1.0"
   },
   "devDependencies": {
+    "coffeelint-use-strict": "^1.0.0",
     "coveralls": "^2.11.14",
     "cz-conventional-changelog": "^2.1.0",
     "express": "^4.12.0",

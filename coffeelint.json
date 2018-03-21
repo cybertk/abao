@@ -131,5 +131,11 @@
   },
   "transform_messes_up_line_numbers": {
     "level": "warn"
+  },
+  "use_strict": {
+    "module": "coffeelint-use-strict",
+    "level": "warn",
+    "allowGlobal": false,
+    "requireGlobal": false
   }
 }
