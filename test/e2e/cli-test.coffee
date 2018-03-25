@@ -34,8 +34,6 @@ stdout = ''
 report = ''
 exitStatus = null
 
-receivedRequest = {}
-
 #
 # To dump individual raw test results:
 #
@@ -209,7 +207,7 @@ describe 'Command line interface', () ->
 
       describe 'when invoked with "--generate-hooks" option', () ->
 
-        describe 'by itself', () ->
+        describe 'by itself (use package-provided template)', () ->
 
           runGenHooksTestAsync = (done) ->
             ramlFile = "#{RAML_DIR}/single-get.raml"
@@ -415,7 +413,7 @@ describe 'Command line interface', () ->
       before (done) ->
         runRamlIncludesTestAsync done
 
-      it 'should print count of tests run', () ->
+      it 'should print count of passing tests run', () ->
         expect(stdout).to.have.string('1 passing')
 
       it 'should exit normally', () ->
@@ -457,20 +455,42 @@ describe 'Command line interface', () ->
       describe 'when invoked with "--header" option', () ->
 
         receivedRequest = {}
+        producedMediaType = 'application/vnd.api+json'
+        reqMediaType = undefined
 
         runHeaderTestAsync = (done) ->
-          extraHeader = 'Accept:application/json'
+          extraHeader = "Accept:#{reqMediaType}"
           ramlFile = "#{RAML_DIR}/single-get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header #{extraHeader}"
 
           app = express()
 
-          app.get '/machines', (req, res) ->
+          app.use (req, res, next) ->
             receivedRequest = req
+            next()
+
+          app.use (req, res, next) ->
+            err = null
+            produces = ["#{producedMediaType}"]
+            if !req.accepts produces
+              err = new Error('Not Acceptable')
+              err.status = 406
+            next(err)
+
+          app.get '/machines', (req, res) ->
             machine =
               type: 'bulldozer'
               name: 'willy'
-            res.status(200).json([machine])
+            res.setHeader 'Content-Type', "#{producedMediaType}"
+            res.status(200).send([machine])
+
+          app.use (err, req, res, next) ->
+            res.status(err.status || 500)
+              .json({
+                message: err.message,
+                stack: err.stack
+              })
+            return
 
           server = app.listen PORT, () ->
             execCommand cmd, () ->
@@ -478,17 +498,41 @@ describe 'Command line interface', () ->
 
           server.on 'close', done
 
-        before (done) ->
-          runHeaderTestAsync done
+        context 'with "accept"-able request', () ->
 
-        it 'should have an additional header in the request', () ->
-          expect(receivedRequest.headers.accept).to.equal('application/json')
+          before (done) ->
+            reqMediaType = "#{producedMediaType}"
+            runHeaderTestAsync done
 
-        it 'should print count of tests run', () ->
-          expect(stdout).to.have.string('1 passing')
+          it 'should have the additional header in the request', () ->
+            expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
 
-        it 'should exit normally', () ->
-          expect(exitStatus).to.equal(0)
+          it 'should print count of passing tests run', () ->
+            expect(stdout).to.have.string('1 passing')
+
+          it 'should exit normally', () ->
+            expect(exitStatus).to.equal(0)
+
+
+        context 'with un-"accept"-able request', () ->
+
+          before (done) ->
+            reqMediaType = 'application/json'
+            runHeaderTestAsync done
+
+          it 'should have the additional header in the request', () ->
+            expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
+
+          # Errors thrown by Mocha show up in stdout; those by Abao in stderr.
+          it 'Mocha should throw an error', () ->
+            detail = "Error: expected 406 to equal '200'"
+            expect(stdout).to.have.string(detail)
+
+          it 'should run test but not complete', () ->
+            expect(stdout).to.have.string('1 failing')
+
+          it 'should exit due to error', () ->
+            expect(exitStatus).to.equal(1)
 
 
       describe 'when invoked with "--hookfiles" option', () ->
@@ -502,8 +546,11 @@ describe 'Command line interface', () ->
 
           app = express()
 
-          app.get '/machines', (req, res) ->
+          app.use (req, res, next) ->
             receivedRequest = req
+            next()
+
+          app.get '/machines', (req, res) ->
             machine =
               type: 'bulldozer'
               name: 'willy'
@@ -655,7 +702,7 @@ describe 'Command line interface', () ->
           expect(exitStatus).to.equal(0)
 
 
-        describe 'when expecting error', () ->
+        describe 'when expecting validation to fail', () ->
 
           runSchemaFailTestAsync = (done) ->
             pattern = "#{SCHEMA_DIR}/*.json"
@@ -666,7 +713,7 @@ describe 'Command line interface', () ->
 
             app.get '/machines', (req, res) ->
               machine =
-                typO: 'bulldozer'       # 'type' != 'typ0'
+                typO: 'bulldozer'       # 'type' != 'typO'
                 name: 'willy'
               res.status(200).json([machine])
 
