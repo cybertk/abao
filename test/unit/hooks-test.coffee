@@ -11,11 +11,13 @@ ABAO_IO_SERVER = 'http://abao.io'
 describe 'Hooks', () ->
   'use strict'
 
+  noop = () -> {}
+
   describe 'when adding before hook', () ->
 
     before () ->
-      hooks.before 'beforeHook', () ->
-        ''
+      hooks.before 'beforeHook', noop
+
     after () ->
       hooks.beforeHooks = {}
 
@@ -26,8 +28,8 @@ describe 'Hooks', () ->
   describe 'when adding after hook', () ->
 
     before () ->
-      hooks.after 'afterHook', () ->
-        ''
+      hooks.after 'afterHook', noop
+
     after () ->
       hooks.afterHooks = {}
 
@@ -75,7 +77,7 @@ describe 'Hooks', () ->
       hooks.beforeHooks = {}
 
     it 'should add to hook list', () ->
-      hooks.beforeEach () ->
+      hooks.beforeEach noop
       assert.lengthOf hooks.beforeEachHooks, 1
 
     it 'should invoke registered callbacks', (testDone) ->
@@ -120,7 +122,7 @@ describe 'Hooks', () ->
       hooks.afterHooks = {}
 
     it 'should add to hook list', () ->
-      hooks.afterEach () ->
+      hooks.afterEach noop
       assert.lengthOf hooks.afterEachHooks, 1
 
     it 'should invoke registered callbacks', (testDone) ->
@@ -131,14 +133,14 @@ describe 'Hooks', () ->
         assert.equal test.name, test_name
         after_called = true
         assert.isFalse after_each_called,
-            'after_hook should be called before after_each'
+          'after_hook should be called before after_each'
         done()
 
       hooks.afterEach (test, done) ->
         assert.equal test.name, test_name
         after_each_called = true
         assert.isTrue after_called,
-            'after_each should be called after after_hook'
+          'after_each should be called after after_hook'
         done()
 
       hooks.runAfter {name: test_name}, () ->
@@ -352,8 +354,8 @@ describe 'Hooks', () ->
     test_name = 'content_test_test'
 
     it 'should get added to the set of hooks', () ->
-      hooks.test(test_name, () ->)
-      assert.isDefined(hooks.contentTests[test_name])
+      hooks.test test_name, noop
+      assert.isDefined hooks.contentTests[test_name]
 
   describe 'adding two content tests fails', () ->
     afterEach () ->
@@ -361,9 +363,9 @@ describe 'Hooks', () ->
 
     test_name = 'content_test_test'
 
-    it 'should assert when adding a second content test', () ->
+    it 'should assert when attempting to add a second content test', () ->
       f = () ->
-        hooks.test(test_name, () ->)
+        hooks.test test_name, noop
       f()
       assert.throw f,
         "cannot have more than one test with the name: #{test_name}"
