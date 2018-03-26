@@ -6,9 +6,9 @@ version: v1
 
 /machines:
   get:
+    description: Get a list of existing machines
     responses:
       200:
-        description: "Returns an existing machine"
         body:
           application/json:
             schema: |
@@ -19,6 +19,7 @@ version: v1
             example: |
               { "type": "Kulu", "name": "Mike" }
   post:
+    description: Creates a new machine
     body:
       application/json:
         schema: |
@@ -28,11 +29,10 @@ version: v1
               { "type": "Kulu", "name": "Mike" }
     responses:
       201:
-        description: "Returns a newly created machine, with server-controlled fields like 'id' populated"
         headers:
           location: 
             description: URI of the newly created machine
-            example: {baseUri}/machines/{id}
+            example: /machines/{id}
         body:
           application/json:
             schema: |

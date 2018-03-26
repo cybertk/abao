@@ -12,15 +12,17 @@ traits:
 /songs:
   is: [ paged ]
   get:
+    description: Gets a list of existing songs
     queryParameters:
       genre:
         description: filter the songs by genre
   post:
+    description: Adds a new song
   /{songId}:
     get:
+      description: Gets an existing song by `songId`
       responses:
         200:
-          description: "Returns an existing song"
           body:
             application/json:
               schema: |
@@ -37,6 +39,5 @@ traits:
                 { "title": "A Beautiful Day", "artist": "Mike" }
             application/xml:
     delete:
-      description: |
-        This method will *delete* an **individual song**
+      description: Deletes an existing song by `songId`
 

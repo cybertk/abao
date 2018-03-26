@@ -6,6 +6,7 @@ version: v1
 
 /contacts:
   post:
+    description: Creates a new contact
     body:
       application/json:
         schema: |
@@ -15,11 +16,10 @@ version: v1
               { "type": "Kulu", "name": "Mike" }
     responses:
       201:
-        description: "Returns a newly created contact, with server-controlled fields like 'id' populated"
         headers:
           location:
             description: URI of the newly created contact
-            example: {baseUri}/contacts/{id}
+            example: /contacts/{contact_id}
         body:
           application/json:
             schema: |
@@ -27,12 +27,13 @@ version: v1
               name: 'string'
             example: |
               { "type": "Kulu", "name": "Mike" }
-  /contacts/{id}
+  /contacts/{contact_id}
     delete:
+      description: Deletes an existing contact by `contact_id`
       responses:
         204:
-          description: "Deletes an existing contact"
     put:
+      description: Replaces an existing contact by `contact_id`
       body:
         application/json:
           schema: |
@@ -42,7 +43,6 @@ version: v1
                 { "type": "Kulu", "name": "Mike" }
       responses:
         201:
-          description: "Replaces body of an existing contact"
           body:
             application/json:
               schema: |
@@ -51,9 +51,9 @@ version: v1
               example: |
                 { "type": "Kulu", "name": "Mike" }
     get:
+      description: Gets an existing contact by `contact_id`
       responses:
         200:
-          description: "Returns an existing contact"
           body:
             application/json:
               schema: |
