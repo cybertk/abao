@@ -28,7 +28,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
+        ramlFile = "#{RAML_DIR}/machines-single_get.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -77,8 +77,7 @@ describe '#addTests', () ->
         callback = ''
 
         before (done) ->
-
-          ramlFile = "#{RAML_DIR}/1-get-1-post.raml"
+          ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
@@ -131,8 +130,7 @@ describe '#addTests', () ->
         callback = ''
 
         before (done) ->
-
-          ramlFile = "#{RAML_DIR}/1-get-1-post.raml"
+          ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
@@ -185,8 +183,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/ref_other_schemas.raml"
+        ramlFile = "#{RAML_DIR}/machines-ref_other_schemas.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -230,8 +227,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/inline_and_included_schemas.raml"
+        ramlFile = "#{RAML_DIR}/machines-inline_and_included_schemas.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -275,8 +271,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/three-levels.raml"
+        ramlFile = "#{RAML_DIR}/machines-three_levels.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -316,8 +311,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/no-method.raml"
+        ramlFile = "#{RAML_DIR}/machines-no_method.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -390,7 +384,7 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-        ramlFile = "#{RAML_DIR}/vendor-content-type.raml"
+        ramlFile = "#{RAML_DIR}/music-vendor_content_type.raml"
         ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
@@ -436,8 +430,8 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
-        ramlParser.loadFile("#{RAML_DIR}/required_query_parameter.raml")
+        ramlFile ="#{RAML_DIR}/machines-required_query_parameter.raml"
+        ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
           callback.returns(done())
@@ -457,7 +451,8 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-        ramlParser.loadFile("#{RAML_DIR}/non_required_query_parameter.raml")
+        ramlFile = "#{RAML_DIR}/machines-non_required_query_parameter.raml"
+        ramlParser.loadFile(ramlFile)
         .then (raml) ->
           callback = sinon.stub()
           callback.returns(done())

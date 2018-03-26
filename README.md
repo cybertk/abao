@@ -93,12 +93,12 @@ the RAML. You can print a list of the generated names with the `--names` flag.
 
 ### Example
 
-The RAML file used in the examples below can be found [here](../master/test/fixtures/single-get.raml).
+The RAML file used in the examples below can be found [here](../master/test/fixtures/machines-single_get.raml).
 
 Get Names:
 
 ```bash
-$ abao single-get.raml --names
+$ abao machines-single_get.raml --names
 GET /machines -> 200
 ```
 
@@ -108,7 +108,7 @@ response code for each path.
 ```bash
 $ ABAO_HOME="/path/to/node_modules/abao"
 $ TEMPLATE="${ABAO_HOME}/templates/hookfile.js"
-$ abao single-get.raml --generate-hooks --template="${TEMPLATE}" > test_machines_hooks.js
+$ abao machines-single_get.raml --generate-hooks --template="${TEMPLATE}" > test_machines_hooks.js
 
 ```
 
@@ -155,7 +155,7 @@ after 'GET /machines -> 200', (test, done) ->
 Run validation with *JavaScript* hookfile (from above):
 
 ```bash
-$ abao single-get.raml --hookfiles=test_machines_hooks.js
+$ abao machines-single_get.raml --hookfiles=test_machines_hooks.js
 ```
 
 You can also specify what tests **Abao** should skip:

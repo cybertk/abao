@@ -105,7 +105,7 @@ describe 'Command line interface', () ->
   describe 'when run with multiple positional arguments', (done) ->
 
     runTooManyArgTestAsync = (done) ->
-      ramlFile = "#{RAML_DIR}/single-get.raml"
+      ramlFile = "#{RAML_DIR}/machines-single_get.raml"
       cmd = "#{ABAO_BIN} #{ramlFile} #{ramlFile}"
 
       execCommand cmd, done
@@ -187,7 +187,7 @@ describe 'Command line interface', () ->
       describe 'when invoked with "--names" option', () ->
 
         runNamesTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --names"
 
           execCommand cmd, done
@@ -210,7 +210,7 @@ describe 'Command line interface', () ->
         describe 'by itself (use package-provided template)', () ->
 
           runGenHooksTestAsync = (done) ->
-            ramlFile = "#{RAML_DIR}/single-get.raml"
+            ramlFile = "#{RAML_DIR}/machines-single_get.raml"
             cmd = "#{ABAO_BIN} #{ramlFile} --generate-hooks"
 
             execCommand cmd, done
@@ -232,7 +232,7 @@ describe 'Command line interface', () ->
 
           runGenHookTemplateTestAsync = (done) ->
             templateFile = "#{TEMPLATE_DIR}/hookfile.js"
-            ramlFile = "#{RAML_DIR}/single-get.raml"
+            ramlFile = "#{RAML_DIR}/machines-single_get.raml"
             cmd = "#{ABAO_BIN} #{ramlFile} --generate-hooks --template #{templateFile}"
 
             execCommand cmd, done
@@ -254,7 +254,7 @@ describe 'Command line interface', () ->
 
         runTemplateOnlyTestAsync = (done) ->
           templateFile = "#{TEMPLATE_DIR}/hookfile.js"
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --template #{templateFile}"
 
           execCommand cmd, done
@@ -297,7 +297,7 @@ describe 'Command line interface', () ->
       describe 'when RAML file does not specify "baseUri"', () ->
 
         runUnspecifiedServerTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/no-base-uri.raml"
+          ramlFile = "#{RAML_DIR}/music-no_base_uri.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --reporter json"
 
           execCommand cmd, done
@@ -317,7 +317,7 @@ describe 'Command line interface', () ->
         resTestTitle = 'GET /machines -> 200 Validate response code and body'
 
         runBaseUriServerTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --reporter json"
 
           app = express()
@@ -356,7 +356,7 @@ describe 'Command line interface', () ->
       resTestTitle = 'GET /machines -> 200 Validate response code and body'
 
       runNormalTestAsync = (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
+        ramlFile = "#{RAML_DIR}/machines-single_get.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter json"
 
         app = express()
@@ -393,7 +393,7 @@ describe 'Command line interface', () ->
     describe 'when executing the command and RAML includes other RAML files', () ->
 
       runRamlIncludesTestAsync = (done) ->
-        ramlFile = "#{RAML_DIR}/include_other_raml.raml"
+        ramlFile = "#{RAML_DIR}/machines-include_other_raml.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER}"
 
         app = express()
@@ -425,7 +425,7 @@ describe 'Command line interface', () ->
       describe 'when invoked with "--reporter" option', () ->
 
         runReporterTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter spec"
 
           app = express()
@@ -463,7 +463,7 @@ describe 'Command line interface', () ->
 
           runAcceptHeaderTestAsync = (done) ->
             extraHeader = "Accept:#{reqMediaType}"
-            ramlFile = "#{RAML_DIR}/single-get.raml"
+            ramlFile = "#{RAML_DIR}/machines-single_get.raml"
             cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header #{extraHeader}"
 
             app = express()
@@ -544,7 +544,7 @@ describe 'Command line interface', () ->
 
         runHookfilesTestAsync = (done) ->
           pattern = "#{HOOK_DIR}/*_hooks.*"
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hookfiles=#{pattern}"
 
           app = express()
@@ -583,7 +583,7 @@ describe 'Command line interface', () ->
       describe 'when invoked with "--hooks-only" option', () ->
 
         runHooksOnlyTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --hooks-only"
 
           app = express()
@@ -617,7 +617,7 @@ describe 'Command line interface', () ->
         finished = undefined
 
         runTimeoutTestAsync = (done) ->
-          ramlFile = "#{RAML_DIR}/single-get.raml"
+          ramlFile = "#{RAML_DIR}/machines-single_get.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --timeout #{timeout}"
 
           beginTime = undefined
@@ -681,7 +681,7 @@ describe 'Command line interface', () ->
 
         runSchemaTestAsync = (done) ->
           pattern = "#{SCHEMA_DIR}/*.json"
-          ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+          ramlFile = "#{RAML_DIR}/machines-with_json_refs.raml"
           cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{pattern}"
 
           app = express()
@@ -709,7 +709,7 @@ describe 'Command line interface', () ->
 
           runSchemaFailTestAsync = (done) ->
             pattern = "#{SCHEMA_DIR}/*.json"
-            ramlFile = "#{RAML_DIR}/with-json-refs.raml"
+            ramlFile = "#{RAML_DIR}/machines-with_json_refs.raml"
             cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --schemas=#{pattern}"
 
             app = express()

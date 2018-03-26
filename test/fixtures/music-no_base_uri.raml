@@ -1,7 +1,6 @@
 #%RAML 0.8
 
 title: World Music API
-baseUri: http://example.api.com/{version}
 version: v1
 traits:
   - paged:
@@ -20,6 +19,7 @@ traits:
     get:
       responses:
         200:
+          description: "Returns an existing song"
           body:
             application/json:
               schema: |

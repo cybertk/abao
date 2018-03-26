@@ -8,6 +8,7 @@ version: v1
   get:
     responses:
       200:
+        description: "Returns an existing machine"
         body:
           application/json:
             schema: |
@@ -27,6 +28,11 @@ version: v1
               { "type": "Kulu", "name": "Mike" }
     responses:
       201:
+        description: "Returns a newly created machine, with server-controlled fields like 'id' populated"
+        headers:
+          location: 
+            description: URI of the newly created machine
+            example: {baseUri}/machines/{id}
         body:
           application/json:
             schema: |
