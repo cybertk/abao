@@ -457,82 +457,85 @@ describe 'Command line interface', () ->
         receivedRequest = {}
         producedMediaType = 'application/vnd.api+json'
         reqMediaType = undefined
+        extraHeader = undefined
 
-        runHeaderTestAsync = (done) ->
-          extraHeader = "Accept:#{reqMediaType}"
-          ramlFile = "#{RAML_DIR}/single-get.raml"
-          cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header #{extraHeader}"
+        describe 'with "Accept" header', () ->
 
-          app = express()
+          runAcceptHeaderTestAsync = (done) ->
+            extraHeader = "Accept:#{reqMediaType}"
+            ramlFile = "#{RAML_DIR}/single-get.raml"
+            cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --header #{extraHeader}"
 
-          app.use (req, res, next) ->
-            receivedRequest = req
-            next()
+            app = express()
 
-          app.use (req, res, next) ->
-            err = null
-            produces = ["#{producedMediaType}"]
-            if !req.accepts produces
-              err = new Error('Not Acceptable')
-              err.status = 406
-            next(err)
+            app.use (req, res, next) ->
+              receivedRequest = req
+              next()
 
-          app.get '/machines', (req, res) ->
-            machine =
-              type: 'bulldozer'
-              name: 'willy'
-            res.setHeader 'Content-Type', "#{producedMediaType}"
-            res.status(200).send([machine])
+            app.use (req, res, next) ->
+              err = null
+              produces = ["#{producedMediaType}"]
+              if !req.accepts produces
+                err = new Error('Not Acceptable')
+                err.status = 406
+              next(err)
 
-          app.use (err, req, res, next) ->
-            res.status(err.status || 500)
-              .json({
-                message: err.message,
-                stack: err.stack
-              })
-            return
+            app.get '/machines', (req, res) ->
+              machine =
+                type: 'bulldozer'
+                name: 'willy'
+              res.setHeader 'Content-Type', "#{producedMediaType}"
+              res.status(200).send([machine])
 
-          server = app.listen PORT, () ->
-            execCommand cmd, () ->
-              server.close()
+            app.use (err, req, res, next) ->
+              res.status(err.status || 500)
+                .json({
+                  message: err.message,
+                  stack: err.stack
+                })
+              return
 
-          server.on 'close', done
+            server = app.listen PORT, () ->
+              execCommand cmd, () ->
+                server.close()
 
-        context 'with "accept"-able request', () ->
+            server.on 'close', done
 
-          before (done) ->
-            reqMediaType = "#{producedMediaType}"
-            runHeaderTestAsync done
+          context 'when expecting success', () ->
 
-          it 'should have the additional header in the request', () ->
-            expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
+            before (done) ->
+              reqMediaType = "#{producedMediaType}"
+              runAcceptHeaderTestAsync done
 
-          it 'should print count of passing tests run', () ->
-            expect(stdout).to.have.string('1 passing')
+            it 'should have the additional header in the request', () ->
+              expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
 
-          it 'should exit normally', () ->
-            expect(exitStatus).to.equal(0)
+            it 'should print count of passing tests run', () ->
+              expect(stdout).to.have.string('1 passing')
+
+            it 'should exit normally', () ->
+              expect(exitStatus).to.equal(0)
 
 
-        context 'with un-"accept"-able request', () ->
+          context 'when expecting failure', () ->
 
-          before (done) ->
-            reqMediaType = 'application/json'
-            runHeaderTestAsync done
+            before (done) ->
+              reqMediaType = 'application/json'
+              runAcceptHeaderTestAsync done
 
-          it 'should have the additional header in the request', () ->
-            expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
+            it 'should have the additional header in the request', () ->
+              expect(receivedRequest.headers.accept).to.equal("#{reqMediaType}")
 
-          # Errors thrown by Mocha show up in stdout; those by Abao in stderr.
-          it 'Mocha should throw an error', () ->
-            detail = "Error: expected 406 to equal '200'"
-            expect(stdout).to.have.string(detail)
+            # Errors thrown by Mocha show up in stdout; those by Abao in stderr.
+            it 'Mocha should throw an error', () ->
+              detail = "Error: expected 406 to equal '200'"
+              expect(stdout).to.have.string(detail)
 
-          it 'should run test but not complete', () ->
-            expect(stdout).to.have.string('1 failing')
+            it 'should run test but not complete', () ->
+              expect(stdout).to.have.string('1 failing')
 
-          it 'should exit due to error', () ->
-            expect(exitStatus).to.equal(1)
+            it 'should exit due to error', () ->
+              expect(exitStatus).to.equal(1)
 
 
       describe 'when invoked with "--hookfiles" option', () ->
