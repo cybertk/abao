@@ -36,6 +36,7 @@ describe '#addTests', () ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
+
       after () ->
         tests = []
 
@@ -69,7 +70,9 @@ describe '#addTests', () ->
         assert.isNull res.headers
         assert.isNull res.body
 
+
     describe 'when endpoint has multiple methods', () ->
+
       describe 'when processed in order specified in RAML', () ->
 
         tests = []
@@ -85,6 +88,7 @@ describe '#addTests', () ->
 
             addTests raml, tests, hooks, callback, testFactory, false
           return
+
         after () ->
           tests = []
 
@@ -123,6 +127,7 @@ describe '#addTests', () ->
           assert.isNull res.headers
           assert.isNull res.body
 
+
       describe 'when processed in order specified by "--sorted" option', () ->
 
         tests = []
@@ -138,6 +143,7 @@ describe '#addTests', () ->
 
             addTests raml, tests, hooks, null, callback, testFactory, true
           return
+
         after () ->
           tests = []
 
@@ -176,6 +182,7 @@ describe '#addTests', () ->
           assert.isNull res.headers
           assert.isNull res.body
 
+
     describe 'when RAML includes multiple referencing schemas', () ->
 
       tests = []
@@ -191,6 +198,7 @@ describe '#addTests', () ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
+
       after () ->
         tests = []
 
@@ -220,6 +228,7 @@ describe '#addTests', () ->
         assert.isNull res.headers
         assert.isNull res.body
 
+
     describe 'when RAML has inline and included schemas', () ->
 
       tests = []
@@ -235,6 +244,7 @@ describe '#addTests', () ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
+
       after () ->
         tests = []
 
@@ -263,6 +273,7 @@ describe '#addTests', () ->
         assert.equal res.schema?.properties?.type['$ref'], 'type2'
         assert.isNull res.headers
         assert.isNull res.body
+
 
     describe 'when RAML contains three-levels endpoints', () ->
 
@@ -304,6 +315,7 @@ describe '#addTests', () ->
         assert.deepEqual test.request.params,
           machine_id: '1'
 
+
     describe 'when RAML has resource not defined method', () ->
 
       tests = []
@@ -332,6 +344,7 @@ describe '#addTests', () ->
       it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /root/machines -> 200'
 
+
     describe 'when RAML has invalid request body example', () ->
 
       tests = []
@@ -339,7 +352,6 @@ describe '#addTests', () ->
       callback = ''
 
       before (done) ->
-
         raml = """
         #%RAML 0.8
 
@@ -378,7 +390,9 @@ describe '#addTests', () ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
+
     describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', () ->
+
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -392,6 +406,7 @@ describe '#addTests', () ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
+
       after () ->
         tests = []
 
@@ -425,6 +440,7 @@ describe '#addTests', () ->
 
 
     describe 'when there is required query parameter with example value', () ->
+
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -445,7 +461,9 @@ describe '#addTests', () ->
       it 'should append query parameters with example value', () ->
         assert.equal tests[0].request.query['quux'], 'foo'
 
+
     describe 'when there is no required query parameter', () ->
+
       tests = []
       testFactory = new TestFactory()
       callback = ''
@@ -459,8 +477,10 @@ describe '#addTests', () ->
 
           addTests raml, tests, hooks, callback, testFactory, false
         return
+
       after () ->
         tests = []
 
       it 'should not append query parameters', () ->
         assert.deepEqual tests[0].request.query, {}
+
