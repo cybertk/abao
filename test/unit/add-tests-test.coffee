@@ -25,7 +25,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-single_get.raml"
@@ -35,6 +35,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -77,7 +80,7 @@ describe '#addTests', () ->
 
         tests = []
         testFactory = new TestFactory()
-        callback = ''
+        callback = undefined
 
         before (done) ->
           ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
@@ -87,6 +90,9 @@ describe '#addTests', () ->
             callback.returns(done())
 
             addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
           return
 
         after () ->
@@ -132,7 +138,7 @@ describe '#addTests', () ->
 
         tests = []
         testFactory = new TestFactory()
-        callback = ''
+        callback = undefined
 
         before (done) ->
           ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
@@ -142,6 +148,9 @@ describe '#addTests', () ->
             callback.returns(done())
 
             addTests raml, tests, hooks, null, callback, testFactory, true
+          .catch (err) ->
+            console.error err
+            done(err)
           return
 
         after () ->
@@ -187,7 +196,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-ref_other_schemas.raml"
@@ -197,6 +206,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -233,7 +245,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-inline_and_included_schemas.raml"
@@ -243,6 +255,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -279,7 +294,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-three_levels.raml"
@@ -289,6 +304,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -320,7 +338,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-no_method.raml"
@@ -330,6 +348,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -349,7 +370,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         raml = """
@@ -374,6 +395,9 @@ describe '#addTests', () ->
 
           sinon.stub console, 'warn'
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -395,7 +419,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/music-vendor_content_type.raml"
@@ -405,6 +429,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -443,7 +470,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile ="#{RAML_DIR}/machines-required_query_parameter.raml"
@@ -453,6 +480,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
@@ -466,7 +496,7 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-non_required_query_parameter.raml"
@@ -476,6 +506,9 @@ describe '#addTests', () ->
           callback.returns(done())
 
           addTests raml, tests, hooks, callback, testFactory, false
+        .catch (err) ->
+          console.error err
+          done(err)
         return
 
       after () ->
