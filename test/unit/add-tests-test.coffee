@@ -488,6 +488,12 @@ describe '#addTests', () ->
       after () ->
         tests = []
 
+      it 'should run callback', () ->
+        assert.ok callback.called
+
+      it 'should add 1 test', () ->
+        assert.lengthOf tests, 1
+
       it 'should append query parameters with example value', () ->
         assert.equal tests[0].request.query['quux'], 'foo'
 
@@ -513,6 +519,12 @@ describe '#addTests', () ->
 
       after () ->
         tests = []
+
+      it 'should run callback', () ->
+        assert.ok callback.called
+
+      it 'should add 1 test', () ->
+        assert.lengthOf tests, 1
 
       it 'should not append query parameters', () ->
         assert.deepEqual tests[0].request.query, {}
