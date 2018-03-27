@@ -30,14 +30,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-single_get.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -85,14 +85,14 @@ describe '#addTests', () ->
         before (done) ->
           ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
-          .then (raml) ->
-            callback = sinon.stub()
-            callback.returns(done())
+            .then (raml) ->
+              callback = sinon.stub()
+              callback.returns(done())
 
-            addTests raml, tests, hooks, callback, testFactory, false
-          .catch (err) ->
-            console.error err
-            done(err)
+              addTests raml, tests, hooks, callback, testFactory, false
+            .catch (err) ->
+              console.error err
+              done(err)
           return
 
         after () ->
@@ -143,14 +143,14 @@ describe '#addTests', () ->
         before (done) ->
           ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
-          .then (raml) ->
-            callback = sinon.stub()
-            callback.returns(done())
+            .then (raml) ->
+              callback = sinon.stub()
+              callback.returns(done())
 
-            addTests raml, tests, hooks, null, callback, testFactory, true
-          .catch (err) ->
-            console.error err
-            done(err)
+              addTests raml, tests, hooks, null, callback, testFactory, true
+            .catch (err) ->
+              console.error err
+              done(err)
           return
 
         after () ->
@@ -201,14 +201,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-ref_other_schemas.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -250,14 +250,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-inline_and_included_schemas.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -299,14 +299,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-three_levels.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -343,14 +343,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-no_method.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -389,15 +389,15 @@ describe '#addTests', () ->
               204:
         """
         ramlParser.load(raml)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          sinon.stub console, 'warn'
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            sinon.stub console, 'warn'
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -424,14 +424,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/music-vendor_content_type.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -473,16 +473,16 @@ describe '#addTests', () ->
       callback = undefined
 
       before (done) ->
-        ramlFile ="#{RAML_DIR}/machines-required_query_parameter.raml"
+        ramlFile = "#{RAML_DIR}/machines-required_query_parameter.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -501,14 +501,14 @@ describe '#addTests', () ->
       before (done) ->
         ramlFile = "#{RAML_DIR}/machines-non_required_query_parameter.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
-        .catch (err) ->
-          console.error err
-          done(err)
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
