@@ -353,19 +353,68 @@ describe 'Command line interface', () ->
 
     describe 'when executing the command and the server is responding as specified in the RAML', () ->
 
-      resTestTitle = 'GET /machines -> 200 Validate response code and body'
+      responses = {}
+      getResponse = undefined
+      headResponse = undefined
+      optionsResponse = undefined
+
+      getTestTitle = 'GET /machines -> 200 Validate response code and body'
+      headTestTitle = 'HEAD /machines -> 200 Validate response code only'
+      optionsTestTitle = 'OPTIONS /machines -> 204 Validate response code only'
 
       runNormalTestAsync = (done) ->
-        ramlFile = "#{RAML_DIR}/machines-single_get.raml"
+        ramlFile = "#{RAML_DIR}/machines-get_head_options.raml"
         cmd = "#{ABAO_BIN} #{ramlFile} --server #{SERVER} --reporter json"
 
         app = express()
 
-        app.get '/machines', (req, res) ->
+        app.use (req, res, next) ->
+          origResWrite = res.write
+          origResEnd = res.end
+          chunks = []
+          res.write = (chunk) ->
+            chunks.push new Buffer(chunk)
+            origResWrite.apply res, arguments
+          res.end = (chunk) ->
+            if (chunk)
+              chunks.push new Buffer(chunk)
+            res.body = Buffer.concat(chunks).toString('utf8')
+            origResEnd.apply res, arguments
+          next()
+
+        app.options '/machines', (req, res, next) ->
+          allow = ['OPTIONS', 'HEAD', 'GET']
+          res.setHeader 'Allow', allow.join ', '
+          res.setHeader 'Cache-Control', 'no-cache, no-store, must-revalidate'
+          res.status(204).end()
+          next()
+
+        app.get '/machines', (req, res, next) ->
           machine =
             type: 'bulldozer'
             name: 'willy'
           res.status(200).json([machine])
+          next()
+
+        app.use (req, res, next) ->
+          response =
+            headers: {},
+            body: res.body
+          headerNames = do () ->
+            if req.method == 'OPTIONS'
+              return [
+                'Allow',
+                'Cache-Control'
+              ]
+            else
+              return [
+                'Content-Type',
+                'Content-Length',
+                'ETag'
+              ]
+          headerNames.forEach (headerName) ->
+            response.headers[headerName] = res.get headerName
+          responses[req.method] = _.cloneDeep(response)
 
         server = app.listen PORT, () ->
           execCommand cmd, () ->
@@ -376,15 +425,39 @@ describe 'Command line interface', () ->
       before (done) ->
         runNormalTestAsync done
 
-      it 'should print count of tests run', () ->
+      before () ->
+        getResponse = responses['GET']
+        headResponse = responses['HEAD']
+        optionsResponse = responses['OPTIONS']
+
+      it 'should provide count of tests run', () ->
         expect(report).to.exist
         expect(report).to.have.all.keys(mochaJsonReportKeys)
-        expect(report.stats.tests).to.equal(1)
-        expect(report.stats.passes).to.equal(1)
+        expect(report.stats.tests).to.equal(3)
 
-      it 'should print correct title for response', () ->
-        expect(report.tests).to.have.length(1)
-        expect(report.tests[0].fullTitle).to.equal(resTestTitle)
+      it 'should provide count of tests passing', () ->
+        expect(report.stats.passes).to.equal(3)
+
+      it 'should print correct title for each response', () ->
+        expect(report.tests).to.have.length(3)
+        expect(report.tests[0].fullTitle).to.equal(getTestTitle)
+        expect(report.tests[1].fullTitle).to.equal(headTestTitle)
+        expect(report.tests[2].fullTitle).to.equal(optionsTestTitle)
+
+      it 'OPTIONS response should allow GET and HEAD requests', () ->
+        allow = optionsResponse.headers['Allow']
+        expect(allow).to.equal('OPTIONS, HEAD, GET')
+
+      it 'OPTIONS response should disable cacheing of it', () ->
+        cacheControl = optionsResponse.headers['Cache-Control']
+        expect(cacheControl).to.equal('no-cache, no-store, must-revalidate')
+
+      it 'OPTIONS and HEAD responses should not have bodies', () ->
+        expect(optionsResponse.body).to.be.empty
+        expect(headResponse.body).to.be.empty
+
+      it 'GET and HEAD responses should have identical headers', () ->
+        expect(getResponse.headers).to.deep.equal(headResponse.headers)
 
       it 'should exit normally', () ->
         expect(exitStatus).to.equal(0)
@@ -474,8 +547,7 @@ describe 'Command line interface', () ->
 
             app.use (req, res, next) ->
               err = null
-              produces = ["#{producedMediaType}"]
-              if !req.accepts produces
+              if !req.accepts ["#{producedMediaType}"]
                 err = new Error('Not Acceptable')
                 err.status = 406
               next(err)
@@ -484,7 +556,7 @@ describe 'Command line interface', () ->
               machine =
                 type: 'bulldozer'
                 name: 'willy'
-              res.setHeader 'Content-Type', "#{producedMediaType}"
+              res.type "#{producedMediaType}"
               res.status(200).send([machine])
 
             app.use (err, req, res, next) ->
