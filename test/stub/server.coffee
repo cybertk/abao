@@ -15,7 +15,7 @@ app.set 'port', process.env.PORT || 3333
 app.options '/machines', (req, res) ->
   'use strict'
   allow = ['OPTIONS', 'HEAD', 'GET']
-  res.setHeader 'Allow', allow.join ', '
+  res.setHeader 'Allow', allow.join ','
   res.setHeader 'Cache-Control', 'no-cache, no-store, must-revalidate'
   res.status(204).end()
 

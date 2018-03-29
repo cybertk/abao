@@ -446,7 +446,7 @@ describe 'Command line interface', () ->
 
       it 'OPTIONS response should allow GET and HEAD requests', () ->
         allow = optionsResponse.headers['Allow']
-        expect(allow).to.equal('OPTIONS, HEAD, GET')
+        expect(allow).to.equal('OPTIONS,HEAD,GET')
 
       it 'OPTIONS response should disable cacheing of it', () ->
         cacheControl = optionsResponse.headers['Cache-Control']
