@@ -384,7 +384,7 @@ describe 'Command line interface', () ->
 
         app.options '/machines', (req, res, next) ->
           allow = ['OPTIONS', 'HEAD', 'GET']
-          res.setHeader 'Allow', allow.join ', '
+          res.setHeader 'Allow', allow.join ','
           res.setHeader 'Cache-Control', 'no-cache, no-store, must-revalidate'
           res.status(204).end()
           next()
@@ -456,7 +456,7 @@ describe 'Command line interface', () ->
         expect(optionsResponse.body).to.be.empty
         expect(headResponse.body).to.be.empty
 
-      it 'GET and HEAD responses should have identical headers', () ->
+      it 'GET and HEAD responses should have equivalent headers', () ->
         expect(getResponse.headers).to.deep.equal(headResponse.headers)
 
       it 'should exit normally', () ->
