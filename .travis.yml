@@ -12,7 +12,7 @@ node_js:
   - '6'
   - '4'
 env:
-- NODE_ENV=development
+  - NODE_ENV=development
 notifications:
   slack:
     secure: fsCX0/TDE9TAJR0S91dboOZ4expmCc8o6joVzsHNJYTJfDtSJehdKjTzYuO/vsRigOOoQZ0dJEPl+D4fysBDV+jkOT5sTjp/uKtcfwHwPi03K8GauwvyW0x4N1M+mY+5jN2ZyBZXqVM5dc0wbgldP9QOg5UpB80hfWUZ+0F1MTM=
