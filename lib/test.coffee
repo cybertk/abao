@@ -26,8 +26,6 @@ class TestFactory
       files = glob.sync schemaLocation
       console.log '\tJSON ref schemas: ' + files.join(', ')
 
-      tv4.banUnknown = true
-
       for file in files
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
@@ -120,7 +118,12 @@ class Test
       """
 
       json = validateJson()
-      result = tv4.validateResult json, schema
+
+      # Validate object against JSON schema
+      checkRecursive = false
+      banUnknown = false
+      result = tv4.validateResult json, schema, checkRecursive, banUnknown
+
       assert.lengthOf result.missing, 0, """
         Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
         #{JSON.stringify(schema, null, 4)}

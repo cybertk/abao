@@ -190,7 +190,6 @@ describe 'Test', () ->
       )
 
       tv4Stub = {}
-      tv4Stub.banUnknown = false
       tv4Stub.addSchema = sinon.spy()
 
       TestTestFactory = proxyquire '../../lib/test', {
@@ -203,7 +202,6 @@ describe 'Test', () ->
         new TestTestFactory('')
         assert.isFalse globStub.sync.called
         assert.isFalse fsStub.readFileSync.called
-        assert.isFalse tv4Stub.banUnknown
         assert.isFalse tv4Stub.addSchema.called
 
       it 'test TestFactory with name 1', () ->
@@ -211,7 +209,6 @@ describe 'Test', () ->
         assert.isTrue globStub.sync.calledWith 'thisisaword'
         assert.isTrue fsStub.readFileSync.calledOnce
         assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
-        assert.isTrue tv4Stub.banUnknown
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
       it 'test TestFactory with name 2', () ->
@@ -219,7 +216,6 @@ describe 'Test', () ->
         assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
         assert.isTrue fsStub.readFileSync.calledTwice
         assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
-        assert.isTrue tv4Stub.banUnknown
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
 
