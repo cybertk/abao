@@ -2,6 +2,8 @@
 # @file Stores command line arguments in configuration object
 ###
 
+path = require 'path'
+
 applyConfiguration = (config) ->
   'use strict'
 
@@ -47,7 +49,10 @@ applyConfiguration = (config) ->
   for own key, value of config
     configuration[key] = value
 
-  # Coerce some options into an dict
+  # Customize
+  if !configuration.options.template
+    defaultTemplate = path.join 'templates', 'hookfile.js'
+    configuration.options.template = defaultTemplate
   configuration.options.header = coerceToDict(configuration.options.header)
 
   # TODO(quanlong): OAuth2 Bearer Token

@@ -95,11 +95,7 @@ class TestRunner
       (callback) ->
         if options['generate-hooks']
           # Generate hooks skeleton file
-          templateFile = if options.template
-                           options.template
-                         else
-                           path.join 'templates', 'hookfile.js'
-          generateHooks names, ramlFile, templateFile, done
+          generateHooks names, ramlFile, options.template, done
         else if options.names
           # Write names to console
           console.log name for name in names
