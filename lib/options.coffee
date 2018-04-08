@@ -2,7 +2,7 @@
 # @file Command line options
 ###
 
-options =
+module.exports =
   'generate-hooks':
     description: 'Output hooks generated from template file and exit'
     type: 'boolean'
@@ -14,13 +14,15 @@ options =
 
   header:
     alias: 'h'
-    description: 'Add header to include in each request. Header must be in KEY:VALUE format ' +
-      '(e.g., "-h Accept:application/json").\nReuse option to add multiple headers'
+    description: 'Add header to include in each request. Header must be ' +
+                 'in KEY:VALUE format (e.g., "-h Accept:application/json").' +
+                 '\nReuse option to add multiple headers'
     type: 'string'
 
   hookfiles:
     alias: 'f'
-    description: 'Specify pattern to match files with before/after hooks for running tests'
+    description: 'Specify pattern to match files with before/after hooks ' +
+                 'for running tests'
     type: 'string'
 
   'hooks-only':
@@ -49,11 +51,13 @@ options =
     type: 'boolean'
 
   schemas:
-    description: 'Specify pattern to match schema files to be loaded for use as JSON refs'
+    description: 'Specify pattern to match schema files to be loaded for ' +
+                 'use as JSON $refs'
     type: 'string'
 
   server:
-    description: 'Specify API endpoint to use. The RAML-specified baseUri value will be used if not provided'
+    description: 'Specify API endpoint to use. The RAML-specified baseUri ' +
+                 'value will be used if not provided'
     type: 'string'
 
   sorted:
@@ -72,6 +76,4 @@ options =
     description: 'Set test case timeout in milliseconds'
     type: 'number'
     default: 2000
-
-module.exports = options
 
