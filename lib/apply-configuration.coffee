@@ -31,7 +31,9 @@ applyConfiguration = (config) ->
     options:
       server: null
       schemas: null
-      reporters: false
+      'generate-hooks': false
+      template: null
+      timeout: 2000
       reporter: null
       header: null
       names: false
