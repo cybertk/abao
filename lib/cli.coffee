@@ -4,11 +4,12 @@
 
 require 'coffee-script/register'
 
+child_process = require 'child_process'
 path = require 'path'
 _ = require 'lodash'
 yargs = require 'yargs'
 
-Abao = require '../lib/abao'
+Abao = require './abao'
 pkg = require '../package'
 
 EXIT_SUCCESS = 0
@@ -16,22 +17,14 @@ EXIT_FAILURE = 1
 
 showReporters = () ->
   'use strict'
-  # Copied from node_modules/mocha/_mocha
-  console.log()
-  console.log '    dot - dot matrix'
-  console.log '    doc - html documentation'
-  console.log '    spec - hierarchical spec list'
-  console.log '    json - single json object'
-  console.log '    progress - progress bar'
-  console.log '    list - spec-style listing'
-  console.log '    tap - test-anything-protocol'
-  console.log '    landing - unicode landing strip'
-  console.log '    xunit - xunit reporter'
-  console.log '    min - minimal reporter (great with --watch)'
-  console.log '    json-stream - newline delimited json events'
-  console.log '    markdown - markdown documentation (github flavour)'
-  console.log '    nyan - nyan cat!'
-  console.log()
+  mochaDir = path.dirname require.resolve('mocha')
+  mochaPkg = require 'mocha/package'
+  executable = path.join mochaDir, mochaPkg.bin._mocha
+  executable = path.normalize executable
+  stdoutBuff = child_process.execFileSync executable, ['--reporters']
+  stdout = stdoutBuff.toString()
+  stdout = stdout.slice 0, stdout.length - 1   # Remove last newline
+  console.log stdout
   return
 
 mochaOptionNames = [
