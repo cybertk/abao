@@ -276,6 +276,11 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
+```bash
+$ npm issues abao
+```
+
+
 [//]: # (Cross reference section)
 
 [RAML]: https://raml.org/
