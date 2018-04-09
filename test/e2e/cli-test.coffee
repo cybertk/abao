@@ -384,10 +384,10 @@ describe 'Command line interface', () ->
 
         app.options '/machines', (req, res, next) ->
           allow = ['OPTIONS', 'HEAD', 'GET']
+          directives = ['no-cache', 'no-store', 'must-revalidate']
           res.setHeader 'Allow', allow.join ','
-          disableCache = ['no-cache', 'no-store', 'must-revalidate']
-          res.setHeader 'Cache-Control', disableCache.join ','
-          res.setHeader 'Pragma', disableCache[0]
+          res.setHeader 'Cache-Control', directives.join ','
+          res.setHeader 'Pragma', directives[0]
           res.setHeader 'Expires', '0'
           res.status(204).end()
           next()

@@ -15,8 +15,11 @@ app.set 'port', process.env.PORT || 3333
 app.options '/machines', (req, res) ->
   'use strict'
   allow = ['OPTIONS', 'HEAD', 'GET']
+  directives = ['no-cache', 'no-store', 'must-revalidate']
   res.setHeader 'Allow', allow.join ','
-  res.setHeader 'Cache-Control', 'no-cache, no-store, must-revalidate'
+  res.setHeader 'Cache-Control', directives.join ','
+  res.setHeader 'Pragma', directives[0]
+  res.setHeader 'Expires', '0'
   res.status(204).end()
 
 app.get '/machines', (req, res) ->
