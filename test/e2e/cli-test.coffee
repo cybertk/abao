@@ -385,7 +385,8 @@ describe 'Command line interface', () ->
         app.options '/machines', (req, res, next) ->
           allow = ['OPTIONS', 'HEAD', 'GET']
           res.setHeader 'Allow', allow.join ','
-          res.setHeader 'Cache-Control', 'no-cache, no-store, must-revalidate'
+          disableCache = ['no-cache', 'no-store', 'must-revalidate']
+          res.setHeader 'Cache-Control', disableCache.join ','
           res.status(204).end()
           next()
 
@@ -448,9 +449,9 @@ describe 'Command line interface', () ->
         allow = optionsResponse.headers['Allow']
         expect(allow).to.equal('OPTIONS,HEAD,GET')
 
-      it 'OPTIONS response should disable cacheing of it', () ->
+      it 'OPTIONS response should disable caching of it', () ->
         cacheControl = optionsResponse.headers['Cache-Control']
-        expect(cacheControl).to.equal('no-cache, no-store, must-revalidate')
+        expect(cacheControl).to.equal('no-cache,no-store,must-revalidate')
 
       it 'OPTIONS and HEAD responses should not have bodies', () ->
         expect(optionsResponse.body).to.be.empty
