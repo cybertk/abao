@@ -387,6 +387,8 @@ describe 'Command line interface', () ->
           res.setHeader 'Allow', allow.join ','
           disableCache = ['no-cache', 'no-store', 'must-revalidate']
           res.setHeader 'Cache-Control', disableCache.join ','
+          res.setHeader 'Pragma', disableCache[0]
+          res.setHeader 'Expires', '0'
           res.status(204).end()
           next()
 
@@ -405,7 +407,9 @@ describe 'Command line interface', () ->
             if req.method == 'OPTIONS'
               return [
                 'Allow',
-                'Cache-Control'
+                'Cache-Control',
+                'Expires',
+                'Pragma'
               ]
             else
               return [
@@ -452,6 +456,10 @@ describe 'Command line interface', () ->
       it 'OPTIONS response should disable caching of it', () ->
         cacheControl = optionsResponse.headers['Cache-Control']
         expect(cacheControl).to.equal('no-cache,no-store,must-revalidate')
+        pragma = optionsResponse.headers['Pragma']
+        expect(pragma).to.equal('no-cache')
+        expires = optionsResponse.headers['Expires']
+        expect(expires).to.equal('0')
 
       it 'OPTIONS and HEAD responses should not have bodies', () ->
         expect(optionsResponse.body).to.be.empty
