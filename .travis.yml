@@ -13,6 +13,11 @@ node_js:
   - '4'
 env:
   - NODE_ENV=development
+  global:
+    # Get all branches referencing this commit
+    - REAL_BRANCH=$(git ls-remote origin | sed -n "\|$TRAVIS_COMMIT\s\+refs/heads/|{s///p}")
+    # Check if we are on a particular branch:
+    - IS_RELEASE=$(git ls-remote origin | grep "$TRAVIS_COMMIT\s\+refs/heads/release$")
 notifications:
   slack:
     secure: fsCX0/TDE9TAJR0S91dboOZ4expmCc8o6joVzsHNJYTJfDtSJehdKjTzYuO/vsRigOOoQZ0dJEPl+D4fysBDV+jkOT5sTjp/uKtcfwHwPi03K8GauwvyW0x4N1M+mY+5jN2ZyBZXqVM5dc0wbgldP9QOg5UpB80hfWUZ+0F1MTM=
@@ -26,12 +31,20 @@ deploy:
     repo: cybertk/abao
 after_success:
 #  - grunt coveralls:upload
-  - export BUILD_DIR="$HOME/build"
-  - export GITHUB_REPO="cybertk/abao"
-  - export PROJ_BUILD_DIR="$BUILD_DIR/$TRAVIS_REPO_SLUG"
-  - export PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
-  - export COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
-  - export COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
-  - env | sort
+  - COVERAGE_FILE="$TRAVIS_BUILD_DIR/coverage/coverage.lcov"
+  - COVERALLS_BIN="./node_modules/.bin/coveralls"
   - $COVERALLS_BIN lib < $COVERAGE_FILE; echo "exit=$?"
+  - echo
+  - echo
+  - echo "===== COMMIT ====="
+  - echo "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG"
+  - echo "TRAVIS_COMMIT=$TRAVIS_COMMIT"
+  - echo "TRAVIS_COMMIT_MESSAGE=$TRAVIS_COMMIT_MESSAGE"
+  - echo "TRAVIS_TAG=$TRAVIS_TAG"
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
+  - echo "REAL_BRANCH=$REAL_BRANCH"
+  - echo "IS_RELEASE=$IS_RELEASE"
+  - echo "===== BUILD ====="
+  - echo "TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER"
+  - echo "TRAVIS_BUILD_DIR=$TRAVIS_BUILD_DIR"
 
