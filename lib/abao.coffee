@@ -32,33 +32,47 @@ class Abao
     tests = @tests
     hooks = @hooks
 
-    # Inject the JSON refs schemas
-    factory = new TestFactory(config.options.schemas)
+    parseHooks = (callback) ->
+# TODO(plroebuck): addHooks should be using callback. Convert to use below...
+#      addHooks hooks, config.options.hookfiles, callback
+#      return # NOTREACHED
+      addHooks hooks, config.options.hookfiles
+      return callback()
+
+    loadRAML = (callback) ->
+      if !config.ramlPath
+        return callback(new Error 'unspecified RAML file')
+
+      ramlParser.loadFile(config.ramlPath)
+        .then (raml) ->
+          return callback(null, raml)
+        .catch (err) ->
+          return callback(err)
+      return # NOTREACHED
+
+    parseTestsFromRAML = (raml, callback) ->
+      if !config.options.server
+        if raml.baseUri
+          config.options.server = raml.baseUri
+
+      # Inject the JSON refs schemas
+      factory = new TestFactory(config.options.schemas)
+
+      addTests raml, tests, hooks, callback, factory, config.options.sorted
+      return # NOTREACHED
+
+    runTests = (callback) ->
+      runner = new Runner config.options, config.ramlPath
+      runner.run tests, hooks, callback
+      return # NOTREACHED
 
     async.waterfall [
-      # Parse hooks
-      (callback) ->
-        addHooks hooks, config.options.hookfiles
-        callback()
-      ,
-      # Load RAML
-      (callback) ->
-        ramlParser.loadFile(config.ramlPath).then (raml) ->
-          callback(null, raml)
-        , callback
-      ,
-      # Parse tests from RAML
-      (raml, callback) ->
-        if !config.options.server
-          if raml.baseUri
-            config.options.server = raml.baseUri
-        addTests raml, tests, hooks, callback, factory, config.options.sorted
-      ,
-      # Run tests
-      (callback) ->
-        runner = new Runner config.options, config.ramlPath
-        runner.run tests, hooks, callback
+      parseHooks,
+      loadRAML,
+      parseTestsFromRAML,
+      runTests
     ], done
+    return
 
 
 
