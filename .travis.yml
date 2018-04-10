@@ -26,12 +26,12 @@ deploy:
     repo: cybertk/abao
 after_success:
 #  - grunt coveralls:upload
-  - BUILD_DIR="$HOME/build"
-  - GITHUB_REPO="cybertk/abao"
-  - PROJ_BUILD_DIR="$BUILD_DIR/$GITHUB_REPO"
-  - PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
-  - COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
-  - COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
+  - export BUILD_DIR="$HOME/build"
+  - export GITHUB_REPO="cybertk/abao"
+  - export PROJ_BUILD_DIR="$BUILD_DIR/$TRAVIS_REPO_SLUG"
+  - export PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
+  - export COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
+  - export COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
   - env | sort
   - $COVERALLS_BIN lib < $COVERAGE_FILE; echo "exit=$?"
 
