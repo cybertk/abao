@@ -8,7 +8,6 @@ ramlParserStub = require 'raml-parser'
 addTestsStub = require '../../lib/add-tests'
 addHooksStub = require '../../lib/add-hooks'
 runnerStub = require '../../lib/test-runner'
-applyConfigurationStub = require '../../lib/apply-configuration'
 hooksStub = require '../../lib/hooks'
 
 Abao = proxyquire '../../', {
@@ -16,7 +15,6 @@ Abao = proxyquire '../../', {
   './add-tests': addTestsStub,
   './add-hooks': addHooksStub,
   './test-runner': runnerStub,
-  './apply-configuration': applyConfigurationStub,
   './hooks': hooksStub
 }
 

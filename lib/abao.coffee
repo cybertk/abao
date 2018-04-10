@@ -8,7 +8,7 @@ ramlParser = require 'raml-parser'
 
 addTests = require './add-tests'
 addHooks = require './add-hooks'
-applyConfiguration = require './apply-configuration'
+applyConfiguration = require './configuration'
 hooks = require './hooks'
 options = require './options'
 Runner = require './test-runner'
@@ -18,7 +18,7 @@ TestFactory = require './test'
 class Abao
   constructor: (config) ->
     'use strict'
-    @configuration = applyConfiguration(config)
+    @configuration = applyConfiguration config
     @tests = []
     @hooks = hooks
 
