@@ -1,16 +1,11 @@
 ###*
-# @file Command line options
+# @file Command line options (Abao-related)
 ###
 
 module.exports =
   'generate-hooks':
     description: 'Output hooks generated from template file and exit'
     type: 'boolean'
-
-  grep:
-    alias: 'g'
-    description: 'Only run tests matching <pattern>'
-    type: 'string'
 
   header:
     alias: 'h'
@@ -30,24 +25,9 @@ module.exports =
     description: 'Run test only if defined either before or after hooks'
     type: 'boolean'
 
-  invert:
-    alias: 'i'
-    description: 'Invert --grep matches'
-    type: 'boolean'
-
   names:
     alias: 'n'
     description: 'List names of requests and exit'
-    type: 'boolean'
-
-  reporter:
-    alias: 'R'
-    description: 'Specify reporter to use'
-    type: 'string'
-    default: 'spec'
-
-  reporters:
-    description: 'Display available reporters and exit'
     type: 'boolean'
 
   schemas:
@@ -70,10 +50,4 @@ module.exports =
     description: 'Specify template file to use for generating hooks'
     type: 'string'
     normalize: true
-
-  timeout:
-    alias: 't'
-    description: 'Set test case timeout in milliseconds'
-    type: 'number'
-    default: 2000
 
