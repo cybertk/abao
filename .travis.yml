@@ -32,5 +32,6 @@ after_success:
   - PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
   - COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
   - COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
+  - env | sort
   - $COVERALLS_BIN lib < $COVERAGE_FILE; echo "exit=$?"
 
