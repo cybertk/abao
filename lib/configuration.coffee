@@ -92,7 +92,7 @@ asConfiguration = (parsedArgs) ->
   configuration.options = _.omit configuration.options, mochaOptionNames
   configuration.options.mocha = mochaOptions
 
-  return applyConfiguration config
+  return applyConfiguration configuration
 
 
 module.exports = asConfiguration
