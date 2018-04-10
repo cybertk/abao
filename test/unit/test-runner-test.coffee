@@ -32,24 +32,25 @@ describe 'Test Runner', () ->
 
     describe 'when test is valid', () ->
 
-      runner = ''
-      beforeAllHook = ''
-      afterAllHook = ''
-      beforeHook = ''
-      afterHook = ''
-      runCallback = ''
-      testFactory = new TestFactory()
-      test = testFactory.create()
-      test.name = 'GET /machines -> 200'
-      test.request.path = '/machines'
-      test.request.method = 'GET'
-      test.response.status = 200
-      test.response.schema = """[
-        type: 'string'
-        name: 'string'
-      ]"""
+      runner = undefined
+      beforeAllHook = undefined
+      afterAllHook = undefined
+      beforeHook = undefined
+      afterHook = undefined
+      runCallback = undefined
 
       before (done) ->
+        testFactory = new TestFactory()
+        test = testFactory.create()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+        test.response.status = 200
+        test.response.schema = """[
+          type: 'string'
+          name: 'string'
+        ]"""
+
         options =
           server: "#{ABAO_IO_SERVER}"
 
@@ -118,7 +119,7 @@ describe 'Test Runner', () ->
         hooksStub.runBefore.restore()
         hooksStub.runAfter.restore()
 
-        runCallback = ''
+        runCallback = undefined
 
       it 'should generate beforeAll hooks', () ->
         mochaStub = runner.mocha
@@ -158,8 +159,8 @@ describe 'Test Runner', () ->
 
     describe 'Interact with #test', () ->
 
-      test = ''
-      runner = ''
+      test = undefined
+      runner = undefined
 
       before (done) ->
         testFactory = new TestFactory()
@@ -320,7 +321,7 @@ describe 'Test Runner', () ->
 
     describe 'when test throws AssertionError', () ->
 
-      afterAllHook = ''
+      afterAllHook = undefined
 
       before (done) ->
         testFactory = new TestFactory()
@@ -350,7 +351,7 @@ describe 'Test Runner', () ->
             done()
 
       after () ->
-        afterAllHook = ''
+        afterAllHook = undefined
 
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
@@ -358,8 +359,8 @@ describe 'Test Runner', () ->
 
     describe 'when beforeAllHooks throws UncaughtError', () ->
 
-      beforeAllHook = ''
-      afterAllHook = ''
+      beforeAllHook = undefined
+      afterAllHook = undefined
 
       before (done) ->
         testFactory = new TestFactory()
@@ -392,8 +393,8 @@ describe 'Test Runner', () ->
             done()
 
       after () ->
-        beforeAllHook = ''
-        afterAllHook = ''
+        beforeAllHook = undefined
+        afterAllHook = undefined
 
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
@@ -431,8 +432,8 @@ describe 'Test Runner', () ->
             done()
 
       after () ->
-        runner.mocha.run.restore()
         console.log.restore()
+        runner.mocha.run.restore()
 
       it 'should not run mocha', () ->
         assert.notOk runner.mocha.run.called
@@ -466,7 +467,7 @@ describe 'Test Runner', () ->
         runner = new TestRunner options, ''
         sinon.stub runner.mocha, 'run'
           .callsFake (callback) ->
-            receivedTest = _.cloneDeep(test)
+            receivedTest = _.cloneDeep test
             callback()
 
         runner.run [test], hooksStub, done
@@ -483,17 +484,17 @@ describe 'Test Runner', () ->
 
     describe 'run test with hooks only indicated by `hooks-only`', () ->
 
-      testFactory = new TestFactory()
-      test = testFactory.create()
-      test.name = 'GET /machines -> 200'
-      test.request.path = '/machines'
-      test.request.method = 'GET'
-      test.response.status = 200
-      test.response.schema = {}
-
-      suiteStub = ''
+      suiteStub = undefined
 
       before (done) ->
+        testFactory = new TestFactory()
+        test = testFactory.create()
+        test.name = 'GET /machines -> 200'
+        test.request.path = '/machines'
+        test.request.method = 'GET'
+        test.response.status = 200
+        test.response.schema = {}
+
         options =
           server: "#{SERVER}"
           'hooks-only': true
@@ -520,11 +521,11 @@ describe 'Test Runner', () ->
         runner.run [test], hooksStub, done
 
       after () ->
-        runner.mocha.run.restore()
-        mocha.Suite.create.restore()
         suiteStub.addTest.restore()
         suiteStub.beforeAll.restore()
         suiteStub.afterAll.restore()
+        mocha.Suite.create.restore()
+        runner.mocha.run.restore()
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
