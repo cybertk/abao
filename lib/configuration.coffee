@@ -5,7 +5,9 @@
 _ = require 'lodash'
 path = require 'path'
 
-allOptions = require './options'
+abaoOptions = require './options-abao'
+mochaOptions = require './options-mocha'
+allOptions = _.assign {}, abaoOptions, mochaOptions
 
 
 applyConfiguration = (config) ->
@@ -65,7 +67,9 @@ applyConfiguration = (config) ->
 
   return configuration
 
-
+# Create configuration settings from CLI arguments applied against options
+# @param {Object} parsedArgs - yargs .argv() output
+# @returns {Object} configuration object
 asConfiguration = (parsedArgs) ->
   ## TODO(plroebuck): Do all configuration in one place...
   aliases = Object.keys(allOptions).map (key) -> allOptions[key].alias
@@ -80,17 +84,10 @@ asConfiguration = (parsedArgs) ->
     ramlPath: parsedArgs._[0],
     options: _.omit parsedArgs, ['_', '$0', aliases..., alreadyHandled...]
 
-  mochaOptionNames = [
-    'grep',
-    'invert'
-    'reporter',
-    'reporters',
-    'timeout'
-  ]
-
-  mochaOptions = _.pick configuration.options, mochaOptionNames
+  mochaOptionNames = Object.keys mochaOptions
+  optionsToReparent = _.pick configuration.options, mochaOptionNames
   configuration.options = _.omit configuration.options, mochaOptionNames
-  configuration.options.mocha = mochaOptions
+  configuration.options.mocha = optionsToReparent
 
   return applyConfiguration configuration
 

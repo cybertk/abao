@@ -10,7 +10,8 @@ _ = require 'lodash'
 yargs = require 'yargs'
 
 Abao = require './abao'
-allOptions = require './options'
+abaoOptions = require './options-abao'
+mochaOptions = require './options-mocha'
 pkg = require '../package'
 
 EXIT_SUCCESS = 0
@@ -30,13 +31,8 @@ showReporters = () ->
 
 parseArgs = (argv) ->
   'use strict'
-  mochaOptionNames = [
-    'grep',
-    'invert'
-    'reporter',
-    'reporters',
-    'timeout'
-  ]
+  allOptions = _.assign {}, abaoOptions, mochaOptions
+  mochaOptionNames = Object.keys mochaOptions
   prog = path.basename pkg.bin
   return yargs(argv)
     .usage("Usage:\n  #{prog} </path/to/raml> [OPTIONS]" +
