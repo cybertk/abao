@@ -12,6 +12,5 @@ var path = require('path');
 var fs   = require('fs');
 
 var libpath = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
-
-require(libpath + '/cli');
+require(libpath + '/cli').main(process.argv.slice(2));
 
