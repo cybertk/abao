@@ -2,7 +2,11 @@
 # @file Stores command line arguments in configuration object
 ###
 
+_ = require 'lodash'
 path = require 'path'
+
+allOptions = require './options'
+
 
 applyConfiguration = (config) ->
   'use strict'
@@ -62,5 +66,34 @@ applyConfiguration = (config) ->
   return configuration
 
 
-module.exports = applyConfiguration
+asConfiguration = (parsedArgs) ->
+  ## TODO(plroebuck): Do all configuration in one place...
+  aliases = Object.keys(allOptions).map (key) -> allOptions[key].alias
+              .filter (val) -> val != undefined
+  alreadyHandled = [
+    'reporters',
+    'help',
+    'version'
+  ]
+
+  configuration =
+    ramlPath: parsedArgs._[0],
+    options: _.omit parsedArgs, ['_', '$0', aliases..., alreadyHandled...]
+
+  mochaOptionNames = [
+    'grep',
+    'invert'
+    'reporter',
+    'reporters',
+    'timeout'
+  ]
+
+  mochaOptions = _.pick configuration.options, mochaOptionNames
+  configuration.options = _.omit configuration.options, mochaOptionNames
+  configuration.options.mocha = mochaOptions
+
+  return applyConfiguration config
+
+
+module.exports = asConfiguration
 

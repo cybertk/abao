@@ -13,14 +13,6 @@ Abao = require './abao'
 allOptions = require './options'
 pkg = require '../package'
 
-mochaOptionNames = [
-  'grep',
-  'invert'
-  'reporter',
-  'reporters',
-  'timeout'
-]
-
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
 
@@ -38,6 +30,13 @@ showReporters = () ->
 
 parseArgs = (argv) ->
   'use strict'
+  mochaOptionNames = [
+    'grep',
+    'invert'
+    'reporter',
+    'reporters',
+    'timeout'
+  ]
   prog = path.basename pkg.bin
   return yargs(argv)
     .usage("Usage:\n  #{prog} </path/to/raml> [OPTIONS]" +
@@ -71,24 +70,7 @@ main = (argv) ->
   'use strict'
   parsedArgs = parseArgs argv
 
-  ## TODO(plroebuck): Do all configuration in one place...
-  aliases = Object.keys(allOptions).map (key) -> allOptions[key].alias
-              .filter (val) -> val != undefined
-  alreadyHandled = [
-    'reporters',
-    'help',
-    'version'
-  ]
-
-  configuration =
-    ramlPath: parsedArgs._[0],
-    options: _.omit parsedArgs, ['_', '$0', aliases..., alreadyHandled...]
-
-  mochaOptions = _.pick configuration.options, mochaOptionNames
-  configuration.options = _.omit configuration.options, mochaOptionNames
-  configuration.options.mocha = mochaOptions
-
-  abao = new Abao configuration
+  abao = new Abao parsedArgs
   abao.run (error, nfailures) ->
     if error
       process.exitCode = EXIT_FAILURE
