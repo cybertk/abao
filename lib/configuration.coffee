@@ -71,6 +71,7 @@ applyConfiguration = (config) ->
 # @param {Object} parsedArgs - yargs .argv() output
 # @returns {Object} configuration object
 asConfiguration = (parsedArgs) ->
+  'use strict'
   ## TODO(plroebuck): Do all configuration in one place...
   aliases = Object.keys(allOptions).map (key) -> allOptions[key].alias
               .filter (val) -> val != undefined
