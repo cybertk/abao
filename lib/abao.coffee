@@ -10,7 +10,6 @@ addTests = require './add-tests'
 addHooks = require './add-hooks'
 applyConfiguration = require './configuration'
 hooks = require './hooks'
-options = require './options'
 Runner = require './test-runner'
 TestFactory = require './test'
 
@@ -59,5 +58,4 @@ class Abao
 
 
 module.exports = Abao
-module.exports.options = options
 

@@ -10,6 +10,7 @@ _ = require 'lodash'
 yargs = require 'yargs'
 
 Abao = require './abao'
+allOptions = require './options'
 pkg = require '../package'
 
 mochaOptionNames = [
@@ -41,7 +42,7 @@ parseArgs = (argv) ->
   return yargs(argv)
     .usage("Usage:\n  #{prog} </path/to/raml> [OPTIONS]" +
       "\n\nExample:\n  #{prog} api.raml --server http://api.example.com")
-    .options(Abao.options)
+    .options(allOptions)
     .group(mochaOptionNames, 'Options passed to Mocha:')
     .implies('template', 'generate-hooks')
     .check((argv) ->
@@ -71,7 +72,7 @@ main = (argv) ->
   parsedArgs = parseArgs argv
 
   ## TODO(plroebuck): Do all configuration in one place...
-  aliases = Object.keys(Abao.options).map (key) -> Abao.options[key].alias
+  aliases = Object.keys(allOptions).map (key) -> allOptions[key].alias
               .filter (val) -> val != undefined
   alreadyHandled = [
     'reporters',
