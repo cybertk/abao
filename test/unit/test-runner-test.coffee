@@ -27,12 +27,21 @@ describe 'Test Runner', () ->
   'use strict'
 
   runner = undefined
+  test = undefined
+
+  createStdTest = () ->
+    testname = 'GET /machines -> 200'
+    testFactory = new TestFactory()
+    stdTest = testFactory.create testname, undefined
+    stdTest.request.path = '/machines'
+    stdTest.request.method = 'GET'
+    return stdTest
+
 
   describe '#run', () ->
 
     describe 'when test is valid', () ->
 
-      runner = undefined
       beforeAllHook = undefined
       afterAllHook = undefined
       beforeHook = undefined
@@ -40,11 +49,7 @@ describe 'Test Runner', () ->
       runCallback = undefined
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = """[
           type: 'string'
@@ -120,6 +125,8 @@ describe 'Test Runner', () ->
         hooksStub.runAfter.restore()
 
         runCallback = undefined
+        runner = undefined
+        test = undefined
 
       it 'should generate beforeAll hooks', () ->
         mochaStub = runner.mocha
@@ -159,15 +166,8 @@ describe 'Test Runner', () ->
 
     describe 'Interact with #test', () ->
 
-      test = undefined
-      runner = undefined
-
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = """[
           type: 'string'
@@ -190,6 +190,8 @@ describe 'Test Runner', () ->
 
       after () ->
         test.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should call #test.run', () ->
         assert.ok test.run.calledOnce
@@ -219,6 +221,8 @@ describe 'Test Runner', () ->
 
       after () ->
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
@@ -237,11 +241,7 @@ describe 'Test Runner', () ->
     describe 'when test skipped in hooks', () ->
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = """[
           type: 'string'
@@ -264,6 +264,8 @@ describe 'Test Runner', () ->
       after () ->
         hooksStub.skippedTests = []
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
@@ -282,11 +284,7 @@ describe 'Test Runner', () ->
     describe 'when test has no response schema', () ->
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
 
         options =
@@ -304,6 +302,8 @@ describe 'Test Runner', () ->
 
       after () ->
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
@@ -324,11 +324,7 @@ describe 'Test Runner', () ->
       afterAllHook = undefined
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
 
         afterAllHook = sinon.stub()
@@ -352,6 +348,8 @@ describe 'Test Runner', () ->
 
       after () ->
         afterAllHook = undefined
+        runner = undefined
+        test = undefined
 
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
@@ -363,11 +361,7 @@ describe 'Test Runner', () ->
       afterAllHook = undefined
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
 
         beforeAllHook = sinon.stub()
@@ -395,6 +389,8 @@ describe 'Test Runner', () ->
       after () ->
         beforeAllHook = undefined
         afterAllHook = undefined
+        runner = undefined
+        test = undefined
 
       it 'should call afterAll hook', () ->
         afterAllHook.should.have.been.called
@@ -405,11 +401,7 @@ describe 'Test Runner', () ->
     describe 'list all tests with `names`', () ->
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = """[
           type: 'string'
@@ -434,6 +426,8 @@ describe 'Test Runner', () ->
       after () ->
         console.log.restore()
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should not run mocha', () ->
         assert.notOk runner.mocha.run.called
@@ -448,11 +442,7 @@ describe 'Test Runner', () ->
       headers = undefined
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = {}
 
@@ -474,6 +464,8 @@ describe 'Test Runner', () ->
 
       after () ->
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
@@ -487,11 +479,7 @@ describe 'Test Runner', () ->
       suiteStub = undefined
 
       before (done) ->
-        testFactory = new TestFactory()
-        test = testFactory.create()
-        test.name = 'GET /machines -> 200'
-        test.request.path = '/machines'
-        test.request.method = 'GET'
+        test = createStdTest()
         test.response.status = 200
         test.response.schema = {}
 
@@ -526,6 +514,8 @@ describe 'Test Runner', () ->
         suiteStub.afterAll.restore()
         mocha.Suite.create.restore()
         runner.mocha.run.restore()
+        runner = undefined
+        test = undefined
 
       it 'should run mocha', () ->
         assert.ok runner.mocha.run.called
