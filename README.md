@@ -1,10 +1,10 @@
-Automated testing tool based on RAML-0.8
-
 # Abao
 
+RAML-based automated testing tool
+
 [![Build Status][Travis-Abao-badge]][Travis-Abao]
-[![Dependency Status][David-AbaoDep-badge]][David-AbaoDep]
-[![devDependency Status][David-AbaoDevDep-badge]][David-AbaoDevDep]
+[![Dependency Status][DavidDM-AbaoDep-badge]][DavidDM-AbaoDep]
+[![devDependency Status][DavidDM-AbaoDevDep-badge]][DavidDM-AbaoDevDep]
 [![Coverage Status][Coveralls-Abao-badge]][Coveralls-Abao]
 [![Gitter][Gitter-Abao-badge]][Gitter-Abao]
 [![CII Best Practices][BestPractices-Abao-badge]][BestPractices-Abao]
@@ -20,13 +20,13 @@ is valid or not.
 
 ## Features
 
-- Verify that each endpoint defined in RAML exists in service
-- Verify that URL params for each endpoint defined in RAML are supported in service
-- Verify that the required query parameters defined in RAML are supported in service
-- Verify that HTTP request headers for each endpoint defined in RAML are supported in service
-- Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
-- Verify that HTTP response headers for each endpoint defined in RAML are supported in service
-- Verify that HTTP response body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
+* Verify that each endpoint defined in RAML exists in service
+* Verify that URL params for each endpoint defined in RAML are supported in service
+* Verify that the required query parameters defined in RAML are supported in service
+* Verify that HTTP request headers for each endpoint defined in RAML are supported in service
+* Verify that HTTP request body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
+* Verify that HTTP response headers for each endpoint defined in RAML are supported in service
+* Verify that HTTP response body for each endpoint defined in RAML is supported in service, via [JSONSchema][] validation
 
 ## RAML Support
 
@@ -93,12 +93,12 @@ the RAML. You can print a list of the generated names with the `--names` flag.
 
 ### Example
 
-The RAML file used in the examples below can be found [here](../master/test/fixtures/single-get.raml).
+The RAML file used in the examples below can be found [here](../master/test/fixtures/machines-single_get.raml).
 
 Get Names:
 
 ```bash
-$ abao single-get.raml --names
+$ abao machines-single_get.raml --names
 GET /machines -> 200
 ```
 
@@ -108,7 +108,7 @@ response code for each path.
 ```bash
 $ ABAO_HOME="/path/to/node_modules/abao"
 $ TEMPLATE="${ABAO_HOME}/templates/hookfile.js"
-$ abao single-get.raml --generate-hooks --template="${TEMPLATE}" > test_machines_hooks.js
+$ abao machines-single_get.raml --generate-hooks --template="${TEMPLATE}" > test_machines_hooks.js
 
 ```
 
@@ -155,7 +155,7 @@ after 'GET /machines -> 200', (test, done) ->
 Run validation with *JavaScript* hookfile (from above):
 
 ```bash
-$ abao single-get.raml --hookfiles=test_machines_hooks.js
+$ abao machines-single_get.raml --hookfiles=test_machines_hooks.js
 ```
 
 You can also specify what tests **Abao** should skip:
@@ -208,24 +208,27 @@ test 'GET /machines -> 200', (response, body, done) ->
 
 ### test.request
 
-- `server` - Server address, provided from command line.
-- `path` - API endpoint path, parsed from RAML.
-- `method` - HTTP method, parsed from RAML request method (e.g., `get`).
-- `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
-- `query` - Object containing querystring values to be appended to the `path`,parsed from RAML `queryParameters` section [default: `{}`].
-- `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
-- `body` - Entity body for POST, PUT, and PATCH requests. Must be a JSON-serializable object. Parsed from RAML `example` [default: `{}`].
+* `server` - Server address, provided by command line option or parsed from
+  RAML `baseUri`.
+* `path` - API endpoint path, parsed from RAML.
+* `method` - HTTP method, parsed from RAML request method (e.g., `get`).
+* `params` - URI parameters, parsed from RAML request `uriParameters` [default: `{}`].
+* `query` - Object containing querystring values to be appended to the `path`.
+  Parsed from RAML `queryParameters` section [default: `{}`].
+* `headers` - HTTP headers, parsed from RAML `headers` [default: `{}`].
+* `body` - Entity body for POST, PUT, and PATCH requests. Must be a
+  JSON-serializable object. Parsed from RAML `example` [default: `{}`].
 
 ### test.response
 
-- `status` - Expected HTTP response code, parsed from RAML response status.
-- `schema` - Expected schema of HTTP response body, parsed from RAML response `schema`.
-- `headers` - Object containing HTTP response headers from server [default: `{}`].
-- `body` - HTTP response body (JSON-format) from server [default: `null`].
+* `status` - Expected HTTP response code, parsed from RAML response status.
+* `schema` - Expected schema of HTTP response body, parsed from RAML response `schema`.
+* `headers` - Object containing HTTP response headers from server [default: `{}`].
+* `body` - HTTP response body (JSON-format) from server [default: `null`].
 
 ## Command Line Options
 
-```
+```console
 Usage:
   abao </path/to/raml> [OPTIONS]
 
@@ -273,6 +276,11 @@ $ npm test
 **Abao** is always looking for new ideas to make the codebase useful.
 If you think of something that would make life easier, please submit an issue.
 
+```bash
+$ npm issues abao
+```
+
+
 [//]: # (Cross reference section)
 
 [RAML]: https://raml.org/
@@ -285,10 +293,10 @@ If you think of something that would make life easier, please submit an issue.
 
 [Travis-Abao]: https://travis-ci.org/cybertk/abao/
 [Travis-Abao-badge]: https://img.shields.io/travis/cybertk/abao.svg?style=flat
-[David-AbaoDep]: https://david-dm.org/cybertk/abao/
-[David-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
-[David-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
-[David-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
+[DavidDM-AbaoDep]: https://david-dm.org/cybertk/abao/
+[DavidDM-AbaoDep-badge]: https://david-dm.org/cybertk/abao/status.svg
+[DavidDM-AbaoDevDep]: https://david-dm.org/cybertk/abao?type=dev
+[DavidDM-AbaoDevDep-badge]: https://david-dm.org/cybertk/abao/dev-status.svg
 [Coveralls-Abao]: https://coveralls.io/r/cybertk/abao/
 [Coveralls-Abao-badge]: https://img.shields.io/coveralls/cybertk/abao.svg
 [Gitter-Abao]: https://gitter.im/cybertk/abao/
@@ -297,5 +305,4 @@ If you think of something that would make life easier, please submit an issue.
 [BestPractices-Abao-badge]: https://bestpractices.coreinfrastructure.org/projects/388/badge
 [NPM-Abao]: https://npmjs.org/package/abao/
 [NPM-Abao-badge]: https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true
-
 

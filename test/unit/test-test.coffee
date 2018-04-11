@@ -10,6 +10,7 @@ chai.use(sinonChai)
 
 requestStub = sinon.stub()
 requestStub.restore = () ->
+  'use strict'
   this.callsArgWith(1, null, {statusCode: 200}, '')
 
 TestFactory = proxyquire '../../lib/test', {
@@ -20,6 +21,7 @@ ABAO_IO_SERVER = 'http://abao.io'
 
 
 describe 'Test', () ->
+  'use strict'
 
   describe '#run', () ->
 
@@ -48,7 +50,12 @@ describe 'Test', () ->
         test.request.body =
           body: 'value'
         test.response.status = 201
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = [
+          type: 'object'
+          properties:
+            type: 'string'
+            name: 'string'
+        ]
 
         machine =
           type: 'foo'
@@ -124,7 +131,12 @@ describe 'Test', () ->
         test.request.body =
           body: 'value'
         test.response.status = 200
-        test.response.schema = [{ type: 'object', properties: { type: 'string', name: 'string'}}]
+        test.response.schema = [
+          type: 'object'
+          properties:
+            type: 'string'
+            name: 'string'
+        ]
 
         machine =
           type: 'foo'
@@ -178,7 +190,6 @@ describe 'Test', () ->
       )
 
       tv4Stub = {}
-      tv4Stub.banUnknown = false
       tv4Stub.addSchema = sinon.spy()
 
       TestTestFactory = proxyquire '../../lib/test', {
@@ -191,23 +202,20 @@ describe 'Test', () ->
         new TestTestFactory('')
         assert.isFalse globStub.sync.called
         assert.isFalse fsStub.readFileSync.called
-        assert.isFalse tv4Stub.banUnknown
         assert.isFalse tv4Stub.addSchema.called
 
       it 'test TestFactory with name 1', () ->
         new TestTestFactory('thisisaword')
-        assert.isTrue globStub.sync.calledWith('thisisaword')
+        assert.isTrue globStub.sync.calledWith 'thisisaword'
         assert.isTrue fsStub.readFileSync.calledOnce
-        assert.isTrue fsStub.readFileSync.calledWith('thisisaword','utf8')
-        assert.isTrue tv4Stub.banUnknown
+        assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
       it 'test TestFactory with name 2', () ->
         new TestTestFactory('thisIsAnotherWord')
-        assert.isTrue globStub.sync.calledWith('thisIsAnotherWord')
+        assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
         assert.isTrue fsStub.readFileSync.calledTwice
-        assert.isTrue fsStub.readFileSync.calledWith('thisIsAnotherWord','utf8')
-        assert.isTrue tv4Stub.banUnknown
+        assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
         assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
 
 
@@ -261,7 +269,7 @@ describe 'Test', () ->
 
         errorStub = null
         responseStub =
-          statusCode : 201
+          statusCode: 201
         bodyStub = JSON.stringify
           type: 'foo'
           name: 'bar'
@@ -275,7 +283,7 @@ describe 'Test', () ->
 
           errorStub = null
           responseStub =
-            statusCode : 201
+            statusCode: 201
           bodyStub = null
           fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
           assert.throw fn, chai.AssertionError
@@ -286,7 +294,7 @@ describe 'Test', () ->
 
           errorStub = null
           responseStub =
-            statusCode : 201
+            statusCode: 201
           bodyStub = 'Im invalid'
           fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
           assert.throw fn, chai.AssertionError

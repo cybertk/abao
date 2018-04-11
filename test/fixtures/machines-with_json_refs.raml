@@ -5,11 +5,11 @@ version: v1
 resourceTypes:
   - resource:
      get:
+       description: Get <<resourcePathName|!singularize>> by Identifier
        headers:
          Abao-API-Key:
            type: string
            example: abcdef
-       description: Get <<resourcePathName|!singularize>> by Identifier
        responses:
          200:
            body:

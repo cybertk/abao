@@ -1,11 +1,13 @@
 {
   "name": "abao",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "RAML testing tool",
   "bin": "bin/abao",
   "main": "lib/index.js",
   "scripts": {
-    "commit": "git-cz",
+    "git-cz": "git-cz",
+    "precommit": "npm test",
+    "prepush": "npm test",
     "test": "grunt test"
   },
   "config": {
@@ -13,7 +15,7 @@
       "path": "./node_modules/cz-conventional-changelog"
     },
     "yargs": {
-      "camel-case-expansion": false
+      "camel-case-expansion": true
     }
   },
   "repository": {
@@ -62,6 +64,8 @@
     "yargs": "^11.1.0"
   },
   "devDependencies": {
+    "coffeelint-use-strict": "^1.0.0",
+    "commitizen": "^2.9.6",
     "coveralls": "^2.11.14",
     "cz-conventional-changelog": "^2.1.0",
     "express": "^4.12.0",
@@ -72,9 +76,12 @@
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-coveralls": "^1.0.1",
+    "grunt-markdownlint": "^1.1.1",
     "grunt-mocha-test": "~0.13.2",
     "grunt-shell": "^2.0.0",
+    "husky": "^0.14.3",
     "load-grunt-config": "^0.19.2",
+    "markdownlint": "^0.8.0",
     "mocha-phantom-coverage-reporter": "^0.1.0",
     "mute": "^1.0.0",
     "nock": "~9.1.6",

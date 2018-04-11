@@ -2,39 +2,42 @@
 # @file TestFactory/Test classes
 ###
 
-chai = require 'chai'
-request = require 'request'
-_ = require 'underscore'
 async = require 'async'
-tv4 = require 'tv4'
+chai = require 'chai'
 fs = require 'fs'
 glob = require 'glob'
+request = require 'request'
+tv4 = require 'tv4'
+_ = require 'underscore'
 
 assert = chai.assert
 
 
 String::contains = (it) ->
+  'use strict'
   @indexOf(it) != -1
 
 
 class TestFactory
   constructor: (schemaLocation) ->
+    'use strict'
     if schemaLocation
 
       files = glob.sync schemaLocation
       console.log '\tJSON ref schemas: ' + files.join(', ')
 
-      tv4.banUnknown = true
-
       for file in files
         tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
 
   create: (name, contentTest) ->
+    'use strict'
     return new Test(name, contentTest)
+
 
 
 class Test
   constructor: (@name, @contentTest) ->
+    'use strict'
     @name ?= ''
     @skip = false
 
@@ -57,6 +60,7 @@ class Test
       done()
 
   url: () ->
+    'use strict'
     path = @request.server + @request.path
 
     for key, value of @request.params
@@ -64,6 +68,7 @@ class Test
     return path
 
   run: (callback) ->
+    'use strict'
     assertResponse = @assertResponse
     contentTest = @contentTest
 
@@ -86,6 +91,7 @@ class Test
     ], callback
 
   assertResponse: (error, response, body) =>
+    'use strict'
     assert.isNull error
     assert.isNotNull response, 'Response'
 
@@ -112,7 +118,12 @@ class Test
       """
 
       json = validateJson()
-      result = tv4.validateResult json, schema
+
+      # Validate object against JSON schema
+      checkRecursive = false
+      banUnknown = false
+      result = tv4.validateResult json, schema, checkRecursive, banUnknown
+
       assert.lengthOf result.missing, 0, """
         Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
         #{JSON.stringify(schema, null, 4)}

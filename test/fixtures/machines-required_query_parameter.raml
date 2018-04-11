@@ -6,10 +6,11 @@ version: v1
 
 /machines:
   get:
+    description: Gets a list of existing machines
     queryParameters:
       quux:
         type: string
-        required: false
+        required: true
         example: foo
     responses:
       200:

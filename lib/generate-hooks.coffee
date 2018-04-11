@@ -6,6 +6,7 @@ fs = require 'fs'
 Mustache = require 'mustache'
 
 generateHooks = (names, ramlFile, templateFile, callback) ->
+  'use strict'
   if !names
     callback new Error 'no names found for which to generate hooks'
 
@@ -19,7 +20,7 @@ generateHooks = (names, ramlFile, templateFile, callback) ->
       ramlFile: ramlFile
       timestamp: datetime
       hooks:
-        { 'name': name } for name in names
+        {'name': name} for name in names
     view.hooks[0].comment = true
 
     content = Mustache.render template, view

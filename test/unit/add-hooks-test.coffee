@@ -1,10 +1,15 @@
 require 'coffee-errors'
-{assert} = require 'chai'
+chai = require 'chai'
+chai.use require('sinon-chai')
 {EventEmitter} = require 'events'
+mute = require 'mute'
 nock = require 'nock'
 proxyquire = require 'proxyquire'
 sinon = require 'sinon'
-mute = require 'mute'
+
+assert = chai.assert
+expect = chai.expect
+should = chai.should()
 
 globStub = require 'glob'
 pathStub = require 'path'
@@ -15,96 +20,175 @@ addHooks = proxyquire  '../../lib/add-hooks', {
   'path': pathStub
 }
 
-describe 'addHooks(hooks, pattern)', () ->
+describe 'addHooks(hooks, pattern, callback)', () ->
+  'use strict'
 
+  callback = undefined
+  globSyncSpy = undefined
+  addHookSpy = undefined
+  pathResolveSpy = undefined
+  consoleErrorSpy = undefined
   transactions = {}
 
   describe 'with no pattern', () ->
 
     before () ->
-      sinon.spy globStub, 'sync'
+      callback = sinon.spy()
+      globSyncSpy = sinon.spy globStub, 'sync'
+
+    it 'should return immediately', (done) ->
+      addHooks hooksStub, '', callback
+      globSyncSpy.should.not.have.been.called
+      done()
+
+    it 'should return successful continuation', () ->
+      callback.should.have.been.calledOnce
+      callback.should.have.been.calledWith(
+        sinon.match.typeOf('null'))
 
     after () ->
       globStub.sync.restore()
 
-    it 'should return immediately', () ->
-      addHooks(hooksStub, '')
-      assert.ok globStub.sync.notCalled
 
-  describe 'with valid pattern', () ->
+  describe 'with pattern', () ->
 
-    pattern = './test/**/*_hooks.*'
+    context 'not matching any files', () ->
 
-    it 'should return files', (done)->
-      mute (unmute) ->
-        sinon.spy globStub, 'sync'
-        addHooks(hooksStub, pattern)
-        assert.ok globStub.sync.called
-        globStub.sync.restore()
-
-        unmute()
-        done()
-
-    describe 'when files are valid js/coffeescript', () ->
+      pattern = '/path/to/directory/without/hooks/*'
 
       beforeEach () ->
-        sinon.spy globStub, 'sync'
-        sinon.spy pathStub, 'resolve'
-        sinon.spy hooksStub, 'addHook'
-
-      afterEach () ->
-        globStub.sync.restore()
-        pathStub.resolve.restore()
-        hooksStub.addHook.restore()
-
-      it 'should load the files', (done) ->
-        mute (unmute) ->
-          addHooks(hooksStub, pattern)
-          assert.ok pathStub.resolve.called
-
-          unmute()
-          done()
-
-      it 'should attach the hooks', (done) ->
-        mute (unmute) ->
-          addHooks(hooksStub, pattern)
-          assert.ok hooksStub.addHook.called
-
-          unmute()
-          done()
-
-
-    describe 'when there is an error reading the hook files', () ->
-
-      beforeEach () ->
-        sinon.stub pathStub, 'resolve'
-          .callsFake (path, rel) ->
-            throw new Error()
-        sinon.spy console, 'error'
-        sinon.stub globStub, 'sync'
+        callback = sinon.spy()
+        addHookSpy = sinon.spy hooksStub, 'addHook'
+        globSyncSpy = sinon.stub globStub, 'sync'
           .callsFake (pattern) ->
-            ['invalid.xml', 'unexist.md']
-        sinon.spy hooksStub, 'addHook'
+            []
+        pathResolveSpy = sinon.spy pathStub, 'resolve'
+
+      it 'should not return any file names', (done) ->
+        mute (unmute) ->
+          addHooks hooksStub, pattern, callback
+          globSyncSpy.should.have.returned []
+          unmute()
+          done()
+
+      it 'should not attempt to load files', (done) ->
+        mute (unmute) ->
+          addHooks hooksStub, pattern, callback
+          pathResolveSpy.should.not.have.been.called
+          unmute()
+          done()
+
+      it 'should propagate the error condition', (done) ->
+        mute (unmute) ->
+          addHooks hooksStub, pattern, callback
+          callback.should.have.been.calledOnce
+          detail = "no hook files found matching pattern '#{pattern}'"
+          callback.should.have.been.calledWith(
+            sinon.match.instanceOf(Error).and(
+              sinon.match.has('message', detail)))
+          unmute()
+          done()
 
       afterEach () ->
-        pathStub.resolve.restore()
-        console.error.restore()
-        globStub.sync.restore()
         hooksStub.addHook.restore()
+        globStub.sync.restore()
+        pathStub.resolve.restore()
 
-      it 'should log a warning', (done) ->
+
+    context 'matching files', () ->
+
+      pattern = './test/**/*_hooks.*'
+
+      it 'should return file names', (done) ->
         mute (unmute) ->
-          addHooks(hooksStub, pattern)
-          assert.ok console.error.called
-
+          globSyncSpy = sinon.spy globStub, 'sync'
+          addHooks hooksStub, pattern, callback
+          globSyncSpy.should.have.been.called
+          globStub.sync.restore()
           unmute()
           done()
 
-      it 'should not attach the hooks', (done) ->
-        mute (unmute) ->
-          addHooks(hooksStub, pattern)
-          assert.ok hooksStub.addHook.notCalled
 
-          unmute()
-          done()
+      context 'when files are valid javascript/coffeescript', () ->
+
+        beforeEach () ->
+          callback = sinon.spy()
+          globSyncSpy = sinon.spy globStub, 'sync'
+          pathResolveSpy = sinon.spy pathStub, 'resolve'
+          addHookSpy = sinon.spy hooksStub, 'addHook'
+
+        it 'should load the files', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            pathResolveSpy.should.have.been.called
+            unmute()
+            done()
+
+        it 'should attach the hooks', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            addHookSpy.should.have.been.called
+            unmute()
+            done()
+
+        it 'should return successful continuation', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            callback.should.have.been.calledOnce
+            callback.should.have.been.calledWith(
+              sinon.match.typeOf('null'))
+            unmute()
+            done()
+
+        afterEach () ->
+          globStub.sync.restore()
+          pathStub.resolve.restore()
+          hooksStub.addHook.restore()
+
+
+      context 'when error occurs reading the hook files', () ->
+
+        addHookSpy = undefined
+        consoleErrorSpy = undefined
+
+        beforeEach () ->
+          callback = sinon.spy()
+          pathResolveSpy = sinon.stub pathStub, 'resolve'
+            .callsFake (path, rel) ->
+              throw new Error 'resolve'
+          consoleErrorSpy = sinon.spy console, 'error'
+          globSyncSpy = sinon.stub globStub, 'sync'
+            .callsFake (pattern) ->
+              ['invalid.xml', 'unexist.md']
+          addHookSpy = sinon.spy hooksStub, 'addHook'
+
+        it 'should log an error', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            consoleErrorSpy.should.have.been.called
+            unmute()
+            done()
+
+        it 'should not attach the hooks', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            addHookSpy.should.not.have.been.called
+            unmute()
+            done()
+
+        it 'should propagate the error condition', (done) ->
+          mute (unmute) ->
+            addHooks hooksStub, pattern, callback
+            callback.should.have.been.calledOnce
+            callback.should.have.been.calledWith(
+              sinon.match.instanceOf(Error).and(
+                sinon.match.has('message', 'resolve')))
+            unmute()
+            done()
+
+        afterEach () ->
+          pathStub.resolve.restore()
+          console.error.restore()
+          globStub.sync.restore()
+          hooksStub.addHook.restore()
 

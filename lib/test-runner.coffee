@@ -2,16 +2,18 @@
 # @file TestRunner class
 ###
 
-Mocha = require 'mocha'
 async = require 'async'
+Mocha = require 'mocha'
 path = require 'path'
 # TODO(proebuck): Replace underscore module with Lodash; ensure compatibility
 _ = require 'underscore'
+
 generateHooks = require './generate-hooks'
 
 
 class TestRunner
   constructor: (options, ramlFile) ->
+    'use strict'
     @server = options.server
     delete options.server
     @mocha = new Mocha options.mocha
@@ -20,6 +22,7 @@ class TestRunner
     @ramlFile = ramlFile
 
   addTestToMocha: (test, hooks) =>
+    'use strict'
     mocha = @mocha
     options = @options
 
@@ -62,6 +65,7 @@ class TestRunner
     , {test}
 
   run: (tests, hooks, done) ->
+    'use strict'
     server = @server
     options = @options
     addTestToMocha = @addTestToMocha
@@ -91,11 +95,7 @@ class TestRunner
       (callback) ->
         if options['generate-hooks']
           # Generate hooks skeleton file
-          templateFile = if options.template
-                           options.template
-                         else
-                           path.join 'templates', 'hookfile.js'
-          generateHooks names, ramlFile, templateFile, done
+          generateHooks names, ramlFile, options.template, done
         else if options.names
           # Write names to console
           console.log name for name in names
@@ -114,6 +114,7 @@ class TestRunner
         mocha.run (failures) ->
           return callback(null, failures)
     ], done
+
 
 
 module.exports = TestRunner
