@@ -33,11 +33,8 @@ class Abao
     hooks = @hooks
 
     parseHooks = (callback) ->
-# TODO(plroebuck): addHooks should be using callback. Convert to use below...
-#      addHooks hooks, config.options.hookfiles, callback
-#      return # NOTREACHED
-      addHooks hooks, config.options.hookfiles
-      return callback()
+      addHooks hooks, config.options.hookfiles, callback
+      return # NOTREACHED
 
     loadRAML = (callback) ->
       if !config.ramlPath

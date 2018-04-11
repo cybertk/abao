@@ -8,27 +8,29 @@ path = require 'path'
 proxyquire = require('proxyquire').noCallThru()
 
 
-addHooks = (hooks, pattern) ->
+addHooks = (hooks, pattern, callback) ->
   'use strict'
   if pattern
     files = glob.sync pattern
 
-    console.info 'hook file pattern matches: ' + files
+    if files.length == 0
+      nomatch = new Error "no hook files found matching pattern '#{pattern}'"
+      return callback nomatch
 
+    console.info 'processing hook file(s):'
     try
-      for file in files
-        proxyquire path.resolve(process.cwd(), file), {
+      files.map (file) ->
+        absFile = path.resolve process.cwd(), file
+        console.info '  ' + absFile
+        proxyquire absFile, {
           'hooks': hooks
         }
+      console.log()
     catch error
-      console.error 'skipping hook loading...'
-      console.group
-      console.error 'error resolving absolute paths of hook files (' + files + ')'
-      console.error 'the "--hookfiles" pattern is probably invalid.'
-      console.error 'message: ' + error.message if error.message?
-      console.error 'stack: ' + error.stack if error.stack?
-      console.groupEnd
-  return
+      console.error 'error loading hooks...'
+      return callback error
+
+  return callback null
 
 
 module.exports = addHooks
