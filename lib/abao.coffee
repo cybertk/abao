@@ -38,13 +38,14 @@ class Abao
 
     loadRAML = (callback) ->
       if !config.ramlPath
-        return callback(new Error 'unspecified RAML file')
+        nofile = new Error 'unspecified RAML file'
+        return callback nofile
 
-      ramlParser.loadFile(config.ramlPath)
+      ramlParser.loadFile config.ramlPath
         .then (raml) ->
-          return callback(null, raml)
+          return callback null, raml
         .catch (err) ->
-          return callback(err)
+          return callback err
       return # NOTREACHED
 
     parseTestsFromRAML = (raml, callback) ->
@@ -53,7 +54,7 @@ class Abao
           config.options.server = raml.baseUri
 
       # Inject the JSON refs schemas
-      factory = new TestFactory(config.options.schemas)
+      factory = new TestFactory config.options.schemas
 
       addTests raml, tests, hooks, callback, factory, config.options.sorted
       return # NOTREACHED
