@@ -27,10 +27,10 @@ describe 'Test', () ->
 
     describe 'of simple test', () ->
 
-      testFact = ''
-      test = ''
-      machine = ''
-      contentTestCalled = null
+      testFact = undefined
+      test = undefined
+      machine = undefined
+      contentTestCalled = undefined
 
       before (done) ->
 
@@ -111,8 +111,8 @@ describe 'Test', () ->
 
     describe 'of test that contains params', () ->
 
-      test = ''
-      machine = ''
+      test = undefined
+      machine = undefined
 
       before (done) ->
 
@@ -250,9 +250,9 @@ describe 'Test', () ->
 
   describe '#assertResponse', () ->
 
-    errorStub = ''
-    responseStub = ''
-    bodyStub = ''
+    errorStub = undefined
+    responseStub = undefined
+    bodyStub = undefined
 
     testFact = new TestFactory()
     test = testFact.create()
