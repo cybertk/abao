@@ -61,13 +61,13 @@ describe 'Test', () ->
           type: 'foo'
           name: 'bar'
 
-        test.contentTest = (response, body, done) ->
+        test.contentTest = (response, body, callback) ->
           contentTestCalled = true
           assert.equal response.status, 201
-          assert.deepEqual JSON.parse(body), machine
-          return done()
+          assert.deepEqual machine, JSON.parse body
+          return callback()
 
-        requestStub.callsArgWith 1, null, {statusCode: 201}, JSON.stringify(machine)
+        requestStub.callsArgWith 1, null, {statusCode: 201}, JSON.stringify machine
         test.run done
 
       after () ->
@@ -100,13 +100,12 @@ describe 'Test', () ->
         response = test.response
         # Unchanged properties
         assert.equal response.status, 201
-
-        # changed properties
-        # assert.equal response.headers, 201
+        # Changed properties
         assert.deepEqual response.body, machine
 
       it 'should call contentTest', () ->
         assert.isTrue contentTestCalled
+        # TODO(plroebuck): Should be checking callback did not pass back an Error
 
 
     describe 'of test that contains params', () ->
@@ -142,7 +141,7 @@ describe 'Test', () ->
           type: 'foo'
           name: 'bar'
 
-        requestStub.callsArgWith 1, null, {statusCode: 200}, JSON.stringify(machine)
+        requestStub.callsArgWith 1, null, {statusCode: 200}, JSON.stringify machine
         test.run done
 
       after () ->
@@ -177,6 +176,8 @@ describe 'Test', () ->
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
 
+      # TODO(plroebuck): Should be checking callback did not pass back an Error
+
 
     describe 'construct a TestFactory', () ->
 
@@ -200,24 +201,24 @@ describe 'Test', () ->
       }
 
       it 'test TestFactory without parameter', () ->
-        new TestTestFactory('')
+        new TestTestFactory ''
         assert.isFalse globStub.sync.called
         assert.isFalse fsStub.readFileSync.called
         assert.isFalse tv4Stub.addSchema.called
 
       it 'test TestFactory with name 1', () ->
-        new TestTestFactory('thisisaword')
+        new TestTestFactory 'thisisaword'
         assert.isTrue globStub.sync.calledWith 'thisisaword'
         assert.isTrue fsStub.readFileSync.calledOnce
         assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
-        assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+        assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
 
       it 'test TestFactory with name 2', () ->
-        new TestTestFactory('thisIsAnotherWord')
+        new TestTestFactory 'thisIsAnotherWord'
         assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
         assert.isTrue fsStub.readFileSync.calledTwice
         assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
-        assert.isTrue tv4Stub.addSchema.calledWith(JSON.parse('{ "text": "example" }'))
+        assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
 
 
   describe '#url', () ->
