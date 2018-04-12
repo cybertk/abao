@@ -11,7 +11,7 @@ chai.use(sinonChai)
 requestStub = sinon.stub()
 requestStub.restore = () ->
   'use strict'
-  this.callsArgWith(1, null, {statusCode: 200}, '')
+  this.callsArgWith 1, null, {statusCode: 200}, ''
 
 TestFactory = proxyquire '../../lib/test', {
   'request': requestStub
@@ -63,11 +63,11 @@ describe 'Test', () ->
 
         test.contentTest = (response, body, done) ->
           contentTestCalled = true
-          assert.equal(response.status, 201)
-          assert.deepEqual(JSON.parse(body), machine)
+          assert.equal response.status, 201
+          assert.deepEqual JSON.parse(body), machine
           return done()
 
-        requestStub.callsArgWith(1, null, {statusCode: 201}, JSON.stringify(machine))
+        requestStub.callsArgWith 1, null, {statusCode: 201}, JSON.stringify(machine)
         test.run done
 
       after () ->
@@ -142,7 +142,7 @@ describe 'Test', () ->
           type: 'foo'
           name: 'bar'
 
-        requestStub.callsArgWith(1, null, {statusCode: 200}, JSON.stringify(machine))
+        requestStub.callsArgWith 1, null, {statusCode: 200}, JSON.stringify(machine)
         test.run done
 
       after () ->
@@ -176,6 +176,7 @@ describe 'Test', () ->
         # Unchanged properties
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
+
 
     describe 'construct a TestFactory', () ->
 
@@ -222,6 +223,7 @@ describe 'Test', () ->
   describe '#url', () ->
 
     describe 'when called with path that does not contain param', () ->
+
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines'
@@ -229,7 +231,9 @@ describe 'Test', () ->
       it 'should return origin path', () ->
         assert.equal test.url(), '/machines'
 
+
     describe 'when called with path that contains param', () ->
+
       testFact = new TestFactory()
       test = testFact.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
@@ -266,7 +270,6 @@ describe 'Test', () ->
     describe 'when given valid response', () ->
 
       it 'should pass all asserts', () ->
-
         errorStub = null
         responseStub =
           statusCode: 201
@@ -274,13 +277,14 @@ describe 'Test', () ->
           type: 'foo'
           name: 'bar'
         # assert.doesNotThrow
-        test.assertResponse(errorStub, responseStub, bodyStub)
+        test.assertResponse errorStub, responseStub, bodyStub
+
 
     describe 'when given invalid response', () ->
+
       describe 'when response body is null', () ->
 
         it 'should throw AssertionError', () ->
-
           errorStub = null
           responseStub =
             statusCode: 201
@@ -288,10 +292,10 @@ describe 'Test', () ->
           fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
           assert.throw fn, chai.AssertionError
 
+
       describe 'when response body is invalid JSON', () ->
 
         it 'should throw AssertionError', () ->
-
           errorStub = null
           responseStub =
             statusCode: 201
