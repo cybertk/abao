@@ -63,9 +63,12 @@ describe 'Test', () ->
 
         test.contentTest = (response, body, callback) ->
           contentTestCalled = true
-          assert.equal response.status, 201
-          assert.deepEqual machine, JSON.parse body
-          return callback()
+          try
+            assert.equal response.status, 201
+            assert.deepEqual machine, JSON.parse body
+          catch err
+            return callback err
+          return callback null
 
         requestStub.callsArgWith 1, null, {statusCode: 201}, JSON.stringify machine
         test.run done
@@ -277,8 +280,8 @@ describe 'Test', () ->
         bodyStub = JSON.stringify
           type: 'foo'
           name: 'bar'
-        # assert.doesNotThrow
-        test.assertResponse errorStub, responseStub, bodyStub
+        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+        assert.doesNotThrow fn
 
 
     describe 'when given invalid response', () ->
