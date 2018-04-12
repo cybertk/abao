@@ -19,11 +19,11 @@ String::contains = (it) ->
 
 
 class TestFactory
-  constructor: (schemaLocation) ->
+  constructor: (pattern) ->
     'use strict'
-    if schemaLocation
+    if pattern
 
-      files = glob.sync schemaLocation
+      files = glob.sync pattern
       console.log '\tJSON ref schemas: ' + files.join(', ')
 
       for file in files
@@ -56,8 +56,8 @@ class Test
       headers: null
       body: null
 
-    @contentTest ?= (response, body, done) ->
-      done()
+    @contentTest ?= (response, body, callback) ->
+      return callback null
 
   url: () ->
     'use strict'
@@ -67,7 +67,7 @@ class Test
       path = path.replace "{#{key}}", value
     return path
 
-  run: (callback) ->
+  run: (done) ->
     'use strict'
     assertResponse = @assertResponse
     contentTest = @contentTest
@@ -86,10 +86,11 @@ class Test
           callback null, error, response, body
       ,
       (error, response, body, callback) ->
-        assertResponse(error, response, body)
-        contentTest(response, body, callback)
-    ], callback
+        assertResponse error, response, body
+        contentTest response, body, callback
+    ], done
 
+  # TODO(plroebuck): add callback parameter and use it...
   assertResponse: (error, response, body) =>
     'use strict'
     assert.isNull error
