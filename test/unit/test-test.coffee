@@ -74,9 +74,9 @@ describe 'Test', () ->
       test = undefined
       machine = undefined
       contentTestCalled = undefined
+      callback = undefined
 
       before (done) ->
-
         testFact = new TestFactory()
         test = testFact.create()
         contentTestCalled = false
@@ -114,7 +114,10 @@ describe 'Test', () ->
           return callback null
 
         requestStub.callsArgWith 1, null, {statusCode: 201}, JSON.stringify machine
-        test.run done
+        callback = sinon.stub()
+        callback.returns done()
+
+        test.run callback
 
       after () ->
         requestStub.restore()
@@ -151,16 +154,20 @@ describe 'Test', () ->
 
       it 'should call contentTest', () ->
         assert.isTrue contentTestCalled
-        # TODO(plroebuck): Should be checking callback did not pass back an Error
+
+      it 'should return successful continuation', () ->
+        callback.should.have.been.calledOnce
+        callback.should.have.been.calledWith(
+          sinon.match.typeOf('null'))
 
 
     describe 'of test that contains params', () ->
 
       test = undefined
       machine = undefined
+      callback = undefined
 
       before (done) ->
-
         testFact = new TestFactory()
         test = testFact.create()
         test.name = 'PUT /machines/{machine_id} -> 200'
@@ -188,7 +195,10 @@ describe 'Test', () ->
           name: 'bar'
 
         requestStub.callsArgWith 1, null, {statusCode: 200}, JSON.stringify machine
-        test.run done
+        callback = sinon.stub()
+        callback.returns done()
+
+        test.run callback
 
       after () ->
         requestStub.restore()
@@ -222,7 +232,10 @@ describe 'Test', () ->
         assert.equal response.status, 200
         assert.deepEqual response.body, machine
 
-      # TODO(plroebuck): Should be checking callback did not pass back an Error
+      it 'should return successful continuation', () ->
+        callback.should.have.been.calledOnce
+        callback.should.have.been.calledWith(
+          sinon.match.typeOf('null'))
 
 
   describe '#url', () ->
