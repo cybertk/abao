@@ -84,21 +84,19 @@ class Test
       requestCB = (error, response, body) ->
         if error
           return callback error
-        # Returns error object to match assertResponse(), but already handled
-        return callback null, error, response, body
+        return callback null, response, body
       request options, requestCB
 
     async.waterfall [
       makeHTTPRequest,
-      (error, response, body, callback) ->
-        assertResponse error, response, body
+      (response, body, callback) ->
+        assertResponse response, body
         contentTest response, body, callback
     ], done
 
   # TODO(plroebuck): add callback parameter and use it...
-  assertResponse: (error, response, body) =>
+  assertResponse: (response, body) =>
     'use strict'
-    assert.isNull error
     assert.isNotNull response, 'Response'
 
     # Headers

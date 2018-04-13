@@ -254,7 +254,6 @@ describe 'Test', () ->
 
   describe '#assertResponse', () ->
 
-    errorStub = undefined
     responseStub = undefined
     bodyStub = undefined
 
@@ -274,13 +273,12 @@ describe 'Test', () ->
     describe 'when given valid response', () ->
 
       it 'should pass all asserts', () ->
-        errorStub = null
         responseStub =
           statusCode: 201
         bodyStub = JSON.stringify
           type: 'foo'
           name: 'bar'
-        fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+        fn = _.partial test.assertResponse, responseStub, bodyStub
         assert.doesNotThrow fn
 
 
@@ -289,21 +287,19 @@ describe 'Test', () ->
       describe 'when response body is null', () ->
 
         it 'should throw AssertionError', () ->
-          errorStub = null
           responseStub =
             statusCode: 201
           bodyStub = null
-          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          fn = _.partial test.assertResponse, responseStub, bodyStub
           assert.throw fn, chai.AssertionError
 
 
       describe 'when response body is invalid JSON', () ->
 
         it 'should throw AssertionError', () ->
-          errorStub = null
           responseStub =
             statusCode: 201
           bodyStub = 'Im invalid'
-          fn = _.partial test.assertResponse, errorStub, responseStub, bodyStub
+          fn = _.partial test.assertResponse, responseStub, bodyStub
           assert.throw fn, chai.AssertionError
 
