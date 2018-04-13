@@ -20,6 +20,49 @@ TestFactory = proxyquire '../../lib/test', {
 ABAO_IO_SERVER = 'http://abao.io'
 
 
+describe 'TestFactory', () ->
+  'use strict'
+
+  describe 'constructor', () ->
+
+    globStub = {}
+    globStub.sync = sinon.spy (location) ->
+      return [location]
+
+    fsStub = {}
+    fsStub.readFileSync = sinon.spy () ->
+      return '{ "text": "example" }'
+
+    tv4Stub = {}
+    tv4Stub.addSchema = sinon.spy()
+
+    TestTestFactory = proxyquire '../../lib/test', {
+      'fs': fsStub,
+      'glob': globStub,
+      'tv4': tv4Stub
+    }
+
+    it 'test TestFactory without parameter', () ->
+      new TestTestFactory ''
+      assert.isFalse globStub.sync.called
+      assert.isFalse fsStub.readFileSync.called
+      assert.isFalse tv4Stub.addSchema.called
+
+    it 'test TestFactory with name 1', () ->
+      new TestTestFactory 'thisisaword'
+      assert.isTrue globStub.sync.calledWith 'thisisaword'
+      assert.isTrue fsStub.readFileSync.calledOnce
+      assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
+      assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
+
+    it 'test TestFactory with name 2', () ->
+      new TestTestFactory 'thisIsAnotherWord'
+      assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
+      assert.isTrue fsStub.readFileSync.calledTwice
+      assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
+      assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
+
+
 describe 'Test', () ->
   'use strict'
 
@@ -180,48 +223,6 @@ describe 'Test', () ->
         assert.deepEqual response.body, machine
 
       # TODO(plroebuck): Should be checking callback did not pass back an Error
-
-
-    describe 'construct a TestFactory', () ->
-
-      globStub = {}
-      globStub.sync = sinon.spy((location) ->
-        return [location]
-      )
-
-      fsStub = {}
-      fsStub.readFileSync = sinon.spy(() ->
-        return '{ "text": "example" }'
-      )
-
-      tv4Stub = {}
-      tv4Stub.addSchema = sinon.spy()
-
-      TestTestFactory = proxyquire '../../lib/test', {
-        'fs': fsStub,
-        'glob': globStub,
-        'tv4': tv4Stub
-      }
-
-      it 'test TestFactory without parameter', () ->
-        new TestTestFactory ''
-        assert.isFalse globStub.sync.called
-        assert.isFalse fsStub.readFileSync.called
-        assert.isFalse tv4Stub.addSchema.called
-
-      it 'test TestFactory with name 1', () ->
-        new TestTestFactory 'thisisaword'
-        assert.isTrue globStub.sync.calledWith 'thisisaword'
-        assert.isTrue fsStub.readFileSync.calledOnce
-        assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
-        assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
-
-      it 'test TestFactory with name 2', () ->
-        new TestTestFactory 'thisIsAnotherWord'
-        assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
-        assert.isTrue fsStub.readFileSync.calledTwice
-        assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
-        assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
 
 
   describe '#url', () ->
