@@ -80,11 +80,16 @@ class Test
       options['body'] = JSON.stringify @request.body
     options['qs'] = @request.query
 
+    makeHTTPRequest = (callback) ->
+      requestCB = (error, response, body) ->
+        if error
+          return callback error
+        # Returns error object to match assertResponse(), but already handled
+        return callback null, error, response, body
+      request options, requestCB
+
     async.waterfall [
-      (callback) ->
-        request options, (error, response, body) ->
-          callback null, error, response, body
-      ,
+      makeHTTPRequest,
       (error, response, body, callback) ->
         assertResponse error, response, body
         contentTest response, body, callback
