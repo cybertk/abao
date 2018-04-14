@@ -1,10 +1,11 @@
 chai = require 'chai'
 sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
-_ = require 'underscore'
+_ = require 'lodash'
 proxyquire = require('proxyquire').noCallThru()
 
 assert = chai.assert
+expect = chai.expect
 should = chai.should()
 chai.use(sinonChai)
 
@@ -68,7 +69,7 @@ describe 'Test', () ->
 
   describe '#run', () ->
 
-    describe 'of simple test', () ->
+    describe 'when basic test', () ->
 
       testFact = undefined
       test = undefined
@@ -122,7 +123,7 @@ describe 'Test', () ->
       after () ->
         requestStub.restore()
 
-      it 'should call #request', () ->
+      it 'should make HTTP request', () ->
         requestStub.should.be.calledWith
           url: "#{ABAO_IO_SERVER}/machines"
           method: 'POST'
@@ -161,7 +162,7 @@ describe 'Test', () ->
           sinon.match.typeOf('null'))
 
 
-    describe 'of test that contains params', () ->
+    describe 'when test contains params', () ->
 
       test = undefined
       machine = undefined
@@ -203,7 +204,7 @@ describe 'Test', () ->
       after () ->
         requestStub.restore()
 
-      it 'should call #request', () ->
+      it 'should make HTTP request', () ->
         requestStub.should.be.calledWith
           url: "#{ABAO_IO_SERVER}/machines/1"
           method: 'PUT'
@@ -236,6 +237,123 @@ describe 'Test', () ->
         callback.should.have.been.calledOnce
         callback.should.have.been.calledWith(
           sinon.match.typeOf('null'))
+
+
+    describe 'when HTTP request fails due to Error', () ->
+
+      testFact = undefined
+      test = undefined
+      err = undefined
+      callback = undefined
+
+      before () ->
+        requestStub.reset()
+        testFact = new TestFactory()
+        testname = 'POST /machines -> 201'
+        test = testFact.create testname
+        test.request.server = "#{ABAO_IO_SERVER}"
+        test.request.method = 'POST'
+        test.request.path = '/machines'
+        test.request.body = 'dontcare'
+
+      context 'while attempting to connect', () ->
+
+        before (done) ->
+          err = new Error 'ETIMEDOUT'
+          err.code = 'ETIMEDOUT'
+          err.connect = true
+
+          requestStub.callsArgWith 1, err
+          callback = sinon.spy()
+          callback.returns done()
+
+        after () ->
+          requestStub.restore()
+
+        it 'should propagate the error condition', () ->
+          test.run callback
+          detail = 'timed out attempting to establish connection'
+          callback.should.have.been.calledOnce
+          error = callback.args[0][0]
+          expect(error).to.exist
+          expect(error).to.be.instanceof(Error)
+          expect(error).to.have.property('code', 'ETIMEDOUT')
+          expect(error).to.have.property('connect', true)
+          expect(error).to.have.property('message', detail)
+
+
+      context 'while awaiting server response', () ->
+
+        before (done) ->
+          err = new Error 'ETIMEDOUT'
+          err.code = 'ETIMEDOUT'
+          err.connect = false
+
+          requestStub.callsArgWith 1, err
+          callback = sinon.spy()
+          callback.returns done()
+
+        after () ->
+          requestStub.restore()
+
+        it 'should propagate the error condition', () ->
+          test.run callback
+          detail = 'timed out awaiting server response'
+          callback.should.have.been.calledOnce
+          error = callback.args[0][0]
+          expect(error).to.exist
+          expect(error).to.be.instanceof(Error)
+          expect(error).to.have.property('code', 'ETIMEDOUT')
+          expect(error).to.have.property('message', detail)
+
+
+      context 'when server stopped sending response data', () ->
+
+        before (done) ->
+          err = new Error 'ESOCKETTIMEDOUT'
+          err.code = 'ESOCKETTIMEDOUT'
+          err.connect = false
+
+          requestStub.callsArgWith 1, err
+          callback = sinon.spy()
+          callback.returns done()
+
+        after () ->
+          requestStub.restore()
+
+        it 'should propagate the error condition', () ->
+          test.run callback
+          detail = 'timed out when server stopped sending response data'
+          callback.should.have.been.calledOnce
+          error = callback.args[0][0]
+          expect(error).to.exist
+          expect(error).to.be.instanceof(Error)
+          expect(error).to.have.property('code', 'ESOCKETTIMEDOUT')
+          expect(error).to.have.property('message', detail)
+
+
+      context 'when connection reset by server', () ->
+
+        before (done) ->
+          err = new Error 'ECONNRESET'
+          err.code = 'ECONNRESET'
+
+          requestStub.callsArgWith 1, err
+          callback = sinon.spy()
+          callback.returns done()
+
+        after () ->
+          requestStub.restore()
+
+        it 'should propagate the error condition', () ->
+          test.run callback
+          detail = 'connection reset by server'
+          callback.should.have.been.calledOnce
+          error = callback.args[0][0]
+          expect(error).to.exist
+          expect(error).to.be.instanceof(Error)
+          expect(error).to.have.property('code', 'ECONNRESET')
+          expect(error).to.have.property('message', detail)
 
 
   describe '#url', () ->

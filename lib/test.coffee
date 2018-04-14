@@ -83,7 +83,21 @@ class Test
     makeHTTPRequest = (callback) ->
       requestCB = (error, response, body) ->
         if error
-          return callback error
+          maybeReplaceMessage = (error) ->
+            error.message = switch
+              when error?.code == 'ETIMEDOUT' and error?.connect
+                'timed out attempting to establish connection'
+              when error?.code == 'ETIMEDOUT'
+                'timed out awaiting server response'
+              when error?.code == 'ESOCKETTIMEDOUT'
+                'timed out when server stopped sending response data'
+              when error?.code == 'ECONNRESET'
+                'connection reset by server'
+              else
+                error.message
+            return error
+
+          return callback maybeReplaceMessage error
         return callback null, response, body
       request options, requestCB
 
