@@ -7,9 +7,19 @@ csonschema = require 'csonschema'
 _ = require 'lodash'
 
 
+# Polyfill
+do ->
+  'use strict'
+  String::includes ?= (searchString, position) ->
+    position = 0 if typeof position isnt 'number'
+    if position + searchString.length > @length
+      return false
+    return @indexOf searchString, position != -1
+
+
 parseSchema = (source) ->
   'use strict'
-  if source.contains('$schema')
+  if source.includes '$schema'
     #jsonschema
     # @response.schema = JSON.parse @response.schema
     JSON.parse source

@@ -13,11 +13,6 @@ _ = require 'underscore'
 assert = chai.assert
 
 
-String::contains = (it) ->
-  'use strict'
-  @indexOf(it) != -1
-
-
 class TestFactory
   constructor: (pattern) ->
     'use strict'
