@@ -20,10 +20,10 @@ FIXTURE_DIR = "#{__dirname}/../fixtures"
 RAML_DIR = "#{FIXTURE_DIR}"
 
 
-describe '#addTests', () ->
+describe 'addTests(raml, tests, hooks, parent, callback, factory, sortFirst)', () ->
   'use strict'
 
-  describe '#run', () ->
+  describe 'run', () ->
 
     describe 'when endpoint specifies a single method', () ->
 
