@@ -27,7 +27,7 @@ describe 'Abao', () ->
 
   describe '#constructor', () ->
 
-    describe 'with valid config', () ->
+    describe 'with default config', () ->
 
       it 'should create a new instance', () ->
         abao = new Abao()
@@ -41,7 +41,7 @@ describe 'Abao', () ->
     before (done) ->
       abao = new Abao()
       callback = sinon.stub()
-      callback.returns(done())
+      callback.returns done()
       abao.run callback
 
     it 'should invoke callback', () ->
