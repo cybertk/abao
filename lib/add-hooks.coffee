@@ -21,7 +21,7 @@ addHooks = (hooks, pattern, callback) ->
     try
       files.map (file) ->
         absFile = path.resolve process.cwd(), file
-        console.info '  ' + absFile
+        console.info "  #{absFile}"
         proxyquire absFile, {
           'hooks': hooks
         }
