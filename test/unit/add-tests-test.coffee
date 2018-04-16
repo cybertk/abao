@@ -1,15 +1,19 @@
-{assert} = require 'chai'
-sinon = require 'sinon'
-ramlParser = require 'raml-parser'
-
+chai = require 'chai'
+mocha = require 'mocha'
 proxyquire = require('proxyquire').noCallThru()
+ramlParser = require 'raml-parser'
+sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
 
-mochaStub = require 'mocha'
+assert = chai.assert
+expect = chai.expect
+should = chai.should()
+chai.use sinonChai
 
 TestFactory = require '../../lib/test'
 hooks = require '../../lib/hooks'
 addTests = proxyquire '../../lib/add-tests', {
-  'mocha': mochaStub
+  'mocha': mocha
 }
 
 FIXTURE_DIR = "#{__dirname}/../fixtures"
