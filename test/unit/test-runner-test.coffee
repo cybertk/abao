@@ -319,7 +319,7 @@ describe 'Test Runner', () ->
         assert.notOk tests[0].pending
 
 
-    describe 'when test throws AssertionError', () ->
+    describe 'when test throws Error', () ->
 
       afterAllHook = undefined
 
@@ -338,7 +338,7 @@ describe 'Test Runner', () ->
         runner = new TestRunner options, ''
         # sinon.stub runner.mocha, 'run', (callback) -> callback()
         testStub = sinon.stub test, 'run'
-        testStub.throws('AssertionError')
+        testStub.throws new Error 'thrown from test#run'
 
         # Mute stdout/stderr
         mute (unmute) ->
@@ -365,7 +365,7 @@ describe 'Test Runner', () ->
         test.response.status = 200
 
         beforeAllHook = sinon.stub()
-        beforeAllHook.throws('Error')
+        beforeAllHook.throws new Error 'thrown from beforeAll hook'
         afterAllHook = sinon.stub()
         afterAllHook.callsArg(0)
 
