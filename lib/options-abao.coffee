@@ -16,8 +16,8 @@ module.exports =
 
   hookfiles:
     alias: 'f'
-    description: 'Specify pattern to match files with before/after hooks ' +
-                 'for running tests'
+    description: 'Specify pattern to match JavaScript/CoffeeScript files ' +
+                 'with before/after hooks for running tests'
     type: 'string'
 
   'hooks-only':
@@ -31,8 +31,8 @@ module.exports =
     type: 'boolean'
 
   schemas:
-    description: 'Specify pattern to match schema files to be loaded for ' +
-                 'use as JSON $refs'
+    description: 'Specify pattern to match JSON-formatted schema files ' +
+                 'to be loaded for use as JSON $refs'
     type: 'string'
 
   server:
@@ -47,7 +47,7 @@ module.exports =
     type: 'boolean'
 
   template:
-    description: 'Specify template file to use for generating hooks'
+    description: 'Specify Mustache template file to use for generating hooks'
     type: 'string'
     normalize: true
 

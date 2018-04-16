@@ -239,6 +239,7 @@ Options passed to Mocha:
   --grep, -g      Only run tests matching <pattern>                     [string]
   --invert, -i    Invert --grep matches                                [boolean]
   --reporter, -R  Specify reporter to use             [string] [default: "spec"]
+  --reporters     Display available reporters and exit                 [boolean]
   --timeout, -t   Set test case timeout in milliseconds [number] [default: 2000]
 
 Options:
@@ -246,21 +247,21 @@ Options:
   --header, -h      Add header to include in each request. Header must be in
                     KEY:VALUE format (e.g., "-h Accept:application/json").
                     Reuse option to add multiple headers                [string]
-  --hookfiles, -f   Specify pattern to match files with before/after hooks for
-                    running tests                                       [string]
+  --hookfiles, -f   Specify pattern to match JavaScript/CoffeeScript files with
+                    before/after hooks for running tests                [string]
   --hooks-only, -H  Run test only if defined either before or after hooks
                                                                        [boolean]
   --names, -n       List names of requests and exit                    [boolean]
-  --reporters       Display available reporters and exit               [boolean]
-  --schemas         Specify pattern to match schema files to be loaded for use
-                    as JSON refs                                        [string]
+  --schemas         Specify pattern to match JSON-formatted schema files to be
+                    loaded for use as JSON $refs                        [string]
   --server          Specify API endpoint to use. The RAML-specified baseUri
                     value will be used if not provided                  [string]
   --sorted          Sorts requests in a sensible way so that objects are not
                     modified before they are created.
                     Order: CONNECT, OPTIONS, POST, GET, HEAD, PUT, PATCH,
                     DELETE, TRACE.                                     [boolean]
-  --template        Specify template file to use for generating hooks   [string]
+  --template        Specify Mustache template file to use for generating hooks
+                                                                        [string]
   --help            Show usage information and exit                    [boolean]
   --version         Show version number and exit                       [boolean]
 ```
