@@ -384,7 +384,7 @@ describe 'Test', () ->
         assert.equal test.request.path, '/machines/{machine_id}/parts/{part_id}'
 
 
-  describe '#assertResponse', () ->
+  describe '#validateResponse', () ->
 
     responseStub = undefined
     bodyStub = undefined
@@ -392,7 +392,7 @@ describe 'Test', () ->
     testFact = new TestFactory()
     test = testFact.create()
     test.response.status = 201
-    test.response.schema = {
+    test.response.schema =
       $schema: 'http://json-schema.org/draft-04/schema#'
       type: 'object'
       properties:
@@ -400,38 +400,55 @@ describe 'Test', () ->
           type: 'string'
         name:
           type: 'string'
-    }
 
     describe 'when given valid response', () ->
 
-      it 'should pass all asserts', () ->
+      before () ->
         responseStub =
           statusCode: 201
         bodyStub = JSON.stringify
           type: 'foo'
           name: 'bar'
-        fn = _.partial test.assertResponse, responseStub, bodyStub
+
+      it 'should not throw', () ->
+        fn = _.partial test.validateResponse, responseStub, bodyStub
         assert.doesNotThrow fn
 
 
     describe 'when given invalid response', () ->
 
-      describe 'when response body is null', () ->
+      describe 'when response body is empty', () ->
 
-        it 'should throw AssertionError', () ->
+        before () ->
           responseStub =
             statusCode: 201
-          bodyStub = null
-          fn = _.partial test.assertResponse, responseStub, bodyStub
-          assert.throw fn, chai.AssertionError
+          bodyStub = ''
+
+        it 'should throw Error', () ->
+          fn = _.partial test.validateResponse, responseStub, bodyStub
+          assert.throws fn, Error, /response body is empty/
 
 
       describe 'when response body is invalid JSON', () ->
 
-        it 'should throw AssertionError', () ->
+        before () ->
           responseStub =
             statusCode: 201
           bodyStub = 'Im invalid'
-          fn = _.partial test.assertResponse, responseStub, bodyStub
-          assert.throw fn, chai.AssertionError
+
+        it 'should throw SyntaxError', () ->
+          fn = _.partial test.validateResponse, responseStub, bodyStub
+          assert.throws fn, SyntaxError, /Unexpected token/
+
+
+      describe 'when response body is null', () ->
+
+        before () ->
+          responseStub =
+            statusCode: 201
+          bodyStub = null
+
+        it 'should throw Error', () ->
+          fn = _.partial test.validateResponse, responseStub, bodyStub
+          assert.throws fn, Error, /schema validation failed/
 

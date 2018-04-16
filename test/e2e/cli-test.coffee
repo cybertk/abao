@@ -609,7 +609,7 @@ describe 'Command line interface', () ->
 
             # Errors thrown by Mocha show up in stdout; those by Abao in stderr.
             it 'Mocha should throw an error', () ->
-              detail = "Error: expected 406 to equal '200'"
+              detail = 'Error: unexpected response code: actual=406, expected=200'
               expect(stdout).to.have.string(detail)
 
             it 'should run test but not complete', () ->

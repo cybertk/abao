@@ -3,14 +3,11 @@
 ###
 
 async = require 'async'
-chai = require 'chai'
 fs = require 'fs'
 glob = require 'glob'
 _ = require 'lodash'
 request = require 'request'
 tv4 = require 'tv4'
-
-assert = chai.assert
 
 
 class TestFactory
@@ -46,7 +43,7 @@ class Test
       body: ''
 
     @response =
-      status: ''
+      status: 0
       schema: null
       headers: null
       body: null
@@ -64,7 +61,7 @@ class Test
 
   run: (done) ->
     'use strict'
-    assertResponse = @assertResponse
+    validateResponse = @validateResponse
     contentTest = @contentTest
 
     options = _.pick @request, 'headers', 'method'
@@ -99,57 +96,81 @@ class Test
     async.waterfall [
       makeHTTPRequest,
       (response, body, callback) ->
-        assertResponse response, body
+        try
+          validateResponse response, body
+        catch err
+          callback err
         contentTest response, body, callback
     ], done
 
   # TODO(plroebuck): add callback parameter and use it...
-  assertResponse: (response, body) =>
+  validateResponse: (response, body) =>
     'use strict'
-    assert.isNotNull response, 'Response'
+    if response is null
+      throw new Error 'response is null'
 
     # Headers
     @response.headers = response.headers
 
     # Status code
-    assert.equal response.statusCode, @response.status, """
-      Got unexpected response code:
-      #{body}
-      Error
-    """
-    response.status = response.statusCode
+    @response.status = +@response.status    # Ensure this is a number!
+    if response.statusCode != @response.status
+      actual = response.statusCode
+      expected = @response.status
+      detail = """
+        unexpected response code: actual=#{actual}, expected=#{expected}
+        #{body}
+      """
+      throw new Error detail
+    else
+      response.status = response.statusCode
 
     # Body
     if @response.schema
-      schema = @response.schema
-      validateJson = _.partial JSON.parse, body
-      body = '[empty]' if body is ''
-      assert.doesNotThrow validateJson, JSON.SyntaxError, """
-        Invalid JSON:
-        #{body}
-        Error
-      """
+      # Empty?
+      if body is ''
+        throw new Error 'response body is empty'
 
-      json = validateJson()
+      # Convert response body to object (or error)
+      parseJSON = (str) ->
+        return _.attempt JSON.parse.bind null, str
+
+      instance = parseJSON body
+      if _.isError instance
+        console.error """
+          invalid JSON:
+            #{body}
+        """
+        throw instance    # SyntaxError
 
       # Validate object against JSON schema
       checkRecursive = false
       banUnknown = false
-      result = tv4.validateResult json, schema, checkRecursive, banUnknown
+      schema = @response.schema
+      result = tv4.validateResult instance, schema, checkRecursive, banUnknown
 
-      assert.lengthOf result.missing, 0, """
-        Missing/unresolved JSON schema $refs (#{result.missing?.join(', ')}) in schema:
-        #{JSON.stringify(schema, null, 4)}
-        Error
-      """
-      assert.ok result.valid, """
-        Got unexpected response body: #{result.error?.message}
-        #{JSON.stringify(json, null, 4)}
-        Error
-      """
+      if result.missing.length != 0
+        detail = """
+          missing/unresolved JSON schema $refs:
+            #{result.missing.join '\n'}
+
+          schema:
+            #{JSON.stringify schema, null, 2}
+        """
+        throw new Error detail
+
+      if result.valid == false
+        detail = """
+          schema validation failed:
+            #{result.error?.message}
+
+          #{JSON.stringify instance, null, 2}
+        """
+        throw new Error detail
 
       # Update @response
-      @response.body = json
+      @response.body = instance
+    return
 
 
 module.exports = TestFactory
