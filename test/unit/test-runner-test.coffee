@@ -1,10 +1,15 @@
 chai = require 'chai'
-sinon = require 'sinon'
-sinonChai = require 'sinon-chai'
 _ = require 'lodash'
 mocha = require 'mocha'
 mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
+sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
+
+assert = chai.assert
+expect = chai.expect
+should = chai.should()
+chai.use sinonChai
 
 pkg = require '../../package'
 TestFactory = require '../../lib/test'
@@ -19,9 +24,6 @@ TestRunner = proxyquire '../../lib/test-runner', {
 ABAO_IO_SERVER = 'http://abao.io'
 SERVER = 'http://localhost:3000'
 
-assert = chai.assert
-should = chai.should()
-chai.use(sinonChai)
 
 describe 'Test Runner', () ->
   'use strict'
