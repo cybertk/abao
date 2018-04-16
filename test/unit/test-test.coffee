@@ -251,6 +251,7 @@ describe 'Test', () ->
             q: 'value'
           body: JSON.stringify
             body: 'value'
+          timeout: 10000
         requestStub.should.be.calledWith options
 
       it 'should not modify @name', () ->
@@ -333,6 +334,7 @@ describe 'Test', () ->
             q: 'value'
           body: JSON.stringify
             body: 'value'
+          timeout: 10000
         requestStub.should.be.calledWith options
 
       it 'should not modify @name', () ->

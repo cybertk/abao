@@ -94,6 +94,7 @@ class Test
       headers: @request.headers
       method: @request.method
       qs: @request.query
+      timeout: 10000                   # 10 secs
       url: @url()
 
     makeHTTPRequest = (callback) ->
