@@ -32,7 +32,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -87,7 +87,7 @@ describe '#addTests', () ->
           ramlParser.loadFile(ramlFile)
             .then (raml) ->
               callback = sinon.stub()
-              callback.returns(done())
+              callback.returns done()
 
               addTests raml, tests, hooks, callback, testFactory, false
             .catch (err) ->
@@ -145,7 +145,7 @@ describe '#addTests', () ->
           ramlParser.loadFile(ramlFile)
             .then (raml) ->
               callback = sinon.stub()
-              callback.returns(done())
+              callback.returns done()
 
               addTests raml, tests, hooks, null, callback, testFactory, true
             .catch (err) ->
@@ -203,7 +203,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -252,7 +252,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -301,7 +301,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -345,7 +345,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -391,7 +391,7 @@ describe '#addTests', () ->
         ramlParser.load(raml)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             sinon.stub console, 'warn'
             addTests raml, tests, hooks, callback, testFactory, false
@@ -426,7 +426,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -477,7 +477,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
@@ -509,7 +509,7 @@ describe '#addTests', () ->
         ramlParser.loadFile(ramlFile)
           .then (raml) ->
             callback = sinon.stub()
-            callback.returns(done())
+            callback.returns done()
 
             addTests raml, tests, hooks, callback, testFactory, false
           .catch (err) ->
