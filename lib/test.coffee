@@ -6,6 +6,7 @@ async = require 'async'
 fs = require 'fs'
 glob = require 'glob'
 _ = require 'lodash'
+path = require 'path'
 request = require 'request'
 tv4 = require 'tv4'
 
@@ -14,16 +15,26 @@ class TestFactory
   constructor: (pattern) ->
     'use strict'
     if pattern
-
       files = glob.sync pattern
-      console.log '\tJSON ref schemas: ' + files.join(', ')
 
-      for file in files
-        tv4.addSchema(JSON.parse(fs.readFileSync(file, 'utf8')))
+      if files.length == 0
+        detail = "no external schema files found matching pattern '#{pattern}'"
+        throw new Error detail
+
+      console.info 'processing external schema file(s):'
+      try
+        files.map (file) ->
+          absFile = path.resolve process.cwd(), file
+          console.info "  #{absFile}"
+          tv4.addSchema require absFile
+        console.log()
+      catch error
+        console.error 'error loading external schemas...'
+        throw error
 
   create: (name, contentTest) ->
     'use strict'
-    return new Test(name, contentTest)
+    return new Test name, contentTest
 
 
 

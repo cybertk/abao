@@ -1,5 +1,6 @@
 chai = require 'chai'
 _ = require 'lodash'
+mute = require 'mute'
 proxyquire = require('proxyquire').noCallThru()
 sinon = require 'sinon'
 sinonChai = require 'sinon-chai'
@@ -9,13 +10,22 @@ expect = chai.expect
 should = chai.should()
 chai.use sinonChai
 
+globStub = require 'glob'
+pathStub = require 'path'
+tv4Stub = require 'tv4'
+
+hooksStub = require '../../lib/hooks'
+
 requestStub = sinon.stub()
 requestStub.restore = () ->
   'use strict'
   this.callsArgWith 1, null, {statusCode: 200}, ''
 
 TestFactory = proxyquire '../../lib/test', {
-  'request': requestStub
+  'glob': globStub,
+  'path': pathStub,
+  'request': requestStub,
+  'tv4': tv4Stub
 }
 
 ABAO_IO_SERVER = 'http://abao.io'
@@ -24,44 +34,150 @@ ABAO_IO_SERVER = 'http://abao.io'
 describe 'TestFactory', () ->
   'use strict'
 
+  factory = undefined
+
   describe 'constructor', () ->
 
-    globStub = {}
-    globStub.sync = sinon.spy (location) ->
-      return [location]
+    describe 'with no pattern', () ->
 
-    fsStub = {}
-    fsStub.readFileSync = sinon.spy () ->
-      return '{ "text": "example" }'
+      before () ->
+        sinon.spy globStub, 'sync'
+        sinon.spy pathStub, 'resolve'
+        sinon.spy tv4Stub, 'addSchema'
 
-    tv4Stub = {}
-    tv4Stub.addSchema = sinon.spy()
+      after () ->
+        globStub.sync.restore()
+        pathStub.resolve.restore()
+        tv4Stub.addSchema.restore()
+        factory = null
 
-    TestTestFactory = proxyquire '../../lib/test', {
-      'fs': fsStub,
-      'glob': globStub,
-      'tv4': tv4Stub
-    }
+      it 'should return immediately', (done) ->
+        factory = new TestFactory ''
+        globStub.sync.notCalled
+        pathStub.resolve.notCalled
+        tv4Stub.addSchema.notCalled
+        done()
 
-    it 'test TestFactory without parameter', () ->
-      new TestTestFactory ''
-      assert.isFalse globStub.sync.called
-      assert.isFalse fsStub.readFileSync.called
-      assert.isFalse tv4Stub.addSchema.called
 
-    it 'test TestFactory with name 1', () ->
-      new TestTestFactory 'thisisaword'
-      assert.isTrue globStub.sync.calledWith 'thisisaword'
-      assert.isTrue fsStub.readFileSync.calledOnce
-      assert.isTrue fsStub.readFileSync.calledWith 'thisisaword', 'utf8'
-      assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
+    describe 'with pattern', () ->
 
-    it 'test TestFactory with name 2', () ->
-      new TestTestFactory 'thisIsAnotherWord'
-      assert.isTrue globStub.sync.calledWith 'thisIsAnotherWord'
-      assert.isTrue fsStub.readFileSync.calledTwice
-      assert.isTrue fsStub.readFileSync.calledWith 'thisIsAnotherWord', 'utf8'
-      assert.isTrue tv4Stub.addSchema.calledWith JSON.parse '{ "text": "example" }'
+      context 'not matching any files', () ->
+
+        pattern = '/path/to/directory/without/schemas/*'
+        thrown = undefined
+
+        before () ->
+          sinon.stub globStub, 'sync'
+            .callsFake (pattern) ->
+              []
+          sinon.spy pathStub, 'resolve'
+          sinon.spy tv4Stub, 'addSchema'
+
+        before (done) ->
+          # Run test for all it()s here
+          mute (unmute) ->
+            try
+              factory = new TestFactory pattern
+            catch error
+              thrown = error
+            unmute()
+            done()
+
+        after () ->
+          globStub.sync.restore()
+          pathStub.resolve.restore()
+          tv4Stub.addSchema.restore()
+          factory = null
+          thrown = null
+
+        it 'should not return any file names', () ->
+          globStub.sync.called
+          globStub.sync.should.have.returned []
+
+        it 'should not attempt to load files', () ->
+          pathStub.resolve.notCalled
+          tv4Stub.addSchema.notCalled
+
+        it 'should throw an error', () ->
+          assert.isDefined thrown
+          assert.instanceOf thrown, Error
+          detail = "no external schema files found matching pattern '#{pattern}'"
+          assert.equal thrown.message, detail
+
+
+      context 'matching files', () ->
+
+        schemaDir = 'test/fixtures/schemas'
+        pattern = "#{schemaDir}/*.json"
+        schemaFile = "#{schemaDir}/with-json-refs.json"
+        borkenFile = "#{schemaDir}/product-set-borken.json"
+        thrown = undefined
+        nfiles = 0
+
+        before () ->
+          sinon.stub globStub, 'sync'
+            .callsFake (pattern) ->
+              retValue = [ schemaFile ]
+              nfiles = retValue.length
+              return retValue
+          sinon.spy pathStub, 'resolve'
+          sinon.spy tv4Stub, 'addSchema'
+
+        before (done) ->
+          # Run test for all it()s here
+          mute (unmute) ->
+            try
+              factory = new TestFactory pattern
+            catch error
+              thrown = error
+            unmute()
+            done()
+
+        after () ->
+          globStub.sync.restore()
+          pathStub.resolve.restore()
+          tv4Stub.addSchema.restore()
+          factory = null
+
+        it 'should return filenames', () ->
+          assert.ok globStub.sync.called
+
+        context 'when files are valid JSON', () ->
+
+          it 'should load the file', () ->
+            pathStub.resolve.called
+
+          it 'should add the schema', () ->
+            tv4Stub.addSchema.called
+            tv4Stub.addSchema.should.have.callCount nfiles
+
+          it 'should not throw an error', () ->
+            assert.isUndefined thrown
+
+          it 'should return the created object', () ->
+            assert.isDefined factory
+
+
+  describe '#create', () ->
+
+    factory = undefined
+    testName = undefined
+    hookFunc = undefined
+    dfltHookFunc = undefined
+
+    before () ->
+      factory = new TestFactory()
+      testName = 'GET /machines -> 200'
+      hookFunc = (response, body, done) ->
+        console.log 'call me maybe'
+        done()
+
+    context 'with valid parameters', () ->
+      it 'should return the created object', () ->
+        test = factory.create testName, hookFunc
+        assert.isDefined test
+        assert.equal test.name, testName
+        assert.equal test.contentTest, hookFunc
 
 
 describe 'Test', () ->
