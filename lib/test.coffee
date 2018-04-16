@@ -3,11 +3,12 @@
 ###
 
 async = require 'async'
-fs = require 'fs'
 glob = require 'glob'
 _ = require 'lodash'
 path = require 'path'
+pkg = require '../package'
 request = require 'request'
+requestPkg = require 'request/package'
 tv4 = require 'tv4'
 
 
@@ -50,7 +51,8 @@ class Test
       method: 'GET'
       params: {}
       query: {}
-      headers: {}
+      headers:
+        'User-Agent': @userAgent()
       body: ''
 
     @response =
@@ -61,6 +63,13 @@ class Test
 
     @contentTest ?= (response, body, callback) ->
       return callback null
+
+  userAgent: () ->
+    'use strict'
+    abaoInfo = "#{pkg.name}/#{pkg.version}"
+    platformInfo = "#{process.platform}; #{process.arch}"
+    requestInfo = "#{requestPkg.name}/#{requestPkg.version}"
+    return "#{abaoInfo} (#{platformInfo}) #{requestInfo}"
 
   url: () ->
     'use strict'

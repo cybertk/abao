@@ -473,6 +473,12 @@ describe 'Test Runner', () ->
         assert.ok runner.mocha.run.called
 
       it 'should add headers into test', () ->
+        pkgVersion = receivedTest.request.headers['X-Abao-Version']
+        expect(pkgVersion).to.equal(pkg.version)
+        userAgent = receivedTest.request.headers['User-Agent']
+        userAgentPkgVersion = userAgent.split(' ')[0].split('/')[1]
+        expect(userAgentPkgVersion).to.equal(pkgVersion)
+        delete receivedTest.request.headers['User-Agent']
         assert.deepEqual receivedTest.request.headers, headers
 
 
