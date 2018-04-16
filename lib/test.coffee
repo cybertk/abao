@@ -84,13 +84,17 @@ class Test
     validateResponse = @validateResponse
     contentTest = @contentTest
 
-    options = _.pick @request, 'headers', 'method'
-    options['url'] = @url()
-    if typeof @request.body is 'string'
-      options['body'] = @request.body
-    else
-      options['body'] = JSON.stringify @request.body
-    options['qs'] = @request.query
+    asString = (value) ->
+      if typeof value is 'string'
+        return value
+      return JSON.stringify value
+
+    options =
+      body: asString @request.body
+      headers: @request.headers
+      method: @request.method
+      qs: @request.query
+      url: @url()
 
     makeHTTPRequest = (callback) ->
       requestCB = (error, response, body) ->
