@@ -1,13 +1,13 @@
 chai = require 'chai'
-sinon = require 'sinon'
-sinonChai = require 'sinon-chai'
 _ = require 'lodash'
 proxyquire = require('proxyquire').noCallThru()
+sinon = require 'sinon'
+sinonChai = require 'sinon-chai'
 
 assert = chai.assert
 expect = chai.expect
 should = chai.should()
-chai.use(sinonChai)
+chai.use sinonChai
 
 requestStub = sinon.stub()
 requestStub.restore = () ->
@@ -71,17 +71,15 @@ describe 'Test', () ->
 
     describe 'when basic test', () ->
 
-      testFact = undefined
       test = undefined
       machine = undefined
-      contentTestCalled = undefined
       callback = undefined
+      contentTestCalled = undefined
 
       before (done) ->
-        testFact = new TestFactory()
-        test = testFact.create()
-        contentTestCalled = false
-        test.name = 'POST /machines -> 201'
+        factory = new TestFactory()
+        testname = 'POST /machines -> 201'
+        test = factory.create testname
         test.request.server = "#{ABAO_IO_SERVER}"
         test.request.path = '/machines'
         test.request.method = 'POST'
@@ -105,7 +103,11 @@ describe 'Test', () ->
           type: 'foo'
           name: 'bar'
 
+        contentTestCalled = false
         test.contentTest = (response, body, callback) ->
+          assert.equal typeof response, 'object'
+          assert.equal typeof body, 'string'
+          assert.equal typeof callback, 'function'
           contentTestCalled = true
           try
             assert.equal response.status, 201
@@ -124,7 +126,7 @@ describe 'Test', () ->
         requestStub.restore()
 
       it 'should make HTTP request', () ->
-        requestStub.should.be.calledWith
+        options =
           url: "#{ABAO_IO_SERVER}/machines"
           method: 'POST'
           headers:
@@ -133,6 +135,7 @@ describe 'Test', () ->
             q: 'value'
           body: JSON.stringify
             body: 'value'
+        requestStub.should.be.calledWith options
 
       it 'should not modify @name', () ->
         assert.equal test.name, 'POST /machines -> 201'
@@ -169,9 +172,9 @@ describe 'Test', () ->
       callback = undefined
 
       before (done) ->
-        testFact = new TestFactory()
-        test = testFact.create()
-        test.name = 'PUT /machines/{machine_id} -> 200'
+        factory = new TestFactory()
+        testname = 'PUT /machines/{machine_id} -> 200'
+        test = factory.create testname
         test.request.server = "#{ABAO_IO_SERVER}"
         test.request.path = '/machines/{machine_id}'
         test.request.method = 'PUT'
@@ -205,7 +208,7 @@ describe 'Test', () ->
         requestStub.restore()
 
       it 'should make HTTP request', () ->
-        requestStub.should.be.calledWith
+        options =
           url: "#{ABAO_IO_SERVER}/machines/1"
           method: 'PUT'
           headers:
@@ -214,6 +217,7 @@ describe 'Test', () ->
             q: 'value'
           body: JSON.stringify
             body: 'value'
+        requestStub.should.be.calledWith options
 
       it 'should not modify @name', () ->
         assert.equal test.name, 'PUT /machines/{machine_id} -> 200'
@@ -241,16 +245,16 @@ describe 'Test', () ->
 
     describe 'when HTTP request fails due to Error', () ->
 
-      testFact = undefined
+      factory = undefined
       test = undefined
       err = undefined
       callback = undefined
 
       before () ->
         requestStub.reset()
-        testFact = new TestFactory()
+        factory = new TestFactory()
         testname = 'POST /machines -> 201'
-        test = testFact.create testname
+        test = factory.create testname
         test.request.server = "#{ABAO_IO_SERVER}"
         test.request.method = 'POST'
         test.request.path = '/machines'
@@ -360,8 +364,8 @@ describe 'Test', () ->
 
     describe 'when called with path that does not contain param', () ->
 
-      testFact = new TestFactory()
-      test = testFact.create()
+      factory = new TestFactory()
+      test = factory.create()
       test.request.path = '/machines'
 
       it 'should return origin path', () ->
@@ -370,8 +374,8 @@ describe 'Test', () ->
 
     describe 'when called with path that contains param', () ->
 
-      testFact = new TestFactory()
-      test = testFact.create()
+      factory = new TestFactory()
+      test = factory.create()
       test.request.path = '/machines/{machine_id}/parts/{part_id}'
       test.request.params =
         machine_id: 'tianmao'
@@ -389,8 +393,8 @@ describe 'Test', () ->
     responseStub = undefined
     bodyStub = undefined
 
-    testFact = new TestFactory()
-    test = testFact.create()
+    factory = new TestFactory()
+    test = factory.create()
     test.response.status = 201
     test.response.schema =
       $schema: 'http://json-schema.org/draft-04/schema#'
