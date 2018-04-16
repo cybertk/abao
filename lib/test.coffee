@@ -6,9 +6,9 @@ async = require 'async'
 chai = require 'chai'
 fs = require 'fs'
 glob = require 'glob'
+_ = require 'lodash'
 request = require 'request'
 tv4 = require 'tv4'
-_ = require 'underscore'
 
 assert = chai.assert
 
