@@ -2,6 +2,7 @@ chai = require 'chai'
 child_process = require 'child_process'
 express = require 'express'
 _ = require 'lodash'
+os = require 'os'
 pkg = require '../../package'
 
 expect = chai.expect
@@ -29,10 +30,10 @@ mochaJsonReportKeys = [
   'passes'
 ]
 
-stderr = ''
-stdout = ''
-report = ''
-exitStatus = null
+stderr = undefined
+stdout = undefined
+report = undefined
+exitStatus = undefined
 
 #
 # To dump individual raw test results:
@@ -52,6 +53,7 @@ debugExecCommand = false
 
 execCommand = (cmd, callback) ->
   'use strict'
+
   stderr = ''
   stdout = ''
   report = ''
@@ -64,18 +66,22 @@ execCommand = (cmd, callback) ->
       report = JSON.parse out
     catch ignore
       # Ignore issues with creating report from output
+    return
 
-    if error
-      exitStatus = error.code
+  cli.on 'exit', (code, signal) ->
+    if code != null
+      exitStatus = code
+    else
+      exitStatus = 128 + os.constants.signals[signal]
+    return
 
-  cli.on 'close', (code) ->
-    exitStatus = code if exitStatus == null and code != undefined
+  cli.on 'close', (code, signal) ->
     if debugExecCommand
       console.log "stdout:\n#{stdout}\n"
       console.log "stderr:\n#{stderr}\n"
       console.log "report:\n#{report}\n"
       console.log "exitStatus = #{exitStatus}\n"
-    callback()
+    return callback null
 
 
 describe 'Command line interface', () ->
