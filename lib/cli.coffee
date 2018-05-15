@@ -77,9 +77,8 @@ main = (argv) ->
 
     if nfailures > 0
       process.exitCode = EXIT_FAILURE
-    return
 
-  process.exit()
+    process.exit()
   return # NOTREACHED
 
 
