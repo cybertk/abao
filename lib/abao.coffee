@@ -6,8 +6,8 @@ require('source-map-support').install({handleUncaughtExceptions: false})
 async = require 'async'
 ramlParser = require 'raml-parser'
 
-addTests = require './add-tests'
 addHooks = require './add-hooks'
+addTests = require './add-tests'
 asConfiguration = require './configuration'
 hooks = require './hooks'
 Runner = require './test-runner'
