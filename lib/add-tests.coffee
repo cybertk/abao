@@ -17,15 +17,13 @@ do ->
     return @indexOf searchString, position != -1
 
 
-parseSchema = (source) ->
+parseSchema = (schema) ->
   'use strict'
-  if source.includes '$schema'
-    #jsonschema
-    # @response.schema = JSON.parse @response.schema
-    JSON.parse source
+  if schema.includes '$schema'
+    jsonschema = JSON.parse schema
   else
-    csonschema.parse source
-    # @response.schema = csonschema.parse @response.schema
+    jsonschema = csonschema.parse schema
+  return jsonschema
 
 
 parseHeaders = (raml) ->
