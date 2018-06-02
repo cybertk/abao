@@ -5,6 +5,7 @@
 require 'coffee-script/register'
 
 child_process = require 'child_process'
+fs = require 'fs'
 path = require 'path'
 _ = require 'lodash'
 yargs = require 'yargs'
@@ -26,7 +27,7 @@ showReporters = () ->
   stdoutBuff = child_process.execFileSync executable, ['--reporters']
   stdout = stdoutBuff.toString()
   stdout = stdout.slice 0, stdout.length - 1   # Remove last newline
-  console.log stdout
+  fs.writeSync 1, stdout
   return
 
 parseArgs = (argv) ->
