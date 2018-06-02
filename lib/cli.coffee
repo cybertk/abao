@@ -25,7 +25,7 @@ showReporters = () ->
   executable = path.join mochaDir, mochaPkg.bin._mocha
   executable = path.normalize executable
   stdout = child_process.execFileSync executable, ['--reporters']
-  fs.writeSync 1, stdout
+  fs.writeSync 1, stdout.toString()
   return
 
 parseArgs = (argv) ->
