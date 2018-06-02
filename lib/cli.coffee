@@ -24,9 +24,7 @@ showReporters = () ->
   mochaPkg = require 'mocha/package'
   executable = path.join mochaDir, mochaPkg.bin._mocha
   executable = path.normalize executable
-  stdoutBuff = child_process.execFileSync executable, ['--reporters']
-  stdout = stdoutBuff.toString()
-  stdout = stdout.slice 0, stdout.length - 1   # Remove last newline
+  stdout = child_process.execFileSync executable, ['--reporters']
   fs.writeSync 1, stdout
   return
 
