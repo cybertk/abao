@@ -32,7 +32,7 @@ parseArgs = (argv) ->
   'use strict'
   allOptions = _.assign {}, abaoOptions, mochaOptions
   mochaOptionNames = Object.keys mochaOptions
-  prog = path.basename pkg.bin
+  prog = path.basename pkg.bin.abao
   return yargs(argv)
     .usage("Usage:\n  #{prog} </path/to/raml> [OPTIONS]" +
       "\n\nExample:\n  #{prog} api.raml --server http://api.example.com")

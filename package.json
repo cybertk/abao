@@ -2,7 +2,9 @@
   "name": "abao",
   "version": "0.6.0",
   "description": "RAML testing tool",
-  "bin": "bin/abao",
+  "bin": {
+    "abao": "bin/abao"
+  },
   "main": "lib/index.js",
   "scripts": {
     "git-cz": "git-cz",
