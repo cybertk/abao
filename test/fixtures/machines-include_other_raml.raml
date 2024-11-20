@@ -4,13 +4,12 @@ title: Machines API
 baseUri: http://example.api.com/{version}
 version: v1
 
+securitySchemes:
+  - oauth_2_0: !include ./oauth_2_0.yml
+
 /machines:
   get:
-    queryParameters:
-      quux:
-        type: string
-        required: true
-        example: foo
+    description: Gets a list of existing machines
     responses:
       200:
         body:

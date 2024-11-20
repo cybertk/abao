@@ -1,0 +1,35 @@
+###
+### .editorconfig <http://editorconfig.org/>
+###
+
+
+## Topmost EditorConfig file
+root = true
+
+## UTF8, Unix-style newlines, newline ends every file, trim trailing whitespace
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+## Source code: 2 space indentation
+[*.coffee,*.js]
+indent_style = space
+indent_size = 2
+
+## RAML: 2 space indentation
+[*.raml]
+indent_style = space
+indent_size = 2
+
+## Config files: 2 space indentation
+[*.json,*.yml,*.yaml]
+indent_style = space
+indent_size = 2
+
+## Matches the exact files either package.json or .travis.yml
+[{package.json,.travis.yml}]
+indent_style = space
+indent_size = 2
+

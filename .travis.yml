@@ -12,7 +12,7 @@ node_js:
   - '6'
   - '4'
 env:
-- NODE_ENV=development
+  - NODE_ENV=development
 notifications:
   slack:
     secure: fsCX0/TDE9TAJR0S91dboOZ4expmCc8o6joVzsHNJYTJfDtSJehdKjTzYuO/vsRigOOoQZ0dJEPl+D4fysBDV+jkOT5sTjp/uKtcfwHwPi03K8GauwvyW0x4N1M+mY+5jN2ZyBZXqVM5dc0wbgldP9QOg5UpB80hfWUZ+0F1MTM=
@@ -26,11 +26,18 @@ deploy:
     repo: cybertk/abao
 after_success:
 #  - grunt coveralls:upload
-  - BUILD_DIR="$HOME/build"
-  - GITHUB_REPO="cybertk/abao"
-  - PROJ_BUILD_DIR="$BUILD_DIR/$GITHUB_REPO"
-  - PROJ_COVER_DIR="$PROJ_BUILD_DIR/coverage"
-  - COVERAGE_FILE="$PROJ_COVER_DIR/coverage.lcov"
-  - COVERALLS_BIN="./node_modules/coveralls/bin/coveralls.js"
+  - COVERAGE_FILE="$TRAVIS_BUILD_DIR/coverage/coverage.lcov"
+  - COVERALLS_BIN="./node_modules/.bin/coveralls"
   - $COVERALLS_BIN lib < $COVERAGE_FILE; echo "exit=$?"
+  - echo
+  - echo
+  - echo "===== COMMIT ====="
+  - echo "TRAVIS_REPO_SLUG=$TRAVIS_REPO_SLUG"
+  - echo "TRAVIS_COMMIT=$TRAVIS_COMMIT"
+  - echo "TRAVIS_COMMIT_MESSAGE=$TRAVIS_COMMIT_MESSAGE"
+  - echo "TRAVIS_TAG=$TRAVIS_TAG"
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH"
+  - echo "===== BUILD ====="
+  - echo "TRAVIS_BUILD_NUMBER=$TRAVIS_BUILD_NUMBER"
+  - echo "TRAVIS_BUILD_DIR=$TRAVIS_BUILD_DIR"
 

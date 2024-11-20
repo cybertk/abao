@@ -17,6 +17,7 @@ RAML_DIR = "#{FIXTURE_DIR}"
 
 
 describe '#addTests', () ->
+  'use strict'
 
   describe '#run', () ->
 
@@ -24,17 +25,21 @@ describe '#addTests', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-        ramlFile = "#{RAML_DIR}/single-get.raml"
+        ramlFile = "#{RAML_DIR}/machines-single_get.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
+
       after () ->
         tests = []
 
@@ -68,23 +73,28 @@ describe '#addTests', () ->
         assert.isNull res.headers
         assert.isNull res.body
 
+
     describe 'when endpoint has multiple methods', () ->
+
       describe 'when processed in order specified in RAML', () ->
 
         tests = []
         testFactory = new TestFactory()
-        callback = ''
+        callback = undefined
 
         before (done) ->
-
-          ramlFile = "#{RAML_DIR}/1-get-1-post.raml"
+          ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
-          .then (raml) ->
-            callback = sinon.stub()
-            callback.returns(done())
+            .then (raml) ->
+              callback = sinon.stub()
+              callback.returns(done())
 
-            addTests raml, tests, hooks, callback, testFactory, false
+              addTests raml, tests, hooks, callback, testFactory, false
+            .catch (err) ->
+              console.error err
+              done(err)
           return
+
         after () ->
           tests = []
 
@@ -123,22 +133,26 @@ describe '#addTests', () ->
           assert.isNull res.headers
           assert.isNull res.body
 
+
       describe 'when processed in order specified by "--sorted" option', () ->
 
         tests = []
         testFactory = new TestFactory()
-        callback = ''
+        callback = undefined
 
         before (done) ->
-
-          ramlFile = "#{RAML_DIR}/1-get-1-post.raml"
+          ramlFile = "#{RAML_DIR}/machines-1_get_1_post.raml"
           ramlParser.loadFile(ramlFile)
-          .then (raml) ->
-            callback = sinon.stub()
-            callback.returns(done())
+            .then (raml) ->
+              callback = sinon.stub()
+              callback.returns(done())
 
-            addTests raml, tests, hooks, null, callback, testFactory, true
+              addTests raml, tests, hooks, null, callback, testFactory, true
+            .catch (err) ->
+              console.error err
+              done(err)
           return
+
         after () ->
           tests = []
 
@@ -177,22 +191,26 @@ describe '#addTests', () ->
           assert.isNull res.headers
           assert.isNull res.body
 
+
     describe 'when RAML includes multiple referencing schemas', () ->
 
       tests = []
-      testFactory = new TestFactory
-      callback = ''
+      testFactory = new TestFactory()
+      callback = undefined
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/ref_other_schemas.raml"
+        ramlFile = "#{RAML_DIR}/machines-ref_other_schemas.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
+
       after () ->
         tests = []
 
@@ -218,26 +236,30 @@ describe '#addTests', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        assert.equal res.schema?.properties?.chick?.type, "string"
+        assert.equal res.schema?.properties?.chick?.type, 'string'
         assert.isNull res.headers
         assert.isNull res.body
+
 
     describe 'when RAML has inline and included schemas', () ->
 
       tests = []
-      testFactory = new TestFactory
-      callback = ''
+      testFactory = new TestFactory()
+      callback = undefined
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/inline_and_included_schemas.raml"
+        ramlFile = "#{RAML_DIR}/machines-inline_and_included_schemas.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
+
       after () ->
         tests = []
 
@@ -263,25 +285,28 @@ describe '#addTests', () ->
         res = tests[0].response
 
         assert.equal res.status, 200
-        assert.equal res.schema?.properties?.type["$ref"], "type2"
+        assert.equal res.schema?.properties?.type['$ref'], 'type2'
         assert.isNull res.headers
         assert.isNull res.body
+
 
     describe 'when RAML contains three-levels endpoints', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/three-levels.raml"
+        ramlFile = "#{RAML_DIR}/machines-three_levels.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -308,21 +333,24 @@ describe '#addTests', () ->
         assert.deepEqual test.request.params,
           machine_id: '1'
 
+
     describe 'when RAML has resource not defined method', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-
-        ramlFile = "#{RAML_DIR}/no-method.raml"
+        ramlFile = "#{RAML_DIR}/machines-no_method.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -337,14 +365,14 @@ describe '#addTests', () ->
       it 'should set test.name', () ->
         assert.equal tests[0].name, 'GET /root/machines -> 200'
 
+
     describe 'when RAML has invalid request body example', () ->
 
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-
         raml = """
         #%RAML 0.8
 
@@ -361,12 +389,15 @@ describe '#addTests', () ->
               204:
         """
         ramlParser.load(raml)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          sinon.stub console, 'warn'
-          addTests raml, tests, hooks, callback, testFactory, false
+            sinon.stub console, 'warn'
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
@@ -383,20 +414,26 @@ describe '#addTests', () ->
         assert.lengthOf tests, 1
         assert.equal tests[0].name, 'POST /machines -> 204'
 
+
     describe 'when RAML media type uses a JSON-suffixed vendor tree subtype', () ->
+
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-        ramlFile = "#{RAML_DIR}/vendor-content-type.raml"
+        ramlFile = "#{RAML_DIR}/music-vendor_content_type.raml"
         ramlParser.loadFile(ramlFile)
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
+
       after () ->
         tests = []
 
@@ -430,41 +467,65 @@ describe '#addTests', () ->
 
 
     describe 'when there is required query parameter with example value', () ->
+
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
+        ramlFile = "#{RAML_DIR}/machines-required_query_parameter.raml"
+        ramlParser.loadFile(ramlFile)
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-        ramlParser.loadFile("#{RAML_DIR}/required_query_parameter.raml")
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
-
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
 
       after () ->
         tests = []
+
+      it 'should run callback', () ->
+        assert.ok callback.called
+
+      it 'should add 1 test', () ->
+        assert.lengthOf tests, 1
 
       it 'should append query parameters with example value', () ->
         assert.equal tests[0].request.query['quux'], 'foo'
 
+
     describe 'when there is no required query parameter', () ->
+
       tests = []
       testFactory = new TestFactory()
-      callback = ''
+      callback = undefined
 
       before (done) ->
-        ramlParser.loadFile("#{RAML_DIR}/non_required_query_parameter.raml")
-        .then (raml) ->
-          callback = sinon.stub()
-          callback.returns(done())
+        ramlFile = "#{RAML_DIR}/machines-non_required_query_parameter.raml"
+        ramlParser.loadFile(ramlFile)
+          .then (raml) ->
+            callback = sinon.stub()
+            callback.returns(done())
 
-          addTests raml, tests, hooks, callback, testFactory, false
+            addTests raml, tests, hooks, callback, testFactory, false
+          .catch (err) ->
+            console.error err
+            done(err)
         return
+
       after () ->
         tests = []
 
+      it 'should run callback', () ->
+        assert.ok callback.called
+
+      it 'should add 1 test', () ->
+        assert.lengthOf tests, 1
+
       it 'should not append query parameters', () ->
         assert.deepEqual tests[0].request.query, {}
+

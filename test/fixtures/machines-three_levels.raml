@@ -6,6 +6,7 @@ version: v1
 
 /machines:
   get:
+    description: Gets a list of existing machines
     responses:
       200:
         body:
@@ -23,10 +24,12 @@ version: v1
         type: string
         example: '1'
     delete:
+      description: Delete a machine by `machine_id`
       responses:
         204:
     /parts:
       get:
+        description: Gets a list of machine `machine_id`'s parts
         responses:
           200:
             body:

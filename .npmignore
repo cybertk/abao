@@ -1,4 +1,39 @@
-test/
-lib/*.js
+###
+### .npmignore
+###
+
+## Git
+.gitignore
+
+## GitHub
+.github/
+
+## CI configuration files
+.codeclimate.yml
 .travis.yml
+wercker.yml
+
+## Build tool configuration files and intermediate storage
+.editorconfig
+.grunt/
+.markdownlint.json
 Gruntfile.coffee
+coffeelint.json
+
+## Node/npm
+.node_repl_history
+.npm/
+
+## Coverage reports and instrumented source
+coverage/
+lib/*.js
+
+## Test code and fixtures
+test/
+
+## `npm pack` artifact
+abao-[0-9]*.[0-9]*.[0-9]*.tgz
+
+# dotenv environment variables file
+.env
+
