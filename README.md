@@ -8,6 +8,7 @@ RAML-based automated testing tool
 [![Coverage Status][Coveralls-Abao-badge]][Coveralls-Abao]
 [![Gitter][Gitter-Abao-badge]][Gitter-Abao]
 [![CII Best Practices][BestPractices-Abao-badge]][BestPractices-Abao]
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcybertk%2Fabao.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcybertk%2Fabao?ref=badge_shield)
 
 **Abao** is a command-line tool for testing API documentation written in
 [RAML][] format against its back-end implementation. With **Abao**, you can
@@ -306,3 +307,6 @@ $ npm issues abao
 [NPM-Abao]: https://npmjs.org/package/abao/
 [NPM-Abao-badge]: https://nodei.co/npm/abao.png?downloads=true&downloadRank=true&stars=true
 
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fcybertk%2Fabao.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fcybertk%2Fabao?ref=badge_large)
